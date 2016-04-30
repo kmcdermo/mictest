@@ -202,6 +202,13 @@ void TTreeValidation::initializeDebugTree(){
   debugtree_->Branch("einvpt_up",&einvpt_up_debug_,"einvpt_up[nlayers_debug_]/F");
   debugtree_->Branch("theta_up",&theta_up_debug_,"theta_up[nlayers_debug_]/F");
   debugtree_->Branch("etheta_up",&etheta_up_debug_,"etheta_up[nlayers_debug_]/F");
+
+  debugtree_->Branch("etabin_hit",&ebhit_debug_,"etabin_hit[nlayers_debug_]/I");
+  debugtree_->Branch("etabinplus",&ebp_debug_,"etabinplus[nlayers_debug_]/I");
+  debugtree_->Branch("etabinminus",&ebm_debug_,"etabinminus[nlayers_debug_]/I");
+  debugtree_->Branch("phibin_hit",&pbhit_debug_,"phibin_hit[nlayers_debug_]/I");
+  debugtree_->Branch("phibinplus",&pbp_debug_,"phibinplus[nlayers_debug_]/I");
+  debugtree_->Branch("phibinminus",pbm_debug_,"phibinminus[nlayers_debug_]/I");
 }
 
 void TTreeValidation::initializeSeedInfoTree(){
@@ -803,6 +810,10 @@ void TTreeValidation::resetDebugTreeArrays(){
     ept_up_debug_[i]=-99;    ephi_up_debug_[i]=-99;   eeta_up_debug_[i]=-99;
     invpt_up_debug_[i] =-99; theta_up_debug_[i] =-99;
     einvpt_up_debug_[i]=-99; etheta_up_debug_[i]=-99;
+
+    // reset eta/phi bin info
+    ebhit_debug_[i] = -99; ebp_debug_[i] = -99; ebm_debug_[i] = -99;
+    pbhit_debug_[i] = -99; pbp_debug_[i] = -99; pbm_debug_[i] = -99;
   }
 }
 
@@ -842,6 +853,10 @@ void TTreeValidation::fillDebugTree(const Event& ev){
     exx_hit_debug_[i] = simhits[i].exx();
     eyy_hit_debug_[i] = simhits[i].eyy();
     ezz_hit_debug_[i] = simhits[i].ezz();
+
+    // which eta/phi bin the hit belongs to
+    ebhit_debug_[i] = getEtaPartition(simhits[i].eta());
+    pbhit_debug_[i] = getPhiPartition(simhits[i].phi());
 
     const TrackState & mcstate = simTkTSVecMap_[mcID][i];
     x_mc_debug_[i]   = mcstate.x();
@@ -958,6 +973,24 @@ void TTreeValidation::fillDebugTree(const Event& ev){
     einvpt_up_debug_[layer] = upTS.einvpT();
     theta_up_debug_[layer]  = upTS.theta();
     etheta_up_debug_[layer] = upTS.etheta();
+  }
+
+  // see what it predicted! (reuse branchval)
+  for (TkIDToBVVMMIter seediter = seedToBranchValVecLayMapMap_.begin(); seediter != seedToBranchValVecLayMapMap_.end(); ++seediter){
+    for (BVVLMiter layiter = (*seediter).second.begin(); layiter != (*seediter).second.end(); ++layiter){
+      const auto& BranchValVec((*layiter).second);
+      const int cands = BranchValVec.size();
+      int layer = (*layiter).first; // first index here is layer
+      for (int cand = 0; cand < cands; cand++){ // loop over input candidates at this layer for this seed
+	const auto& BranchVal(BranchValVec[cand]); // grab the branch validation object
+	
+	ebp_debug_[layer]  = BranchVal.etaBinPlus;
+	ebm_debug_[layer]  = BranchVal.etaBinMinus;
+	pbp_debug_[layer]  = BranchVal.phiBinPlus;
+	pbm_debug_[layer]  = BranchVal.phiBinMinus;
+
+      }
+    }
   }
 
   // fill it once per track (i.e. once per track by definition)

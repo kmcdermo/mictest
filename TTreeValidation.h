@@ -174,7 +174,11 @@ public:
   float ept_up_debug_[Config::nLayers],ephi_up_debug_[Config::nLayers],eeta_up_debug_[Config::nLayers];
   float invpt_up_debug_[Config::nLayers],theta_up_debug_[Config::nLayers];
   float einvpt_up_debug_[Config::nLayers],etheta_up_debug_[Config::nLayers];
-  
+
+  // eta/phi bin info
+  int ebhit_debug_[Config::nLayers], ebp_debug_[Config::nLayers], ebm_debug_[Config::nLayers];
+  int pbhit_debug_[Config::nLayers], pbp_debug_[Config::nLayers], pbm_debug_[Config::nLayers];
+
   // seedinfo tree
   TTree* seedinfotree_;
   int evtID_seedinfo_;
