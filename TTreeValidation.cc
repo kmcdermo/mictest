@@ -98,13 +98,16 @@ void TTreeValidation::initializeDebugTree(){
   debugtree_->Branch("chi2",&chi2_debug_,"chi2[nlayers_debug_]/F");
 
   // MC
+  debugtree_->Branch("x_hit",&x_hit_debug_,"x_hit[nlayers_debug_]/F");
+  debugtree_->Branch("y_hit",&y_hit_debug_,"y_hit[nlayers_debug_]/F");
+  debugtree_->Branch("z_hit",&z_hit_debug_,"z_hit[nlayers_debug_]/F");
+  debugtree_->Branch("exx_hit",&exx_hit_debug_,"exx_hit[nlayers_debug_]/F");
+  debugtree_->Branch("eyy_hit",&eyy_hit_debug_,"eyy_hit[nlayers_debug_]/F");
+  debugtree_->Branch("ezz_hit",&ezz_hit_debug_,"ezz_hit[nlayers_debug_]/F");
+
   debugtree_->Branch("x_mc",&x_mc_debug_,"x_mc[nlayers_debug_]/F");
   debugtree_->Branch("y_mc",&y_mc_debug_,"y_mc[nlayers_debug_]/F");
   debugtree_->Branch("z_mc",&z_mc_debug_,"z_mc[nlayers_debug_]/F");
-  debugtree_->Branch("exx_mc",&exx_mc_debug_,"exx_mc[nlayers_debug_]/F");
-  debugtree_->Branch("eyy_mc",&eyy_mc_debug_,"eyy_mc[nlayers_debug_]/F");
-  debugtree_->Branch("ezz_mc",&ezz_mc_debug_,"ezz_mc[nlayers_debug_]/F");
-
   debugtree_->Branch("px_mc",&px_mc_debug_,"px_mc[nlayers_debug_]/F");
   debugtree_->Branch("py_mc",&py_mc_debug_,"py_mc[nlayers_debug_]/F");
   debugtree_->Branch("pz_mc",&pz_mc_debug_,"pz_mc[nlayers_debug_]/F");
@@ -768,8 +771,9 @@ void TTreeValidation::resetDebugTreeArrays(){
   for (int i = 0; i < Config::nLayers; i++){
     // reset MC info
     layer_mc_debug_[i]=-99;
+    x_hit_debug_[i]=-99;     y_hit_debug_[i]=-99;     z_hit_debug_[i]=-99; 
+    exx_hit_debug_[i]=-99;   eyy_hit_debug_[i]=-99;   ezz_hit_debug_[i]=-99;
     x_mc_debug_[i]=-99;     y_mc_debug_[i]=-99;     z_mc_debug_[i]=-99; 
-    exx_mc_debug_[i]=-99;   eyy_mc_debug_[i]=-99;   ezz_mc_debug_[i]=-99;
     px_mc_debug_[i]=-99;    py_mc_debug_[i]=-99;    pz_mc_debug_[i]=-99;
     pt_mc_debug_[i]=-99;    phi_mc_debug_[i]=-99;   eta_mc_debug_[i]=-99;
     invpt_mc_debug_[i]=-99; theta_mc_debug_[i]=-99;
@@ -832,14 +836,17 @@ void TTreeValidation::fillDebugTree(const Event& ev){
   for (int i = 0; i < simhits.size(); i++){ // assume one hit for layer for sim tracks...
     layer_mc_debug_[i] = i;
 
-    x_mc_debug_[i] = simhits[i].x();
-    y_mc_debug_[i] = simhits[i].y();
-    z_mc_debug_[i] = simhits[i].z();
-    exx_mc_debug_[i] = simhits[i].exx();
-    eyy_mc_debug_[i] = simhits[i].eyy();
-    ezz_mc_debug_[i] = simhits[i].ezz();
+    x_hit_debug_[i]   = simhits[i].x();
+    y_hit_debug_[i]   = simhits[i].y();
+    z_hit_debug_[i]   = simhits[i].z();
+    exx_hit_debug_[i] = simhits[i].exx();
+    eyy_hit_debug_[i] = simhits[i].eyy();
+    ezz_hit_debug_[i] = simhits[i].ezz();
 
     const TrackState & mcstate = simTkTSVecMap_[mcID][i];
+    x_mc_debug_[i]   = mcstate.x();
+    y_mc_debug_[i]   = mcstate.y();
+    z_mc_debug_[i]   = mcstate.z();
     pt_mc_debug_[i]  = mcstate.pT();
     phi_mc_debug_[i] = mcstate.momPhi();
     eta_mc_debug_[i] = mcstate.momEta();

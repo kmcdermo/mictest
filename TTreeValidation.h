@@ -133,8 +133,9 @@ public:
   // mc truth
   int mccharge_debug_;
   int layer_mc_debug_[Config::nLayers];
+  float x_hit_debug_[Config::nLayers],y_hit_debug_[Config::nLayers],z_hit_debug_[Config::nLayers];
+  float exx_hit_debug_[Config::nLayers],eyy_hit_debug_[Config::nLayers],ezz_hit_debug_[Config::nLayers];
   float x_mc_debug_[Config::nLayers],y_mc_debug_[Config::nLayers],z_mc_debug_[Config::nLayers];
-  float exx_mc_debug_[Config::nLayers],eyy_mc_debug_[Config::nLayers],ezz_mc_debug_[Config::nLayers];
   float px_mc_debug_[Config::nLayers],py_mc_debug_[Config::nLayers],pz_mc_debug_[Config::nLayers];
   float pt_mc_debug_[Config::nLayers],phi_mc_debug_[Config::nLayers],eta_mc_debug_[Config::nLayers];
   float invpt_mc_debug_[Config::nLayers],theta_mc_debug_[Config::nLayers];

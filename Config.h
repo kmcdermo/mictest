@@ -17,6 +17,7 @@ namespace Config
   constexpr float TwoPI    = 6.28318530717958647692;
   constexpr float PIOver2  = Config::PI / 2.0;
   constexpr float PIOver4  = Config::PI / 4.0;
+  constexpr float PI3Over4 = 3.0 * Config::PI / 4.0;
   constexpr float InvPI    = 1.0 / Config::PI;
   constexpr float RadToDeg = 180.0 / Config::PI;
   constexpr float DegToRad = Config::PI / 180.0;

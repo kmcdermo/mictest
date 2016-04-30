@@ -97,6 +97,9 @@ void Event::Simulate()
       // do the simulation
       if (Config::useCMSGeom) setupTrackFromTextFile(pos,mom,covtrk,hits,simHitsInfo_,itrack,q,tmpgeom,initialTSs);
       else setupTrackByToyMC(pos,mom,covtrk,hits,simHitsInfo_,itrack,q,tmpgeom,initialTSs); 
+
+      //      std::cout << "mom_mc[0] phi: " << initialTSs[0].momPhi() << std::endl;
+
       validation_.collectSimTkTSVecMapInfo(itrack,initialTSs); // save initial TS parameters
 
       simTracks_[itrack] = Track(q,pos,mom,covtrk,0.0f);
@@ -219,6 +222,7 @@ void Event::Segment()
   void Event::Seed()
 {
 #ifdef ENDTOEND
+  buildSeedsByMC(simTracks_,seedTracks_,seedTracksExtra_,*this);   simTracksExtra_ = seedTracksExtra_;
   buildSeedsByRoadTriplets(seedTracks_,seedTracksExtra_,layerHits_,segmentMap_,*this);
   //buildSeedsByRZFirstRPhiSecond(seedTracks_,seedTracksExtra_,layerHits_,segmentMap_,*this);
 #else
