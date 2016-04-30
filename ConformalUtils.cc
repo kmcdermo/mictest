@@ -123,10 +123,15 @@ void conformalFit(const Hit& hit0, const Hit& hit1, const Hit& hit2, int charge,
 
 
 
-  float px = fabs(pt*cos(phi))*((x[1]-x[0])>0. ? 1. : -1.);
-  float py = fabs(pt*sin(phi))*((y[1]-y[0])>0. ? 1. : -1.);
+//    float px = -pt*cos(phi);
+//    float py = pt*sin(phi);
 
 
+   float px = fabs(pt*cos(phi))*((x[1]-x[0])>0. ? 1. : -1.);
+   float py = fabs(pt*sin(phi))*((y[1]-y[0])>0. ? 1. : -1.);
+
+   //   std::cout << "IF x: " << ((px * px1)>0 ? "same" : "oppo")  << " y: " << ((py * py1)>0 ? "same" : "oppo") << std::endl;
+   //   std::cout << "px: " << px << " px1: " << px1 << " py: " << py << " py1: " << py1 << std::endl;
 
 
 
@@ -309,10 +314,15 @@ void conformalFit(const Hit& hit0, const Hit& hit1, const Hit& hit2, int charge,
 
 
 
-  float px = fabs(pt*cos(phi))*((x[1]-x[0])>0. ? 1. : -1.);
-  float py = fabs(pt*sin(phi))*((y[1]-y[0])>0. ? 1. : -1.);
+   //   float px = -pt*cos(phi);
+   //   float py = pt*sin(phi);
 
 
+   float px = fabs(pt*cos(phi))*((x[1]-x[0])>0. ? 1. : -1.);
+   float py = fabs(pt*sin(phi))*((y[1]-y[0])>0. ? 1. : -1.);
+
+   //   std::cout << "ELSE x: " << ((px * px1)>0 ? "same" : "oppo")  << " y: " << ((py * py1)>0 ? "same" : "oppo") << std::endl;
+   //   std::cout << "px: " << px << " px1: " << px1 << " py: " << py << " py1: " << py1 << std::endl;
 
 
 

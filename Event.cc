@@ -98,7 +98,7 @@ void Event::Simulate()
       if (Config::useCMSGeom) setupTrackFromTextFile(pos,mom,covtrk,hits,simHitsInfo_,itrack,q,tmpgeom,initialTSs);
       else setupTrackByToyMC(pos,mom,covtrk,hits,simHitsInfo_,itrack,q,tmpgeom,initialTSs); 
 
-      //      std::cout << "mom_mc[0] phi: " << initialTSs[0].momPhi() << std::endl;
+      //      std::cout << std::endl << "mc px: " << initialTSs[0].px() << " py: "  << initialTSs[0].py() << std::endl;
 
       validation_.collectSimTkTSVecMapInfo(itrack,initialTSs); // save initial TS parameters
 
