@@ -199,6 +199,10 @@ int MkBuilder::find_seeds()
   double time = dtime();
   findSeedsByRoadSearch(seed_idcs,m_event_of_hits.m_layers_of_hits,m_event->layerHits_[1].size(),m_event);
   time = dtime() - time;
+  
+  std::cout << "Seeding: " << time << std::endl;
+  
+  exit(0);
 
   // use this to initialize tracks
   const Hit * lay0hits = m_event_of_hits.m_layers_of_hits[0].m_hits;
