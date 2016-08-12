@@ -57,11 +57,12 @@ TTreeValidation::TTreeValidation(std::string fileName)
   if (Config::normal_val) { // regular validation
     initializeEfficiencyTree();
     initializeFakeRateTree();  
+    initializeSeedTree();
     if (Config::full_val) { 
       initializeGeometryTree();
       initializeConformalTree();
       initializeSeedInfoTree();
-      initializeSeedTree();
+      initializeSeedCountTree();
       initializeSegmentTree();
       initializeBranchTree();
       initializeTimeTree();
@@ -78,11 +79,12 @@ TTreeValidation::~TTreeValidation()
   if (Config::normal_val) {
     delete efftree_;
     delete fakeratetree_;
+    delete seedtree_;
     if (Config::full_val) {
       delete geotree_;
       delete cftree_;
       delete seedinfotree_;
-      delete seedtree_;
+      delete seedcounttree_;
       delete segtree_;
       delete tree_br_;
       delete timetree_;
@@ -95,7 +97,8 @@ TTreeValidation::~TTreeValidation()
   delete f_;
 }
 
-void TTreeValidation::initializeDebugTree(){
+void TTreeValidation::initializeDebugTree()
+{
   nlayers_debug_ = Config::nLayers;
 
   // debug tree(lots and lots of variables)
@@ -236,7 +239,8 @@ void TTreeValidation::initializeDebugTree(){
   debugtree_->Branch("phibinminus",pbm_debug_,"phibinminus[nlayers_debug_]/I");
 }
 
-void TTreeValidation::initializeSeedInfoTree(){
+void TTreeValidation::initializeSeedInfoTree()
+{
   // seed validation
   seedinfotree_ = new TTree("seedinfotree","seedinfotree");
   seedinfotree_->Branch("evtID",&evtID_seedinfo_);
@@ -251,17 +255,19 @@ void TTreeValidation::initializeSeedInfoTree(){
   seedinfotree_->Branch("pass",&pass);
 }
 
-void TTreeValidation::initializeSeedTree(){
+void TTreeValidation::initializeSeedCountTree()
+{
   // seed validation
-  seedtree_ = new TTree("seedtree","seedtree");
-  seedtree_->Branch("evtID",&evtID_seed_);
-  seedtree_->Branch("nTkAll",&nTkAll_);
-  seedtree_->Branch("nTkAllMC",&nTkAllMC_);
-  seedtree_->Branch("nTkCut",&nTkCut_);
-  seedtree_->Branch("nTkCutMC",&nTkCutMC_);
+  seedcounttree_ = new TTree("seedcounttree","seedcounttree");
+  seedcounttree_->Branch("evtID",&evtID_seed_);
+  seedcounttree_->Branch("nTkAll",&nTkAll_);
+  seedcounttree_->Branch("nTkAllMC",&nTkAllMC_);
+  seedcounttree_->Branch("nTkCut",&nTkCut_);
+  seedcounttree_->Branch("nTkCutMC",&nTkCutMC_);
 }
 
-void TTreeValidation::initializeSegmentTree(){
+void TTreeValidation::initializeSegmentTree()
+{
   // segment validation
   segtree_ = new TTree("segtree","segtree");
   segtree_->Branch("evtID",&evtID_seg_);
@@ -271,7 +277,8 @@ void TTreeValidation::initializeSegmentTree(){
   segtree_->Branch("nHits",&nHits_seg_);
 }
 
-void TTreeValidation::initializeBranchTree(){
+void TTreeValidation::initializeBranchTree()
+{
   // build validation
   tree_br_ = new TTree("tree_br","tree_br");
   tree_br_->Branch("evtID",&evtID_br_);
@@ -292,7 +299,8 @@ void TTreeValidation::initializeBranchTree(){
   tree_br_->Branch("candnSigmaDphi","std::vector<float>",&candnSigmaDphi_);
 }
 
-void TTreeValidation::initializeEfficiencyTree(){  
+void TTreeValidation::initializeEfficiencyTree()
+{  
   // efficiency validation
   efftree_ = new TTree("efftree","efftree");
   efftree_->Branch("evtID",&evtID_eff_);
@@ -371,7 +379,8 @@ void TTreeValidation::initializeEfficiencyTree(){
   efftree_->Branch("nTkMatches_fit",&nTkMatches_fit_eff_);
 }
 
-void TTreeValidation::initializeFakeRateTree(){
+void TTreeValidation::initializeFakeRateTree()
+{
   // fake rate validation
   fakeratetree_ = new TTree("fakeratetree","fakeratetree");
 
@@ -457,7 +466,8 @@ void TTreeValidation::initializeFakeRateTree(){
   fakeratetree_->Branch("iTkMatches_fit",&iTkMatches_fit_FR_);
 }
 
-void TTreeValidation::initializeGeometryTree(){
+void TTreeValidation::initializeGeometryTree()
+{
   // Geometry validation
   geotree_ = new TTree("geotree","geotree");
 
@@ -497,7 +507,8 @@ void TTreeValidation::initializeGeometryTree(){
   geotree_->Branch("ez_lay_fit","std::vector<float>",&ez_lay_fit_geo_);
 }
 
-void TTreeValidation::initializeConformalTree(){
+void TTreeValidation::initializeConformalTree()
+{
   // Conformal Fit validation
   cftree_ = new TTree("cftree","cftree");
 
@@ -579,7 +590,8 @@ void TTreeValidation::initializeConformalTree(){
   cftree_->Branch("etheta_cf_fit",&etheta_fit_cf_);
 }
 
-void TTreeValidation::initializeConfigTree(){
+void TTreeValidation::initializeConfigTree()
+{
   // include config ++ real seeding parameters ...
   configtree_ = new TTree("configtree","configtree");
 
@@ -630,7 +642,8 @@ void TTreeValidation::initializeConfigTree(){
   configtree_->Branch("thetaerr012",&thetaerr012_);
 }
 
-void TTreeValidation::initializeTimeTree(){
+void TTreeValidation::initializeTimeTree()
+{
   timetree_ = new TTree("timetree","timetree");
   
   timetree_->Branch("simtime",&simtime_);
@@ -641,7 +654,22 @@ void TTreeValidation::initializeTimeTree(){
   timetree_->Branch("hlvtime",&hlvtime_);
 }
 
-void TTreeValidation::alignTrackExtra(TrackVec& evt_tracks, TrackExtraVec& evt_extras){
+void TTreeValidation::initializeSeedTree()
+{
+  seedtree_ = new TTree("seedtree","seedtree");
+
+  seedtree_->Branch("nPairs",&nPairs_);
+  seedtree_->Branch("nPairsMatched",&nPairsMatched_);
+  seedtree_->Branch("nUFTrips",&nUFTrips_);
+  seedtree_->Branch("nUFTripsMatched",&nUFTripsMatched_);
+  seedtree_->Branch("nUFTripsVec","std::vector<int>",&nUFTripsVec_);
+  seedtree_->Branch("nFTrips",&nFTrips_);
+  seedtree_->Branch("nFTripsMatched",&nFTripsMatched_);
+  seedtree_->Branch("nFTripsVec","std::vector<int>",&nFTripsVec_);
+}
+
+void TTreeValidation::alignTrackExtra(TrackVec& evt_tracks, TrackExtraVec& evt_extras)
+{
   TrackExtraVec trackExtra_tmp;
 
   // align temporary tkExVec with new track collection ordering
@@ -709,6 +737,20 @@ void TTreeValidation::collectUpTSLayerVecInfo(int layer, const TrackState& upTS)
   upTSLayerPairVec_.push_back(std::make_pair(layer,upTS)); 
 }
 
+void TTreeValidation::collectSeedPairInfo(int hit1mc, const std::vector<int>& hit0mcs) 
+{
+  seedInfoMap_[hit1mc].pairVec_ =  hit0mcs;
+}
+void TTreeValidation::collectSeedTripletInfo(int hit1mc, int hit0mc, const std::vector<int>& hit2mcs) 
+{
+  seedInfoMap_[hit1mc].tripletMap_[hit0mc].unfilteredVec_ = hit2mcs;
+}
+
+void TTreeValidation::collectSeedFilteredTripletInfo(int hit1mc, int hit0mc, int hit2mc)
+{
+  seedInfoMap_[hit1mc].tripletMap_[hit0mc].filteredVec_.push_back(hit2mc);
+}
+
 void TTreeValidation::resetValidationMaps(){
   std::lock_guard<std::mutex> locker(glock_);
   
@@ -734,6 +776,9 @@ void TTreeValidation::resetValidationMaps(){
   // reset map of seed tracks to reco tracks
   seedToBuildMap_.clear();
   seedToFitMap_.clear();
+
+  // reset seedinfo maps
+  seedInfoMap_.clear();
 }
 
 void TTreeValidation::resetDebugVectors(){
@@ -1106,7 +1151,7 @@ void TTreeValidation::fillSeedInfoTree(const TripletIdxVec& hit_triplets, const 
   }
 }
 
-void TTreeValidation::fillSeedTree(const TripletIdxVec& hit_triplets, const TripletIdxVec& filtered_triplets, const Event& ev) {
+void TTreeValidation::fillSeedCountTree(const TripletIdxVec& hit_triplets, const TripletIdxVec& filtered_triplets, const Event& ev) {
   evtID_seed_ = ev.evtID();
   const auto & evt_lay_hits = ev.layerHits_;
 
@@ -1132,7 +1177,55 @@ void TTreeValidation::fillSeedTree(const TripletIdxVec& hit_triplets, const Trip
   nTkCut_   = filtered_triplets.size();
   nTkCutMC_ = correct_cut; 
 
-  seedtree_->Fill();
+  seedcounttree_->Fill();
+}
+
+void TTreeValidation::fillSeedTree(const Event& ev)
+{
+  for (auto&& hit1pair : seedInfoMap_)
+  {
+    // initialize!
+    nPairs_   = 0; nPairsMatched_   = 0;
+    nUFTrips_ = 0; nUFTripsMatched_ = 0; nUFTripsVec_.clear();
+    nFTrips_  = 0; nFTripsMatched_  = 0; nFTripsVec_.clear();
+
+    int hit1mc = hit1pair.first;
+    const SeedInfoStruct & seedstruct = hit1pair.second;
+    const std::vector<int> &  pairVec = seedstruct.pairVec_;
+
+    nPairs_ = pairVec.size();
+    for (int ihit0 = 0; ihit0 < pairVec.size(); ihit0++)
+    { 
+      if (hit1mc == pairVec[ihit0]) nPairsMatched_++;
+    }
+
+    for (auto&& hit0pair : seedstruct.tripletMap_)
+    {
+      int hit0mc = hit0pair.first;
+      const TripletInfoStruct & tripletstruct = hit0pair.second;
+      const std::vector<int> &  unfilteredVec = tripletstruct.unfilteredVec_;
+      const std::vector<int> &    filteredVec = tripletstruct.filteredVec_;
+
+      nUFTrips_ += unfilteredVec.size();
+      nFTrips_  += filteredVec.size();
+
+      nUFTripsVec_.push_back(unfilteredVec.size());
+      nFTripsVec_.push_back(filteredVec.size());
+
+      if (hit1mc != hit0mc) continue;
+
+      for (int ihit2 = 0; ihit2 < unfilteredVec.size(); ihit2++)
+      {
+	if (hit1mc == unfilteredVec[ihit2]) nUFTripsMatched_++;
+      }
+
+      for (int ihit2 = 0; ihit2 < filteredVec.size(); ihit2++)
+      {
+	if (hit1mc == filteredVec[ihit2]) nFTripsMatched_++;
+      }
+    }
+    seedtree_->Fill();
+  }  
 }
 
 void TTreeValidation::fillBranchTree(int evtID)

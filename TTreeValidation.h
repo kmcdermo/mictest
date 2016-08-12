@@ -40,6 +40,28 @@ typedef std::unordered_map<int, BranchValVecLayMap> TkIDToBranchValVecLayMapMap;
 typedef TkIDToBranchValVecLayMapMap::iterator TkIDToBVVMMIter;
 typedef BranchValVecLayMap::iterator BVVLMiter;
 
+
+// seed tree types
+struct TripletInfoStruct
+{
+public:
+  TripletInfoStruct() {}
+  std::vector<int> filteredVec_;
+  std::vector<int> unfilteredVec_;
+};
+
+typedef std::unordered_map<int, TripletInfoStruct> TkIDToTripletInfoMap;
+
+struct SeedInfoStruct
+{
+public:
+  SeedInfoStruct() {}
+  std::vector<int> pairVec_;
+  TkIDToTripletInfoMap tripletMap_;
+};
+
+typedef std::unordered_map<int, SeedInfoStruct> TkIDToSeedInfoMap;
+
 class TTreeValidation : public Validation {
 public:
   TTreeValidation(std::string fileName);
@@ -47,7 +69,7 @@ public:
   
   void initializeDebugTree();
   void initializeSeedInfoTree();
-  void initializeSeedTree();
+  void initializeSeedCountTree();
   void initializeSegmentTree();
   void initializeBranchTree();
   void initializeEfficiencyTree();
@@ -56,7 +78,8 @@ public:
   void initializeConformalTree();
   void initializeConfigTree();
   void initializeTimeTree();
-  
+  void initializeSeedTree();
+
   void alignTrackExtra(TrackVec& evt_tracks, TrackExtraVec& evt_extra) override;
 
   void collectSimTkTSVecMapInfo(int mcTrackID, const TSVec& initTSs) override;
@@ -71,6 +94,10 @@ public:
   void collectPropTSLayerVecInfo(int layer, const TrackState& propTS) override;
   void collectChi2LayerVecInfo(int layer, float chi2) override;
   void collectUpTSLayerVecInfo(int layer, const TrackState& upTS) override;
+
+  void collectSeedPairInfo(int hit1mc, const std::vector<int>& hit0mcs) override;
+  void collectSeedTripletInfo(int hit1mc, int hit0mc, const std::vector<int>& hit2mcs) override;
+  void collectSeedFilteredTripletInfo(int hit1mc, int hit0mc, int hit2mc) override;
 
   void resetValidationMaps() override;
   void resetDebugVectors() override;
@@ -87,7 +114,7 @@ public:
 
   void fillDebugTree(const Event& ev) override;
   void fillSeedInfoTree(const TripletIdxVec& hit_triplets, const Event& ev) override;
-  void fillSeedTree(const TripletIdxVec& hit_triplets, const TripletIdxVec& filtered_triplets, const Event& ev) override;
+  void fillSeedCountTree(const TripletIdxVec& hit_triplets, const TripletIdxVec& filtered_triplets, const Event& ev) override;
   void fillSegmentTree(const BinInfoMap& segmentMap, int evtID) override;
   void fillBranchTree(int evtID) override;
   void fillEfficiencyTree(const Event& ev) override;
@@ -96,6 +123,7 @@ public:
   void fillConformalTree(const Event& ev) override;
   void fillConfigTree() override;
   void fillTimeTree(const std::vector<double>& ticks) override;
+  void fillSeedTree(const Event& ev) override;
 
   void saveTTrees() override;
 
@@ -122,6 +150,9 @@ public:
   // Reco to Reco Maps
   TkIDToTkIDMap seedToBuildMap_;
   TkIDToTkIDMap seedToFitMap_;
+
+  // main collector for seed tree
+  TkIDToSeedInfoMap seedInfoMap_;
 
   // debug tree
   TTree* debugtree_;
@@ -189,8 +220,8 @@ public:
   float a,b,r,d0;
   bool pass;
 
-  // seed tree
-  TTree* seedtree_;
+  // seed count tree
+  TTree* seedcounttree_;
   int evtID_seed_;
   int nTkAll_;
   int nTkAllMC_;
@@ -317,6 +348,11 @@ public:
   // Time tree (smatrix only at the moment)
   TTree* timetree_;
   float simtime_=0.,segtime_=0.,seedtime_=0.,buildtime_=0.,fittime_=0.,hlvtime_=0.;
+
+  // seed tree in mplex
+  TTree* seedtree_;
+  int nPairs_=0,nPairsMatched_=0,nUFTrips_=0,nUFTripsMatched_=0,nFTrips_=0,nFTripsMatched_=0;
+  std::vector<int> nUFTripsVec_, nFTripsVec_;
 
   std::mutex glock_;
 };

@@ -47,6 +47,19 @@ void findSeedsByRoadSearch(TripletIdxConVec & seed_idcs, std::vector<LayerOfHits
 	std::vector<int> cand_hit0_indices; // pass by reference
 	lay0_hits.SelectHitIndices(hit1_z/2.0f,hit1.phi(),Config::seed_z0cut/2.0f,Config::lay01angdiff,cand_hit0_indices,true,false);
 	// loop over first layer hits
+
+	if (Config::normal_val)
+	{ 
+	  int hit1mc = hit1.mcTrackID(ev->simHitsInfo_);
+	  std::vector<int> hit0mcs;
+	  for (auto&& ihit0 : cand_hit0_indices)
+	  {
+	    const Hit & hit0 = lay0_hits.m_hits[ihit0]; 
+	    hit0mcs.push_back(hit0.mcTrackID(ev->simHitsInfo_));
+	  }
+	  ev->validation_.collectSeedPairInfo(hit1mc,hit0mcs);
+	}
+
 	for (auto&& ihit0 : cand_hit0_indices)
 	{
 	  const Hit & hit0   = lay0_hits.m_hits[ihit0]; 
@@ -85,6 +98,20 @@ void findSeedsByRoadSearch(TripletIdxConVec & seed_idcs, std::vector<LayerOfHits
 
 	  // loop over candidate third layer hits
 	  //temp_thr_seed_idcs.reserve(temp_thr_seed_idcs.size()+cand_hit2_indices.size());
+
+	  if (Config::normal_val)
+          { 
+	    int hit1mc = hit1.mcTrackID(ev->simHitsInfo_);
+	    int hit0mc = hit0.mcTrackID(ev->simHitsInfo_);
+	    std::vector<int> hit2mcs;
+	    for (auto&& ihit2 : cand_hit2_indices)
+	    {
+	      const Hit & hit2 = lay2_hits.m_hits[ihit2]; 
+	      hit2mcs.push_back(hit2.mcTrackID(ev->simHitsInfo_));
+	    }
+	    ev->validation_.collectSeedTripletInfo(hit1mc,hit0mc,hit2mcs);
+	  }
+
 #pragma simd
 	  for (auto&& ihit2 : cand_hit2_indices)
 	  {
@@ -104,11 +131,19 @@ void findSeedsByRoadSearch(TripletIdxConVec & seed_idcs, std::vector<LayerOfHits
 	    const float r  = getHypot(hit0_x-a,hit0_y-b);
 
 	    // filter by d0 cut 5mm, pT cut 0.5 GeV (radius of 0.5 GeV track)
-	    if ((r < Config::maxCurvR) || (std::abs(getHypot(a,b)-r) > Config::seed_d0cut)) continue; 
+	    if ((r < Config::maxCurvR*5) || (std::abs(getHypot(a,b)-r) > Config::seed_d0cut)) continue; 
 	
 	    dprint(" ihit2: " << ihit2 << " mcTrackID: " << hit2.mcTrackID(ev->simHitsInfo_) << " phi: " << hit2.phi() << " z: " << hit2.z()); 
 
 	    temp_thr_seed_idcs.emplace_back(TripletIdx{{ihit0,ihit1,ihit2}});
+
+	    if (Config::normal_val)
+            { 
+	      int hit1mc = hit1.mcTrackID(ev->simHitsInfo_);
+	      int hit0mc = hit0.mcTrackID(ev->simHitsInfo_);
+	      int hit2mc = hit2.mcTrackID(ev->simHitsInfo_);
+	      ev->validation_.collectSeedFilteredTripletInfo(hit1mc,hit0mc,hit2mc);
+	    }
 	  } // end loop over third layer matches
 	} // end loop over first layer matches
       } // end chunk of hits for parallel for

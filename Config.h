@@ -206,7 +206,7 @@ namespace Config
     #elif defined USE_CUDA
       #define MPT_SIZE 10000
     #else
-      #define MPT_SIZE 8
+      #define MPT_SIZE 1
     #endif
   #endif
 

@@ -93,21 +93,21 @@ double runBuildingTestPlexBestHit(Event& ev)
   builder.fit_seeds_tbb();
 
   EventOfCandidates event_of_cands;
-  builder.find_tracks_load_seeds(event_of_cands);
+  //  builder.find_tracks_load_seeds(event_of_cands);
 
-#ifdef USE_VTUNE_PAUSE
-  __itt_resume();
-#endif
+// #ifdef USE_VTUNE_PAUSE
+//   __itt_resume();
+// #endif
 
   double time = dtime();
 
-  builder.FindTracksBestHit(event_of_cands);
+//   builder.FindTracksBestHit(event_of_cands);
 
-  time = dtime() - time;
+//   time = dtime() - time;
 
-#ifdef USE_VTUNE_PAUSE
-  __itt_pause();
-#endif
+// #ifdef USE_VTUNE_PAUSE
+//   __itt_pause();
+// #endif
   
   if   (!Config::normal_val) {builder.quality_output_besthit(event_of_cands);}
   else                       {builder.root_val_besthit(event_of_cands);}

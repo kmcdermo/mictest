@@ -143,7 +143,7 @@ void buildSeedsByRZFirstRPhiSecond(TrackVec& evt_seed_tracks, TrackExtraVec& evt
   //  filterHitTripletsByRZChi2(evt_lay_hits,hitTriplets,filteredTriplets); // filter based on RZ chi2 cut
 
   if (!Config::super_debug) {
-    ev.validation_.fillSeedTree(hitTriplets,filteredTriplets,ev);
+    ev.validation_.fillSeedCountTree(hitTriplets,filteredTriplets,ev);
   }
 
   // turn triplets into track seeds by performing CF + KF fit  
@@ -208,7 +208,7 @@ void buildSeedsByRoadTriplets(TrackVec& evt_seed_tracks, TrackExtraVec& evt_seed
   filterHitTripletsByCircleParams(evt_lay_hits,filteredTriplets1,filteredTriplets); // filter based on circle fit to three hits (d0 and curvature)
   //  filterHitTripletsByRZChi2(evt_lay_hits,hitTriplets,filteredTriplets); // filter based on RZ chi2 cut
   if (!Config::super_debug) {
-    ev.validation_.fillSeedTree(hitTriplets,filteredTriplets,ev);
+    ev.validation_.fillSeedCountTree(hitTriplets,filteredTriplets,ev);
   }
   buildSeedsFromTriplets(evt_lay_hits,filteredTriplets,evt_seed_tracks,evt_seed_extras,ev);
 }

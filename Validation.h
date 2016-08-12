@@ -12,6 +12,10 @@ public:
   virtual void resetValidationMaps() {}
   virtual void resetDebugVectors() {}
 
+  virtual void collectSeedPairInfo(int, const std::vector<int>&) {} 
+  virtual void collectSeedTripletInfo(int, int, const std::vector<int>&) {} 
+  virtual void collectSeedFilteredTripletInfo(int, int, int) {} 
+
   virtual void collectSimTkTSVecMapInfo(int, const TSVec&) {}
   virtual void collectSeedTkCFMapInfo(int, const TrackState&) {}
   virtual void collectSeedTkTSLayerPairVecMapInfo(int, const TSLayerPairVec&) {}
@@ -29,7 +33,7 @@ public:
   virtual void makeSeedTkToRecoTkMaps(Event&) {}
 
   virtual void fillSeedInfoTree(const TripletIdxVec&, const Event&) {}
-  virtual void fillSeedTree(const TripletIdxVec&, const TripletIdxVec&, const Event&) {}
+  virtual void fillSeedCountTree(const TripletIdxVec&, const TripletIdxVec&, const Event&) {}
   virtual void fillDebugTree(const Event&) {}
   virtual void fillSegmentTree(const BinInfoMap&, int) {}
   virtual void fillBranchTree(int) {}
@@ -39,6 +43,7 @@ public:
   virtual void fillConformalTree(const Event&) {}
   virtual void fillConfigTree() {}
   virtual void fillTimeTree(const std::vector<double> &) {}
+  virtual void fillSeedTree(const Event&) {}
 
   virtual void saveTTrees() {}
 };

@@ -46,7 +46,7 @@ namespace Config
 
   void RecalculateDependentConstants()
   {
-    maxCandsPerEtaBin = std::max(100, maxCandsPerSeed * (nTracks+100) / nEtaPart);
+    maxCandsPerEtaBin = std::max(100, maxCandsPerSeed * (nTracks+1000) / nEtaPart);
     maxHitsPerBunch   = std::max(100, nTracks * 12 / 10 / nEtaPart) + maxHitsConsidered;
   }
 }
