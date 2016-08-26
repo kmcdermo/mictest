@@ -131,7 +131,7 @@ void findSeedsByRoadSearch(TripletIdxConVec & seed_idcs, std::vector<LayerOfHits
 	    const float r  = getHypot(hit0_x-a,hit0_y-b);
 
 	    // filter by d0 cut 5mm, pT cut 0.5 GeV (radius of 0.5 GeV track)
-	    if ((r < Config::maxCurvR*5) || (std::abs(getHypot(a,b)-r) > Config::seed_d0cut)) continue; 
+	    if ((r < Config::maxCurvR) || (std::abs(getHypot(a,b)-r) > Config::seed_d0cut)) continue; 
 	
 	    dprint(" ihit2: " << ihit2 << " mcTrackID: " << hit2.mcTrackID(ev->simHitsInfo_) << " phi: " << hit2.phi() << " z: " << hit2.z()); 
 

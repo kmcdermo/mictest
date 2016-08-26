@@ -90,7 +90,7 @@ double runBuildingTestPlexBestHit(Event& ev)
   if   (Config::findSeeds) {builder.find_seeds();}
   else                     {builder.map_seed_hits();} // all other simulated seeds need to have hit indices line up in LOH for seed fit
 
-  builder.fit_seeds_tbb();
+  //  builder.fit_seeds_tbb();
 
   EventOfCandidates event_of_cands;
   //  builder.find_tracks_load_seeds(event_of_cands);
