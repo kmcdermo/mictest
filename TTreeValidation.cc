@@ -1389,8 +1389,10 @@ void TTreeValidation::fillEfficiencyTree(const Event& ev){
       nHitsMatched_seed_eff_    = seedextra.nHitsMatched();
       fracHitsMatched_seed_eff_ = float(nHitsMatched_seed_eff_) / float(nHits_seed_eff_);
 
+      const TrackState & helixLayTS = simTkTSVecMap_[mcID_eff_][layer+1];
+
       hitchi2_seed_eff_   = seedtrack.chi2(); // currently not being used
-      helixchi2_seed_eff_ = computeHelixChi2(initLayTS.parameters,seedtrack.parameters(),seedtrack.errors());
+      helixchi2_seed_eff_ = computeHelixChi2(helixLayTS.parameters,seedtrack.parameters(),seedtrack.errors());
 
       duplmask_seed_eff_   = seedextra.isDuplicate(); 
       nTkMatches_seed_eff_ = simToSeedMap_[mcID_eff_].size(); // n reco matches to this sim track.
@@ -1597,7 +1599,8 @@ void TTreeValidation::fillFakeRateTree(const Event& ev){
       eta_mc_seed_FR_   = initLayTS.momEta();
       nHits_mc_seed_FR_ = simTkTSVecMap_[mcID_seed_FR_].size();
 
-      helixchi2_seed_FR_ = computeHelixChi2(initLayTS.parameters,seedtrack.parameters(),seedtrack.errors());
+      const TrackState & helixLayTS = simTkTSVecMap_[mcID_seed_FR_][layer+1];
+      helixchi2_seed_FR_ = computeHelixChi2(helixLayTS.parameters,seedtrack.parameters(),seedtrack.errors());
 
       duplmask_seed_FR_   = seedextra.isDuplicate();
       iTkMatches_seed_FR_ = seedextra.duplicateID(); // ith duplicate seed track, i = 0 "best" match, i > 0 "still matched, real reco, not as good as i-1 track"      
@@ -1610,6 +1613,8 @@ void TTreeValidation::fillFakeRateTree(const Event& ev){
       phi_mc_seed_FR_ = -99;
       eta_mc_seed_FR_ = -99;
       nHits_mc_seed_FR_ = -99;
+
+      helixchi2_seed_FR_ = -99;
 
       duplmask_seed_FR_   = 2; // see notation above      
       iTkMatches_seed_FR_ = -99;  
@@ -1664,6 +1669,8 @@ void TTreeValidation::fillFakeRateTree(const Event& ev){
 	eta_mc_build_FR_ = -99;
 	nHits_mc_build_FR_ = -99;
 
+	helixchi2_build_FR_ = -99;
+	
 	duplmask_build_FR_   = 2;
 	iTkMatches_build_FR_ = -99;
       } // matched seed to build, not build to sim
@@ -1750,6 +1757,8 @@ void TTreeValidation::fillFakeRateTree(const Event& ev){
 	phi_mc_fit_FR_ = -99;
 	eta_mc_fit_FR_ = -99;
 	nHits_mc_fit_FR_ = -99;
+
+	helixchi2_fit_FR_ = -99;
 
 	duplmask_fit_FR_   = 2;
 	iTkMatches_fit_FR_ = -99;
