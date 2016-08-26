@@ -473,6 +473,36 @@ void MkFitter::FitTracks(const int N_proc)
   // XXXXX What's with chi2?
 }
 
+void MkFitter::FitTracksWithChi2(const int N_proc)
+{
+  // Fitting loop.
+
+  for (int hi = 0; hi < Nhits; ++hi)
+  {
+    // Note, charge is not passed (line propagation).
+    // propagateLineToRMPlex(Err[iC], Par[iC], msErr[hi], msPar[hi],
+    //                       Err[iP], Par[iP]);
+
+    propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[hi],
+                           Err[iP], Par[iP], N_proc);
+
+    MPlexQF tmpChi2;
+    computeChi2MPlex(Err[iP], Par[iP], Chg, msErr[hi], msPar[hi], tmpChi2, N_proc);
+
+    using idx_t = Matriplex::idx_t;
+    const idx_t N = NN;
+#pragma simd
+    for (idx_t n = 0; n < N; ++n)
+    {
+      Chi2.At(n, 0, 0) += tmpChi2.ConstAt(n, 0, 0);
+    }
+    
+    updateParametersMPlex(Err[iP], Par[iP], Chg, msErr[hi], msPar[hi],
+                          Err[iC], Par[iC], N_proc);
+  }
+  // XXXXX What's with chi2?
+}
+
 void MkFitter::FitTracksTestEndcap(const int N_proc, const Event* ev)
 {
 
