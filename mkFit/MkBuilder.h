@@ -62,7 +62,8 @@ public:
 
   virtual void begin_event(Event* ev, EventTmp* ev_tmp, const char* build_type);
 
-  int find_seeds();
+  double find_seeds();
+  void prune_bad_tracks(TrackVec & tracks);
   virtual void fit_seeds();
   virtual void fit_seeds_tbb();
 

@@ -93,6 +93,11 @@ namespace
   }
 }
 
+inline bool is_badEtaBin(const Track & track)
+{
+  return getEtaBin(track.posEta()) == -1;
+}
+
 //------------------------------------------------------------------------------
 // Constructor and destructor
 //------------------------------------------------------------------------------
@@ -190,7 +195,29 @@ void MkBuilder::begin_event(Event* ev, EventTmp* ev_tmp, const char* build_type)
   if (! (Config::readCmsswSeeds || Config::findSeeds)) m_event->seedTracks_ = m_event->simTracks_; // make seed tracks == simtracks if not using "realistic" seeding
 }
 
-int MkBuilder::find_seeds()
+//------------------------------------------------------------------------------
+// Seeding tools
+//------------------------------------------------------------------------------
+
+void MkBuilder::prune_bad_tracks(TrackVec & tracks)
+{
+  // KPM: unfortunately, since seedtracks with etabin == -1 do not get added to data structures in track building
+  // this screws up the alignment of candidates to their associated seeds ... which is bad for validation
+  // therefore, we prune them here, and then reassign the labels (as erase-remove idiom screws up indices)
+  
+  for (int iseed = 0; iseed < tracks.size(); ++iseed){
+    if ( getEtaBin(tracks[iseed].posEta()) < 0 ) std::cout << "URGHHH: " << iseed << std::endl;
+  }
+
+  // https://en.wikipedia.org/wiki/Erase%E2%80%93remove_idiom
+  tracks.erase( std::remove_if(tracks.begin(), tracks.end(), is_badEtaBin), tracks.end() );
+  for (int iseed = 0; iseed < tracks.size(); ++iseed)
+  {
+    tracks[iseed].setLabel(iseed);
+  }
+}
+
+double MkBuilder::find_seeds()
 {
   bool debug(false);
 
@@ -353,6 +380,7 @@ inline void MkBuilder::fit_one_seed_set(TrackVec& seedtracks, int itrack, int en
   mkfp->SetNhits(Config::nlayers_per_seed); //just to be sure (is this needed?)
   mkfp->InputTracksAndHits(seedtracks, m_event_of_hits.m_layers_of_hits, itrack, end);
   if (Config::cf_seeding) mkfp->ConformalFitTracks(false, itrack, end);
+  
   if (Config::readCmsswSeeds==false) mkfp->FitTracksWithChi2(end - itrack);
 
   const int ilay = 3; // layer 4
@@ -525,14 +553,106 @@ void MkBuilder::root_val_besthit(const EventOfCandidates& event_of_cands)
 
 void MkBuilder::root_val()
 {
+  // std::cout << std::endl;
+  // std::cout << "MC 2003 LOH: " ;
+  // for (int ilayer = 0; ilayer < Config::nLayers; ++ilayer) {
+  //   const auto & lof_m_hits = m_event_of_hits.m_layers_of_hits[ilayer].m_hits;
+  //   const auto   size = m_event->layerHits_[ilayer].size();
+  //   for (int index = 0; index < size; ++index) { 
+  //     //      if (m_event->simHitsInfo_[lof_m_hits[index].mcHitID()].mcTrackID() == 2003) std::cout << index << " ";
+  //     if (m_event->simHitsInfo_[lof_m_hits[index].mcHitID()].mcTrackID() == 2003) std::cout << lof_m_hits[index].mcHitID() << " ";
+  //   }
+  // }
+  // std::cout << std::endl;
+  // std::cout << std::endl;
+
+  // std::cout << std::endl;
+  // std::cout << "MC 2003 GLH: " ;
+  // for (int ilayer = 0; ilayer < Config::nLayers; ++ilayer) {
+  //   const auto & glh_m_hits = m_event->layerHits_[ilayer];
+  //   const auto   size = m_event->layerHits_[ilayer].size();
+  //   for (int index = 0; index < size; ++index) { 
+  //     //      if (m_event->simHitsInfo_[glh_m_hits[index].mcHitID()].mcTrackID() == 2003) std::cout << index << " ";
+  //     if (m_event->simHitsInfo_[glh_m_hits[index].mcHitID()].mcTrackID() == 2003) std::cout << glh_m_hits[index].mcHitID() << " ";
+  //   }
+  // }
+  // std::cout << std::endl;
+  // std::cout << std::endl;
+
+  int id = 230;
+
+  std::cout << "Validation - seeds before remap" << std::endl;
+  for (int k = 0; k < 10; k++) {
+    Track & testseed = m_event->seedTracks_[id+k];
+    std::cout << testseed.label() << " (" << id+k << "): ";
+    for (int i = 0; i < testseed.nTotalHits(); i++){
+      //    std::cout << testseed.getHitIdx(i) << " ";
+      std::cout << m_event_of_hits.m_layers_of_hits[i].m_hits[testseed.getHitIdx(i)].mcHitID() << " ";
+    }
+    std::cout << std::endl;
+  }
+  std::cout << std::endl;
+
   remap_seed_hits(); // prepare seed tracks for validation
 
   // get the tracks ready for validation
   quality_store_tracks();
+
+  for (int k = 0; k < 10; k++){
+    Track & testcandidate = m_event->candidateTracks_[id+k];
+    std::cout << testcandidate.label() << " (" << id+k << "): ";
+    for (int i = 0; i < testcandidate.nTotalHits(); i++){
+      // std::cout << testcandidate.getHitIdx(i) << " ";
+      if (testcandidate.getHitIdx(i) >= 0) std::cout << m_event_of_hits.m_layers_of_hits[i].m_hits[testcandidate.getHitIdx(i)].mcHitID() << " ";
+      else std::cout << testcandidate.getHitIdx(i) << " ";
+    }
+    std::cout << std::endl;
+  }
+  std::cout << std::endl;
+
   remap_cand_hits();
   m_event->fitTracks_ = m_event->candidateTracks_; // fixme: hack for now. eventually fitting will be including end-to-end
   align_simtracks();
   init_track_extras();
+
+  std::cout << "After seed remap" << std::endl;
+
+  for (int k = 0; k < 10; k++){
+    Track & testseed = m_event->seedTracks_[id+k];
+    TrackExtra & testseedextra = m_event->seedTracksExtra_[testseed.label()];
+    std::cout << testseed.label() << " (" << id+k << ") [" << testseedextra.seedID() << "]: "; //": ";
+    std::vector<int> seedids;
+    testseed.mcHitIDsVec(m_event->layerHits_,m_event->simHitsInfo_,seedids);
+    for (int i = 0; i < seedids.size(); i++){
+      //  std::cout << seedids[i] << " ";
+      std::cout << m_event->layerHits_[i][testseed.getHitIdx(i)].mcHitID() << " ";
+    }
+    std::cout << std::endl;
+  }
+  std::cout << std::endl;
+  
+  for (int k = 0; k < 10; k++){
+    Track & testcandidate = m_event->candidateTracks_[id+k];
+    TrackExtra & testcandidateextra = m_event->candidateTracksExtra_[testcandidate.label()];
+    std::cout << testcandidate.label() << " (" << id+k << ") [" << testcandidateextra.seedID() << "]: ";//": ";//
+    std::vector<int> candidateids;
+    testcandidate.mcHitIDsVec(m_event->layerHits_,m_event->simHitsInfo_,candidateids);
+    for (int i = 0; i < candidateids.size(); i++){
+      // std::cout << candidateids[i] << " ";
+      if (testcandidate.getHitIdx(i) >= 0) std::cout << m_event->layerHits_[i][testcandidate.getHitIdx(i)].mcHitID() << " ";
+      else std::cout << testcandidate.getHitIdx(i) << " ";
+    }
+    std::cout << std::endl;
+  }
+
+
+  // int j = 0;
+  // for (auto iter = m_event->candidateTracksExtra_.begin(); iter != m_event->candidateTracksExtra_.end(); ++iter){
+  //   if (iter->seedID() == 267) std::cout << j << std::endl;
+  //   j++;
+  // }
+
+  exit(0);
 
   m_event->Validate();
 }
@@ -541,25 +661,25 @@ void MkBuilder::init_track_extras()
 {
   TrackVec      & seedtracks      = m_event->seedTracks_; 
   TrackExtraVec & seedtrackextras = m_event->seedTracksExtra_;
-  for (int i = 0; i < seedtracks.size(); i++)
+  for (auto&& seedtrack : seedtracks)
   {
-    seedtrackextras.emplace_back(seedtracks[i].label());
+    seedtrackextras.emplace_back(seedtrack.label());
   }
   m_event->validation_.alignTrackExtra(seedtracks,seedtrackextras);
 
   TrackVec      & candidatetracks      = m_event->candidateTracks_;
   TrackExtraVec & candidatetrackextras = m_event->candidateTracksExtra_;
-  for (int i = 0; i < candidatetracks.size(); i++)
+  for (auto&& candidatetrack : candidatetracks)
   {
-    candidatetrackextras.emplace_back(candidatetracks[i].label());
+    candidatetrackextras.emplace_back(candidatetrack.label());
   }
   m_event->validation_.alignTrackExtra(candidatetracks,candidatetrackextras);
   
   TrackVec      & fittracks      = m_event->fitTracks_;
   TrackExtraVec & fittrackextras = m_event->fitTracksExtra_;
-  for (int i = 0; i < fittracks.size(); i++)
+  for (auto&& fittrack : fittracks)
   {
-    fittrackextras.emplace_back(fittracks[i].label());
+    fittrackextras.emplace_back(fittrack.label());
   }
   m_event->validation_.alignTrackExtra(fittracks,fittrackextras);
 }
@@ -570,6 +690,8 @@ void MkBuilder::init_track_extras()
 
 void MkBuilder::find_tracks_load_seeds(EventOfCandidates& event_of_cands)
 {
+  prune_bad_tracks(m_event->seedTracks_);
+
   // partition recseeds into eta bins
   for (int iseed = 0; iseed < m_event->seedTracks_.size(); ++iseed)
   {
@@ -657,6 +779,8 @@ void MkBuilder::FindTracksBestHit(EventOfCandidates& event_of_cands)
 
 void MkBuilder::find_tracks_load_seeds()
 {
+  prune_bad_tracks(m_event->seedTracks_);
+
   EventOfCombCandidates &event_of_comb_cands = m_event_tmp->m_event_of_comb_cands;
 
   for (int iseed = 0; iseed < m_event->seedTracks_.size(); ++iseed)
@@ -870,6 +994,18 @@ void MkBuilder::find_tracks_in_layers(EtaBinOfCombCandidates &etabin_of_comb_can
       std::vector<Track> &scands = etabin_of_comb_candidates.m_candidates[iseed];
       for (int ic = 0; ic < scands.size(); ++ic)
       {
+
+	if (scands[ic].label() > 230 && scands[ic].label() < 240) //267
+	{
+	  std::cout << scands[ic].label() << " (" << ic << "): ";
+	  for (int jlay = 0; jlay < scands[ic].nTotalHits(); jlay++){
+	    //	    std::cout << scands[ic].getHitIdx(jlay) << " ";
+	    if (scands[ic].getHitIdx(jlay) >= 0) std::cout << m_event_of_hits.m_layers_of_hits[jlay].m_hits[scands[ic].getHitIdx(jlay)].mcHitID() << " ";	
+	    else std::cout << scands[ic].getHitIdx(jlay) << " ";
+	  }
+	  std::cout << std::endl;
+	}
+
         if (scands[ic].getLastHitIdx() >= -1)
         {
           seed_cand_idx.push_back(std::pair<int,int>(iseed,ic));
@@ -1045,6 +1181,37 @@ void MkBuilder::fit_seeds_tbb()
       }
     }
   );
+
+  // // remap hits for processing
+  // remap_seed_hits();
+
+  // TrackVec tmpseeds;
+  // tmpseeds.reserve(seedtracks.size());
+  // int nreal = 0;
+  // for (int itrack = 0; itrack < seedtracks.size(); itrack++)
+  // {
+  //   Track& tkcand = seedtracks[itrack];
+  //   TrackExtra extra(tkcand.label());
+  //   extra.setMCTrackIDInfo(tkcand, m_event->layerHits_, m_event->simHitsInfo_);
+  //   int mctrk = extra.mcTrackID();
+    
+  //   if (mctrk >= 0) nreal++;
+
+  //   if (tkcand.chi2() < 3.0) tmpseeds.push_back(tkcand);
+  // }
+
+  // int nfreal = 0;
+  // for (int itrack = 0; itrack < tmpseeds.size(); itrack++)
+  // {
+  //   Track& tkcand = seedtracks[itrack];
+  //   TrackExtra extra(tkcand.label());
+  //   extra.setMCTrackIDInfo(tkcand, m_event->layerHits_, m_event->simHitsInfo_);
+  //   int mctrk = extra.mcTrackID();
+    
+  //   if (mctrk >= 0) nfreal++;
+  // }
+
+  //  std::cout << "nseeds: " << seedtracks.size() << " nreal: " << nreal << " ntmpseeds: " << tmpseeds.size() << " nfreal: " << nfreal << std::endl;
 
   //ok now, we should have all seeds fitted in recseeds
   dcall(print_seeds(seedtracks));

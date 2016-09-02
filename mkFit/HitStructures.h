@@ -374,6 +374,8 @@ public:
     {
       m_etabins_of_comb_candidates[bin].InsertSeed(seed);
     } 
+    else std::cout << "UGHHH: " << seed.label() << std::endl;
+      
 #ifdef DEBUG
     else { dprint("excluding seed with r=" << seed.posR() << " etaBin=" << bin); };
 #endif

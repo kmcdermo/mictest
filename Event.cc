@@ -273,11 +273,11 @@ void Event::Validate(){
   // KM: Config tree just filled once... in main.cc
   if (Config::normal_val) {
     validation_.fillSeedTree(*this);
-    // validation_.setTrackExtras(*this);
-    // validation_.makeSimTkToRecoTksMaps(*this);
-    // validation_.makeSeedTkToRecoTkMaps(*this);
-    // validation_.fillEfficiencyTree(*this);
-    // validation_.fillFakeRateTree(*this);
+    validation_.setTrackExtras(*this);
+    validation_.makeSimTkToRecoTksMaps(*this);
+    validation_.makeSeedTkToRecoTkMaps(*this);
+    //validation_.fillEfficiencyTree(*this);
+    validation_.fillFakeRateTree(*this);
     if (Config::full_val) {
       validation_.fillSegmentTree(segmentMap_,evtID_);
       validation_.fillBranchTree(evtID_);

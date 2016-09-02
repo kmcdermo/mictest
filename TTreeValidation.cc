@@ -671,18 +671,34 @@ void TTreeValidation::initializeSeedTree()
 void TTreeValidation::alignTrackExtra(TrackVec& evt_tracks, TrackExtraVec& evt_extras)
 {
   TrackExtraVec trackExtra_tmp;
+  trackExtra_tmp.reserve(evt_tracks.size());
 
   // align temporary tkExVec with new track collection ordering
-  for (auto&& track : evt_tracks){ 
-    trackExtra_tmp.push_back(evt_extras[track.label()]); // label is old seedID!
+
+  int j = 0;
+
+  for (auto&& evt_track : evt_tracks)
+  {
+
+
+    trackExtra_tmp.push_back(evt_extras[evt_track.label()]); // label is old seedID!
+
+    //    if (j < 271) std::cout << "j : " << j << " l:" << evt_track.label() << " s:" << evt_extras[evt_track.label()].seedID() << std::endl;
+
+  
+    j++;
   }
+
+  //  std::cout << "----------------" << std::endl;
 
   // now copy the temporary back in the old one
   evt_extras = trackExtra_tmp;
   
   // redo track labels to match index in vector
-  for (int i = 0; i < evt_tracks.size(); i++){
-    evt_tracks[i].setLabel(i);
+  int i = 0;
+  for (auto&& evt_track : evt_tracks)
+  {
+    evt_track.setLabel(i); i++;
   }
 }
 
@@ -1675,7 +1691,7 @@ void TTreeValidation::fillFakeRateTree(const Event& ev){
 	iTkMatches_build_FR_ = -99;
       } // matched seed to build, not build to sim
     }
-
+  
     else { // seed has no matching build track (therefore no matching sim to build track)
       seedmask_build_FR_ = 0; // quick logic
 
