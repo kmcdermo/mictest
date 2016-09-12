@@ -288,6 +288,10 @@ void Event::Validate(){
   if (Config::super_debug) { // super debug mode
     validation_.fillDebugTree(*this);
   }
+
+  if (Config::fit_val) { // fit val for z-phi tuning
+    validation_.fillFitTree();
+  }
 }
 
 void Event::PrintStats(const TrackVec& trks, TrackExtraVec& trkextras)

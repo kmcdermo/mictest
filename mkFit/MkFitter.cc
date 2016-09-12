@@ -454,7 +454,7 @@ void MkFitter::ConformalFitTracks(bool fitting, int beg, int end)
   }
 }
 
-void MkFitter::FitTracks(const int N_proc)
+void MkFitter::FitTracks(const int N_proc, const Event * ev)
 {
   // Fitting loop.
 
@@ -467,10 +467,28 @@ void MkFitter::FitTracks(const int N_proc)
     propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[hi],
                            Err[iP], Par[iP], N_proc);
 
+    // iP is output
+    if (Config::fit_val) MkFitter::CollectFitValidation(hi,ev);
+
     updateParametersMPlex(Err[iP], Par[iP], Chg, msErr[hi], msPar[hi],
                           Err[iC], Par[iC], N_proc);
   }
   // XXXXX What's with chi2?
+}
+
+void MkFitter::CollectFitValidation(const int hi, const Event * ev) const
+{
+  using idx_t = Matriplex::idx_t;
+  const idx_t N = NN;
+
+  for (int n = 0; n < NN; ++n)
+  {
+    const float pphi  = getPhi(Par[iP](n,0,0),Par[iP](n,1,0));
+    const float pephi = getPhiErr2(Par[iP](n,0,0),Par[iP](n,1,0),Err[iP](n,0,0),Err[iP](n,1,1),Err[iP](n,0,1));
+    const float mphi  = getPhi(msPar[hi](n,0,0),msPar[hi](n,1,0));
+
+    ev->validation_.collectFitInfo(Par[iP](n,2,0),Err[iP](n,2,2),msPar[hi](n,2,0),pphi,pephi,mphi,hi,Label(n,0,0));
+  }
 }
 
 void MkFitter::FitTracksTestEndcap(const int N_proc, const Event* ev)
