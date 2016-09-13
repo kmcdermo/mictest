@@ -131,6 +131,33 @@ double runFittingTestPlex(Event& ev, std::vector<Track>& rectracks)
    // Reserves should be made for maximum possible number (but this is just
    // measurments errors, params).
 
+   for (auto&& seedtrack : ev.seedTracks_)
+   {
+     if (seedtrack.label() < 0) continue;
+     const Track& simtrack = simtracks[seedtrack.label()];
+     
+     std::cout << "seed ids[" << seedtrack.label() << "]" << std::endl;
+     for (int hi = 0; hi < Config::nlayers_per_seed; ++hi)
+     {
+       std::cout << seedtrack.getHitIdx(hi) << " ";
+     }
+     std::endl;
+
+     std::cout << "sim ids[" << simtrack.label() << "]" << std::endl;
+     for (int hi = 0; hi < Nhits; ++hi)
+     {
+       std::cout << simtrack.getHitIdx(hi) << " ";
+     }
+     std::endl;
+
+     for (int hi = 0; hi < Nhits; ++hi)
+     {
+       seedtrack.setHitIdx(hi,simtrack.getHitIdx(hi));
+     }
+   }
+
+   return 0.0;
+
    int theEnd = ( (Config::endcapTest && Config::readCmsswSeeds) ? ev.seedTracks_.size() : simtracks.size());
    int count = (theEnd + NN - 1)/NN;
 
@@ -157,16 +184,20 @@ double runFittingTestPlex(Event& ev, std::vector<Track>& rectracks)
 	    mkfp->InputTracksAndHits(simtracks, ev.layerHits_, itrack, end);
 	  }
 	  mkfp->FitTracksTestEndcap(end - itrack, &ev);
-	} else {
-	  if (theEnd < end) {
-	    end = theEnd;
-	    mkfp->InputTracksAndHits(simtracks, ev.layerHits_, itrack, end);
-	  } else {
-	    mkfp->SlurpInTracksAndHits(simtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
+	} else { // barrel test
+	  if (Config::readCmsswSeeds) {
+	    mkfp->InputSeedsTracksAndHits(ev.seedTracks_,simtracks, ev.layerHits_, itrack, end);
+	  } else { // barrel toymc
+	    if (theEnd < end) {
+	      end = theEnd;
+	      mkfp->InputTracksAndHits(simtracks, ev.layerHits_, itrack, end);
+	    } else {
+	      mkfp->SlurpInTracksAndHits(simtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
+	    }
+
+	    if (Config::cf_fitting) mkfp->ConformalFitTracks(true, itrack, end);
+	    mkfp->FitTracks(end - itrack, &ev);
 	  }
-	  
-	  if (Config::cf_fitting) mkfp->ConformalFitTracks(true, itrack, end);
-	  mkfp->FitTracks(end - itrack, &ev);
 	}
 	mkfp->OutputFittedTracks(rectracks, itrack, end);
      }
