@@ -8,14 +8,19 @@
 #include "FitterCU.h"
 #endif
 
+#include <map>
+
+void   prepSeedTracks(const std::vector<Track>& simtracks,
+		      std::vector<Track>& seedtracks,
+		      std::map<int,int>& nHitsToTks);
 void   make_validation_tree(const char         *fname,
                             std::vector<Track> &simtracks,
-                            std::vector<Track> &rectracks);
-
-double runFittingTestPlex(Event& ev, std::vector<Track>& rectracks);
+                            std::vector<Track> &fittracks);
+double runFittingTestPlex(Event& ev, std::vector<Track>& fittracks);
+double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks);
 
 #ifdef USE_CUDA
-double runFittingTestPlexGPU(FitterCU<float> &cuFitter, Event& ev, std::vector<Track>& rectracks);
+double runFittingTestPlexGPU(FitterCU<float> &cuFitter, Event& ev, std::vector<Track>& fittracks);
 #endif
 
 #endif

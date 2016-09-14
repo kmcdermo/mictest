@@ -1,4 +1,4 @@
-#include "fittest.h"
+#include "fittestMPlex.h"
 
 #include "Matrix.h"
 #include "KalmanUtils.h"
@@ -29,13 +29,37 @@
 #include "ittnotify.h"
 #endif
 
+inline bool isBadLabel     (const Track& track){return track.label()<0;}
+inline bool isNotEnoughHits(const Track& track){return track.nFoundHits()<Config::nLayers/2;}
+inline bool sortByNhits    (const Track& track1, const Track& track2){return track1.nFoundHits()>track2.nFoundHits();}
+
+void prepSeedTracks(const std::vector<Track>& simtracks, std::vector<Track>& seedtracks, std::map<int,int>& nHitsToTks)
+{
+  seedtracks.erase(std::remove_if(seedtracks.begin(),seedtracks.end(),isBadLabel),seedtracks.end());
+  
+  for (auto&& seedtrack : seedtracks)
+  {
+    const Track& simtrack = simtracks[seedtrack.label()];
+    for (int hi = 0; hi < Config::nLayers; ++hi)
+    {
+      seedtrack.setHitIdx(hi,simtrack.getHitIdx(hi));
+    }
+    seedtrack.setNGoodHitIdx();
+  }
+
+  seedtracks.erase(std::remove_if(seedtracks.begin(),seedtracks.end(),isNotEnoughHits),seedtracks.end());
+  std::sort(seedtracks.begin(),seedtracks.end(),sortByNhits);
+
+  for (auto&& seedtrack : seedtracks){nHitsToTks[seedtrack.nFoundHits()]++;}
+}
+
 //==============================================================================
 
 void make_validation_tree(const char         *fname,
                           std::vector<Track> &simtracks,
-                          std::vector<Track> &rectracks)
+                          std::vector<Track> &fittracks)
 {
-   assert(simtracks.size() == rectracks.size());
+   assert(simtracks.size() == fittracks.size());
 
    float pt_mc, pt_fit, pt_err, chg;
    int goodtrk = 0;
@@ -60,8 +84,8 @@ void make_validation_tree(const char         *fname,
    for (int i = 0; i < NT; ++i)
    {
       pt_mc  = simtracks[i].pT();
-      pt_fit = rectracks[i].pT();
-      pt_err = rectracks[i].epT() / pt_fit;
+      pt_fit = fittracks[i].pT();
+      pt_err = fittracks[i].epT() / pt_fit;
       chg = simtracks[i].charge();
 
 #ifndef NO_ROOT
@@ -119,10 +143,11 @@ namespace
   auto retfitr = [](MkFitter*   mkfp  ) { g_exe_ctx.m_fitters.ReturnToPool(mkfp);   };
 }
 
-double runFittingTestPlex(Event& ev, std::vector<Track>& rectracks)
+double runFittingTestPlex(Event& ev, std::vector<Track>& fittracks)
 {
    g_exe_ctx.populate(Config::numThreadsFinder);
-   std::vector<Track>& simtracks = ev.simTracks_;
+   std::vector<Track>& simtracks  = ev.simTracks_;
+   std::vector<Track>& seedtracks = ev.seedTracks_;
 
    const int Nhits = Config::nLayers;
    // XXX What if there's a missing / double layer?
@@ -131,34 +156,7 @@ double runFittingTestPlex(Event& ev, std::vector<Track>& rectracks)
    // Reserves should be made for maximum possible number (but this is just
    // measurments errors, params).
 
-   for (auto&& seedtrack : ev.seedTracks_)
-   {
-     if (seedtrack.label() < 0) continue;
-     const Track& simtrack = simtracks[seedtrack.label()];
-     
-     std::cout << "seed ids[" << seedtrack.label() << "]" << std::endl;
-     for (int hi = 0; hi < Config::nlayers_per_seed; ++hi)
-     {
-       std::cout << seedtrack.getHitIdx(hi) << " ";
-     }
-     std::endl;
-
-     std::cout << "sim ids[" << simtrack.label() << "]" << std::endl;
-     for (int hi = 0; hi < Nhits; ++hi)
-     {
-       std::cout << simtrack.getHitIdx(hi) << " ";
-     }
-     std::endl;
-
-     for (int hi = 0; hi < Nhits; ++hi)
-     {
-       seedtrack.setHitIdx(hi,simtrack.getHitIdx(hi));
-     }
-   }
-
-   return 0.0;
-
-   int theEnd = ( (Config::endcapTest && Config::readCmsswSeeds) ? ev.seedTracks_.size() : simtracks.size());
+   int theEnd = ( (Config::endcapTest && Config::readCmsswSeeds) ? seedtracks.size() : simtracks.size());
    int count = (theEnd + NN - 1)/NN;
 
 #ifdef USE_VTUNE_PAUSE
@@ -167,6 +165,8 @@ double runFittingTestPlex(Event& ev, std::vector<Track>& rectracks)
 
    double time = dtime();
 
+   std::cout << Config::numSeedsPerTask/NN << " " << theEnd << " " << count << std::endl;
+   
    tbb::parallel_for(tbb::blocked_range<int>(0, count, std::max(1, Config::numSeedsPerTask/NN)),
      [&](const tbb::blocked_range<int>& i)
    {
@@ -176,30 +176,28 @@ double runFittingTestPlex(Event& ev, std::vector<Track>& rectracks)
      {
         int itrack = it*NN;
         int end = itrack + NN;
+
+	std::cout << "it: " << it << " itrack: " << itrack << " end: " << end << std::endl;
+
 	if (Config::endcapTest) { 
 	  //fixme, check usage of SlurpInTracksAndHits for endcapTest
 	  if (Config::readCmsswSeeds) {
-	    mkfp->InputSeedsTracksAndHits(ev.seedTracks_,simtracks, ev.layerHits_, itrack, end);
+	    mkfp->InputSeedsTracksAndHits(seedtracks,simtracks, ev.layerHits_, itrack, end);
 	  } else {
 	    mkfp->InputTracksAndHits(simtracks, ev.layerHits_, itrack, end);
 	  }
 	  mkfp->FitTracksTestEndcap(end - itrack, &ev);
 	} else { // barrel test
-	  if (Config::readCmsswSeeds) {
-	    mkfp->InputSeedsTracksAndHits(ev.seedTracks_,simtracks, ev.layerHits_, itrack, end);
-	  } else { // barrel toymc
-	    if (theEnd < end) {
-	      end = theEnd;
-	      mkfp->InputTracksAndHits(simtracks, ev.layerHits_, itrack, end);
-	    } else {
-	      mkfp->SlurpInTracksAndHits(simtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
-	    }
-
-	    if (Config::cf_fitting) mkfp->ConformalFitTracks(true, itrack, end);
-	    mkfp->FitTracks(end - itrack, &ev);
+	  if (theEnd < end) {
+	    end = theEnd;
+	    mkfp->InputTracksAndHits(simtracks, ev.layerHits_, itrack, end);
+	  } else {
+	    mkfp->SlurpInTracksAndHits(simtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
 	  }
+	  if (Config::cf_fitting) mkfp->ConformalFitTracks(true, itrack, end);
+	  mkfp->FitTracks(end - itrack, &ev);
 	}
-	mkfp->OutputFittedTracks(rectracks, itrack, end);
+	mkfp->OutputFittedTracks(fittracks, itrack, end);
      }
    });
 
@@ -214,9 +212,64 @@ double runFittingTestPlex(Event& ev, std::vector<Track>& rectracks)
    return time;
 }
 
+double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
+{
+  g_exe_ctx.populate(Config::numThreadsFinder);
+  std::vector<Track>& simtracks  = ev.simTracks_;
+  std::vector<Track>& seedtracks = ev.seedTracks_;
+
+  std::map<int,int> nHitsToTks;
+  prepSeedTracks(simtracks,seedtracks,nHitsToTks);
+   
+#ifdef USE_VTUNE_PAUSE
+  __itt_resume();
+#endif
+  
+  double time = dtime();
+   
+  int previdx = 0;
+  for (auto&& indexinfo : nHitsToTks)
+  {
+    int theEnd = indexinfo.second + previdx;
+    int count = (theEnd + NN - 1)/NN;
+    tbb::parallel_for(tbb::blocked_range<int>(previdx, count, std::max(1, Config::numSeedsPerTask/NN)),
+      [&](const tbb::blocked_range<int>& i)
+    {
+      std::unique_ptr<MkFitter, decltype(retfitr)> mkfp(g_exe_ctx.m_fitters.GetFromPool(), retfitr);
+      mkfp->SetNhits(indexinfo.first);
+      for (int it = i.begin(); it < i.end(); ++it)
+      {
+	int itrack = it*NN;
+	int end = itrack + NN;
+       
+	if (theEnd < end) {
+	  end = theEnd;
+	  mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end);
+	} else {
+	  mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
+	}
+	
+	mkfp->FitTracks(end - itrack, &ev);
+	mkfp->OutputFittedTracks(fittracks, itrack, end);
+      }
+    });
+    previdx += theEnd;
+  }
+  
+  time = dtime() - time;
+  
+#ifdef USE_VTUNE_PAUSE
+  __itt_pause();
+#endif
+  
+  ev.Validate();
+				     
+  return time;
+}
+
 #ifdef USE_CUDA
 double runFittingTestPlexGPU(FitterCU<float> &cuFitter, 
-    Event& ev, std::vector<Track>& rectracks)
+    Event& ev, std::vector<Track>& fittracks)
 {
 
    std::vector<Track>& simtracks = ev.simTracks_;
@@ -259,7 +312,7 @@ double runFittingTestPlexGPU(FitterCU<float> &cuFitter,
                          simtracks, itrack, end, ev.layerHits_);
 
       double time_output = dtime();
-      mkfp->OutputFittedTracks(rectracks, itrack, end);
+      mkfp->OutputFittedTracks(fittracks, itrack, end);
       std::cerr << "Output time: " << (dtime() - time_output)*1e3 << std::endl;
    }
 

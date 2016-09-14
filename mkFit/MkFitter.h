@@ -72,8 +72,10 @@ public:
   int countInvalidHits(int itrack) const { return countInvalidHits(itrack, Nhits); }
 
   void InputTracksAndHits(const std::vector<Track>& tracks, const std::vector<HitVec>& layerHits, int beg, int end);
+  void InputSortedTracksAndHits(const std::vector<Track>& tracks, const std::vector<HitVec>& layerHits, int beg, int end);
   void InputTracksAndHits(const std::vector<Track>& tracks, const std::vector<LayerOfHits>& layerHits, int beg, int end);
   void SlurpInTracksAndHits(const std::vector<Track>&  tracks, const std::vector<HitVec>& layerHits, int beg, int end);
+  void SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks, const std::vector<HitVec>& layerHits, int beg, int end);
   void InputTracksAndHitIdx(const std::vector<Track>& tracks,
                             int beg, int end, bool inputProp);
   void InputTracksAndHitIdx(const std::vector<std::vector<Track> >& tracks, const std::vector<std::pair<int,int> >& idxs,
@@ -83,9 +85,11 @@ public:
   void InputSeedsTracksAndHits(const std::vector<Track>& seeds, const std::vector<Track>& tracks, const std::vector<HitVec>& layerHits, int beg, int end);
   void ConformalFitTracks(bool fitting, int beg, int end);
   void FitTracks(const int N_proc, const Event * ev);
+  void FitSortedTracks(const int N_proc, const Event * ev);
   void FitTracksTestEndcap(const int N_proc, const Event* ev);
 
   void CollectFitValidation(const int hi, const Event * ev) const;
+  void CollectSortedFitValidation(const int hi, const Event * ev) const;
 
   void OutputTracks(std::vector<Track>& tracks, int beg, int end, int iCP) const;
 

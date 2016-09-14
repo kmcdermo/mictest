@@ -32,8 +32,6 @@
 
 //==============================================================================
 
-std::vector<Track> plex_tracks;
-
 void initGeom(Geometry& geom)
 {
   std::cout << "Constructing SimpleGeometry Cylinder geometry" << std::endl;
@@ -65,6 +63,7 @@ namespace
   int   g_file_cur_ev = 0;
 
   bool  g_run_fit_std   = false;
+  bool  g_run_fit_sort  = false;
 
   bool  g_run_build_all = true;
   bool  g_run_build_bh  = false;
@@ -219,10 +218,9 @@ void test_standard()
     FitterCU<float> cuFitter(NN);
     cuFitter.allocateDevice();
     Event &ev = events[0];
-    std::vector<Track> plex_tracks_ev;
-    plex_tracks_ev.resize(ev.simTracks_.size());
+    ev.fitTracks_.resize(ev.simTracks_.size());
 
-    if (g_run_fit_std) runFittingTestPlexGPU(cuFitter, ev, plex_tracks_ev);
+    if (g_run_fit_std) runFittingTestPlexGPU(cuFitter, ev, ev.fitTracks_);
     cuFitter.freeDevice();
   }
 #endif
@@ -247,11 +245,10 @@ void test_standard()
       printf("==============================================================\n");
       printf("Processing event %d with thread %d\n", evt, idx);
       Event &ev = events[evt-1];
-      std::vector<Track> plex_tracks_ev;
-      plex_tracks_ev.resize(ev.simTracks_.size());
+      ev.fitTracks_.resize(ev.simTracks_.size());
       double tmp = 0, tmp2bh = 0, tmp2 = 0, tmp2ce = 0;
 
-      if (g_run_fit_std) tmp = runFittingTestPlexGPU(cuFitter, ev, plex_tracks_ev);
+      if (g_run_fit_std) tmp = runFittingTestPlexGPU(cuFitter, ev, ev.fitTracks_);
 
       printf("Matriplex fit = %.5f  -------------------------------------", tmp);
       printf("\n");
@@ -262,7 +259,7 @@ void test_standard()
       if (omp_get_num_threads() <= 1) {
         if (g_run_fit_std) {
           std::string tree_name = "validation-plex-" + std::to_string(evt) + ".root";
-          make_validation_tree(tree_name.c_str(), ev.simTracks_, plex_tracks_ev);
+          make_validation_tree(tree_name.c_str(), ev.simTracks_, ev.fitTracks_);
         }
       }
 #endif
@@ -304,13 +301,14 @@ void test_standard()
 
     // if (evt!=2985) continue;
 
-    plex_tracks.resize(ev.simTracks_.size());
+    ev.fitTracks_.resize(ev.simTracks_.size());
 
     double t_best[NT] = {0}, t_cur[NT];
 
     for (int b = 0; b < Config::finderReportBestOutOfN; ++b)
     {
-      t_cur[0] = (g_run_fit_std) ? runFittingTestPlex(ev, plex_tracks) : 0;
+      t_cur[0] = (g_run_fit_std)  ? runFittingTestPlex(ev, ev.fitTracks_) : 0;
+      t_cur[0] = (g_run_fit_sort) ? runFittingTestPlexSortedTracks(ev, ev.fitTracks_) : 0;
       t_cur[1] = (g_run_build_all || g_run_build_bh)  ? runBuildingTestPlexBestHit(ev) : 0;
       t_cur[2] = (g_run_build_all || g_run_build_std) ? runBuildingTestPlex(ev, ev_tmp) : 0;
       t_cur[3] = (g_run_build_all || g_run_build_ce)  ? runBuildingTestPlexCloneEngine(ev, ev_tmp) : 0;
@@ -334,7 +332,7 @@ void test_standard()
     for (int i = 0; i < NT; ++i) t_sum[i] += t_best[i];
     if (evt > 1) for (int i = 0; i < NT; ++i) t_skip[i] += t_best[i];
 
-    if (g_run_fit_std) make_validation_tree("validation-plex.root", ev.simTracks_, plex_tracks);
+    if (g_run_fit_std) make_validation_tree("validation-plex.root", ev.simTracks_, ev.fitTracks_);
   }
 #endif
   printf("\n");
@@ -409,6 +407,7 @@ int main(int argc, const char *argv[])
         "                           extra cloning thread is spawned for each of them\n"
         "  --fit-std                run standard fitting test (def: false)\n"
         "  --fit-std-only           run only standard fitting test (def: false)\n"
+        "  --fit-sort-only          run only sorted fitting test (def: false)\n"
         "  --build-bh               run best-hit building test (def: run all building tests)\n"
         "  --build-std              run standard building test\n"
         "  --build-ce               run clone-engine building test\n"
@@ -479,6 +478,11 @@ int main(int argc, const char *argv[])
     else if(*i == "--fit-std-only")
     {
       g_run_fit_std = true;
+      g_run_build_all = false; g_run_build_bh = false; g_run_build_std = false; g_run_build_ce = false;
+    }
+    else if(*i == "--fit-sort-only")
+    {
+      g_run_fit_sort = true; g_run_fit_std = false;
       g_run_build_all = false; g_run_build_bh = false; g_run_build_std = false; g_run_build_ce = false;
     }
     else if(*i == "--build-bh")

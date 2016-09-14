@@ -104,6 +104,11 @@ void MkFitter::InputTracksAndHits(const std::vector<Track>&  tracks,
   }
 }
 
+void MkFitter::InputSortedTracksAndHits(const std::vector<Track>&  tracks,
+					const std::vector<HitVec>& layerHits,
+					int beg, int end)
+{}
+
 void MkFitter::InputTracksAndHits(const std::vector<Track>&  tracks,
                                   const std::vector<LayerOfHits>& layerHits,
                                   int beg, int end)
@@ -229,6 +234,11 @@ void MkFitter::SlurpInTracksAndHits(const std::vector<Track>&  tracks,
   }
 #endif
 }
+
+void MkFitter::SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks,
+					  const std::vector<HitVec>& layerHits,
+					  int beg, int end)
+{}
 
 void MkFitter::InputTracksAndHitIdx(const std::vector<Track>& tracks,
                                     int beg, int end,
@@ -489,6 +499,35 @@ void MkFitter::CollectFitValidation(const int hi, const Event * ev) const
 
     ev->validation_.collectFitInfo(Par[iP](n,2,0),Err[iP](n,2,2),msPar[hi](n,2,0),pphi,pephi,mphi,hi,Label(n,0,0));
   }
+}
+
+void MkFitter::FitSortedTracks(const int N_proc, const Event * ev) 
+{
+  // for (int hi = 0; hi < Nhits; ++hi)
+  // {
+  //   propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[GoodLayer[hi]],
+  //                          Err[iP], Par[iP], N_proc);
+
+  //   if (Config::fit_val) MkFitter::CollectSortedFitValidation(hi,ev); // iP is output
+
+  //   updateParametersMPlex(Err[iP], Par[iP], Chg, msErr[GoodLayer[hi]], msPar[GoodLayer[hi]],
+  //                         Err[iC], Par[iC], N_proc);
+  // }
+}
+
+void MkFitter::CollectSortedFitValidation(const int hi, const Event * ev) const
+{
+  // using idx_t = Matriplex::idx_t;
+  // const idx_t N = NN;
+
+  // for (int n = 0; n < NN; ++n)
+  // {
+  //   const float pphi  = getPhi(Par[iP](n,0,0),Par[iP](n,1,0));
+  //   const float pephi = getPhiErr2(Par[iP](n,0,0),Par[iP](n,1,0),Err[iP](n,0,0),Err[iP](n,1,1),Err[iP](n,0,1));
+  //   const float mphi  = getPhi(msPar[GoodLay[hi]](n,0,0),msPar[GoodLay[hi]](n,1,0));
+
+  //   ev->validation_.collectFitInfo(Par[iP](n,2,0),Err[iP](n,2,2),msPar[GoodLay[hi]](n,2,0),pphi,pephi,mphi,Gohi,Label(n,0,0));
+  // }
 }
 
 void MkFitter::FitTracksTestEndcap(const int N_proc, const Event* ev)
