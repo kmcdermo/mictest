@@ -653,8 +653,9 @@ void TTreeValidation::initializeFitTree(){
   // fit tree(lots and lots of variables)
   fittree_ = new TTree("fittree","fittree");
 
-  fittree_->Branch("nlayers",&nlayers_fit_,"nlayers_fit_/I");
-  fittree_->Branch("id",&id_fit_,"id_fit_/I");
+  fittree_->Branch("nlayers",&nlayers_fit_,"nlayers/I");
+  fittree_->Branch("evtid",&evtid_fit_,"evtid/I");
+  fittree_->Branch("tkid",&tkid_fit_,"tkid/I");
 
   fittree_->Branch("z_prop",&z_prop_fit_,"z_prop[nlayers_fit_]/F");
   fittree_->Branch("ezz_prop",&ezz_prop_fit_,"ezz_prop[nlayers_fit_]/F");
@@ -917,13 +918,14 @@ void TTreeValidation::resetFitBranches()
   }  
 }
 
-void TTreeValidation::fillFitTree()
+void TTreeValidation::fillFitTree(int evtID)
 {
   std::lock_guard<std::mutex> locker(glock_); 
 
+  evtid_fit_ = evtID;
   for(auto&& fitvalmapmap : fitValTkMapMap_)
   {
-    id_fit_ = fitvalmapmap.first;
+    tkid_fit_ = fitvalmapmap.first;
     auto& fitvalmap = fitvalmapmap.second;
     resetFitBranches();
     for(int ilayer = 0; ilayer < Config::nLayers; ++ilayer)

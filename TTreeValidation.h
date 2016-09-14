@@ -120,7 +120,7 @@ public:
   void fillConformalTree(const Event& ev) override;
   void fillConfigTree() override;
   void fillTimeTree(const std::vector<double>& ticks) override;
-  void fillFitTree() override;
+  void fillFitTree(int evtID) override;
 
   void saveTTrees() override;
 
@@ -347,7 +347,7 @@ public:
 
   // Fit tree (for fine tuning z-phi windows in Matriplex only)
   TTree* fittree_;
-  int   nlayers_fit_=0,id_fit_=0;
+  int   nlayers_fit_=0,tkid_fit_=0,evtid_fit_=0;
   float z_prop_fit_[Config::nLayers],ezz_prop_fit_[Config::nLayers],z_hit_fit_[Config::nLayers];
   float phi_prop_fit_[Config::nLayers],ephi_prop_fit_[Config::nLayers],phi_hit_fit_[Config::nLayers];
 

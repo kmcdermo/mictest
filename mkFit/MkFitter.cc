@@ -530,6 +530,8 @@ void MkFitter::FitSortedTracks(const int N_proc, const Event * ev)
 {
   for (int hi = 0; hi < Nhits; ++hi)
   {
+    if (Config::readCmsswSeeeds && hi < Config::nlayers_per_seed) continue;
+
     propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[hi],
                            Err[iP], Par[iP], N_proc);
 
@@ -566,7 +568,7 @@ void MkFitter::FitTracksTestEndcap(const int N_proc, const Event* ev)
     {
 
       //if starting from seed, skip seed hits in fit (note there are only two hits in seeds since pxb1 is removed upfront, at least for now)
-      if (Config::readCmsswSeeds && hi<2) continue;
+      if (Config::readCmsswSeeds && hi< Config::nlayers_per_seed) continue;
       if (HitsIdx[hi].ConstAt(0, 0, 0)<0) continue;
 
       dprint("hit #" << hi << " hit  pos=" << msPar[hi].ConstAt(0, 0, 0) << ", " <<  msPar[hi].ConstAt(0, 0, 1) << ", " <<  msPar[hi].ConstAt(0, 0, 2));

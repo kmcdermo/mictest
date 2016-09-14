@@ -290,7 +290,7 @@ void Event::Validate(){
   }
 
   if (Config::fit_val) { // fit val for z-phi tuning
-    validation_.fillFitTree();
+    validation_.fillFitTree(evtID_);
   }
 }
 

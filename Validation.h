@@ -41,7 +41,7 @@ public:
   virtual void fillConformalTree(const Event&) {}
   virtual void fillConfigTree() {}
   virtual void fillTimeTree(const std::vector<double> &) {}
-  virtual void fillFitTree() {}
+  virtual void fillFitTree(int) {}
 
   virtual void saveTTrees() {}
 };
