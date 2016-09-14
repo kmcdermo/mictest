@@ -107,7 +107,35 @@ void MkFitter::InputTracksAndHits(const std::vector<Track>&  tracks,
 void MkFitter::InputSortedTracksAndHits(const std::vector<Track>&  tracks,
 					const std::vector<HitVec>& layerHits,
 					int beg, int end)
-{}
+{
+  int itrack;
+  for (int i = beg; i < end; ++i) {
+    itrack = i - beg;
+    const Track &trk = tracks[i];
+
+    Label(itrack, 0, 0) = trk.label();
+
+    Err[iC].CopyIn(itrack, trk.errors().Array());
+    Par[iC].CopyIn(itrack, trk.parameters().Array());
+
+    Chg(itrack, 0, 0) = trk.charge();
+    Chi2(itrack, 0, 0) = trk.chi2();
+
+    int pos = 0;
+    for (int hi = 0; hi < Config::nLayers; ++hi)
+    {
+      const int hidx = trk.getHitIdx(hi);
+      HitsIdx[hi](itrack, 0, 0) = hidx;
+
+      if (hidx<0) continue;
+      const Hit &hit = layerHits[hi][hidx];
+      GoodLayer[pos++](itrack, 0, 0) = hi;
+
+      msErr[pos].CopyIn(itrack, hit.errArray());
+      msPar[pos].CopyIn(itrack, hit.posArray());
+    }
+  }
+}
 
 void MkFitter::InputTracksAndHits(const std::vector<Track>&  tracks,
                                   const std::vector<LayerOfHits>& layerHits,
@@ -478,7 +506,7 @@ void MkFitter::FitTracks(const int N_proc, const Event * ev)
                            Err[iP], Par[iP], N_proc);
 
     // iP is output
-    if (Config::fit_val) MkFitter::CollectFitValidation(hi,ev);
+    if (Config::fit_val) MkFitter::CollectFitValidation(hi,N_proc,ev);
 
     updateParametersMPlex(Err[iP], Par[iP], Chg, msErr[hi], msPar[hi],
                           Err[iC], Par[iC], N_proc);
@@ -486,12 +514,9 @@ void MkFitter::FitTracks(const int N_proc, const Event * ev)
   // XXXXX What's with chi2?
 }
 
-void MkFitter::CollectFitValidation(const int hi, const Event * ev) const
+void MkFitter::CollectFitValidation(const int hi, const int N_proc, const Event * ev) const
 {
-  using idx_t = Matriplex::idx_t;
-  const idx_t N = NN;
-
-  for (int n = 0; n < NN; ++n)
+  for (int n = 0; n < N_proc; ++n)
   {
     const float pphi  = getPhi(Par[iP](n,0,0),Par[iP](n,1,0));
     const float pephi = getPhiErr2(Par[iP](n,0,0),Par[iP](n,1,0),Err[iP](n,0,0),Err[iP](n,1,1),Err[iP](n,0,1));
@@ -503,31 +528,28 @@ void MkFitter::CollectFitValidation(const int hi, const Event * ev) const
 
 void MkFitter::FitSortedTracks(const int N_proc, const Event * ev) 
 {
-  // for (int hi = 0; hi < Nhits; ++hi)
-  // {
-  //   propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[GoodLayer[hi]],
-  //                          Err[iP], Par[iP], N_proc);
+  for (int hi = 0; hi < Nhits; ++hi)
+  {
+    propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[hi],
+                           Err[iP], Par[iP], N_proc);
 
-  //   if (Config::fit_val) MkFitter::CollectSortedFitValidation(hi,ev); // iP is output
+    if (Config::fit_val) MkFitter::CollectSortedFitValidation(hi,N_proc,ev); // iP is output
 
-  //   updateParametersMPlex(Err[iP], Par[iP], Chg, msErr[GoodLayer[hi]], msPar[GoodLayer[hi]],
-  //                         Err[iC], Par[iC], N_proc);
-  // }
+    updateParametersMPlex(Err[iP], Par[iP], Chg, msErr[hi], msPar[hi],
+                          Err[iC], Par[iC], N_proc);
+  }
 }
 
-void MkFitter::CollectSortedFitValidation(const int hi, const Event * ev) const
+void MkFitter::CollectSortedFitValidation(const int hi, const int N_proc, const Event * ev) const
 {
-  // using idx_t = Matriplex::idx_t;
-  // const idx_t N = NN;
+  for (int n = 0; n < N_proc; ++n)
+  {
+    const float pphi  = getPhi(Par[iP](n,0,0),Par[iP](n,1,0));
+    const float pephi = getPhiErr2(Par[iP](n,0,0),Par[iP](n,1,0),Err[iP](n,0,0),Err[iP](n,1,1),Err[iP](n,0,1));
+    const float mphi  = getPhi(msPar[hi](n,0,0),msPar[hi](n,1,0));
 
-  // for (int n = 0; n < NN; ++n)
-  // {
-  //   const float pphi  = getPhi(Par[iP](n,0,0),Par[iP](n,1,0));
-  //   const float pephi = getPhiErr2(Par[iP](n,0,0),Par[iP](n,1,0),Err[iP](n,0,0),Err[iP](n,1,1),Err[iP](n,0,1));
-  //   const float mphi  = getPhi(msPar[GoodLay[hi]](n,0,0),msPar[GoodLay[hi]](n,1,0));
-
-  //   ev->validation_.collectFitInfo(Par[iP](n,2,0),Err[iP](n,2,2),msPar[GoodLay[hi]](n,2,0),pphi,pephi,mphi,Gohi,Label(n,0,0));
-  // }
+    ev->validation_.collectFitInfo(Par[iP](n,2,0),Err[iP](n,2,2),msPar[hi](n,2,0),pphi,pephi,mphi,GoodLayer[hi](n,0,0),Label(n,0,0));
+  }
 }
 
 void MkFitter::FitTracksTestEndcap(const int N_proc, const Event* ev)
@@ -625,6 +647,34 @@ void MkFitter::OutputFittedTracksAndHitIdx(std::vector<Track>& tracks, int beg, 
 
     tracks[i].resetHits();
     for (int hi = 0; hi < Nhits; ++hi)
+    {
+      tracks[i].addHitIdx(HitsIdx[hi](itrack, 0, 0),0.);
+    }
+  }
+}
+
+void MkFitter::OutputSortedFittedTracksAndHitIdx(std::vector<Track>& tracks, int beg, int end,
+						 bool outputProp) const
+{
+  // Copies last track parameters (updated) into Track objects and up to Nhits.
+  // The tracks vector should be resized to allow direct copying.
+
+  const int iO = outputProp ? iP : iC;
+
+  int itrack = 0;
+  for (int i = beg; i < end; ++i, ++itrack)
+  {
+    Err[iO].CopyOut(itrack, tracks[i].errors_nc().Array());
+    Par[iO].CopyOut(itrack, tracks[i].parameters_nc().Array());
+
+    tracks[i].setCharge(Chg(itrack, 0, 0));
+    tracks[i].setChi2(Chi2(itrack, 0, 0));
+    tracks[i].setLabel(Label(itrack, 0, 0));
+
+    // XXXXX chi2 is not set (also not in SMatrix fit, it seems)
+
+    tracks[i].resetHits();
+    for (int hi = 0; hi < Config::nLayers; ++hi)
     {
       tracks[i].addHitIdx(HitsIdx[hi](itrack, 0, 0),0.);
     }

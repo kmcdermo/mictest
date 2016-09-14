@@ -31,7 +31,7 @@
 
 inline bool isBadLabel     (const Track& track){return track.label()<0;}
 inline bool isNotEnoughHits(const Track& track){return track.nFoundHits()<Config::nLayers/2;}
-inline bool sortByNhits    (const Track& track1, const Track& track2){return track1.nFoundHits()>track2.nFoundHits();}
+inline bool sortByLessNhits(const Track& track1, const Track& track2){return track1.nFoundHits()<track2.nFoundHits();}
 
 void prepSeedTracks(const std::vector<Track>& simtracks, std::vector<Track>& seedtracks, std::map<int,int>& nHitsToTks)
 {
@@ -48,7 +48,7 @@ void prepSeedTracks(const std::vector<Track>& simtracks, std::vector<Track>& see
   }
 
   seedtracks.erase(std::remove_if(seedtracks.begin(),seedtracks.end(),isNotEnoughHits),seedtracks.end());
-  std::sort(seedtracks.begin(),seedtracks.end(),sortByNhits);
+  std::sort(seedtracks.begin(),seedtracks.end(),sortByLessNhits);
 
   for (auto&& seedtrack : seedtracks){nHitsToTks[seedtrack.nFoundHits()]++;}
 }
@@ -177,8 +177,6 @@ double runFittingTestPlex(Event& ev, std::vector<Track>& fittracks)
         int itrack = it*NN;
         int end = itrack + NN;
 
-	std::cout << "it: " << it << " itrack: " << itrack << " end: " << end << std::endl;
-
 	if (Config::endcapTest) { 
 	  //fixme, check usage of SlurpInTracksAndHits for endcapTest
 	  if (Config::readCmsswSeeds) {
@@ -220,44 +218,47 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
 
   std::map<int,int> nHitsToTks;
   prepSeedTracks(simtracks,seedtracks,nHitsToTks);
-   
+  fittracks.resize(seedtracks.size());
+  
 #ifdef USE_VTUNE_PAUSE
   __itt_resume();
 #endif
   
   double time = dtime();
-   
+
   int previdx = 0;
   for (auto&& indexinfo : nHitsToTks)
   {
-    int theEnd = indexinfo.second + previdx;
-    int count = (theEnd + NN - 1)/NN;
-    tbb::parallel_for(tbb::blocked_range<int>(previdx, count, std::max(1, Config::numSeedsPerTask/NN)),
+    const int theLocalEnd  = indexinfo.second;
+    const int theGlobalEnd = previdx+theLocalEnd;
+    const int count = (theLocalEnd + NN - 1)/NN;
+    
+    tbb::parallel_for(tbb::blocked_range<int>(0, count, std::max(1, Config::numSeedsPerTask/NN)),
       [&](const tbb::blocked_range<int>& i)
     {
       std::unique_ptr<MkFitter, decltype(retfitr)> mkfp(g_exe_ctx.m_fitters.GetFromPool(), retfitr);
       mkfp->SetNhits(indexinfo.first);
       for (int it = i.begin(); it < i.end(); ++it)
       {
-	int itrack = it*NN;
+	int itrack = previdx+it*NN;
 	int end = itrack + NN;
        
-	if (theEnd < end) {
-	  end = theEnd;
+	if (theGlobalEnd < end) {
+	  end = theGlobalEnd;
 	  mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end);
 	} else {
-	  mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
+	  mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
+	  //	  mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
 	}
-	
-	mkfp->FitTracks(end - itrack, &ev);
-	mkfp->OutputFittedTracks(fittracks, itrack, end);
+	mkfp->FitSortedTracks(end - itrack, &ev);
+	mkfp->OutputSortedFittedTracks(fittracks, itrack, end);
       }
     });
-    previdx += theEnd;
+    previdx += theLocalEnd;
   }
-  
+
   time = dtime() - time;
-  
+
 #ifdef USE_VTUNE_PAUSE
   __itt_pause();
 #endif
