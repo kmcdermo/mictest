@@ -530,7 +530,7 @@ void MkFitter::FitSortedTracks(const int N_proc, const Event * ev)
 {
   for (int hi = 0; hi < Nhits; ++hi)
   {
-    if (Config::readCmsswSeeeds && hi < Config::nlayers_per_seed) continue;
+    if (Config::readCmsswSeeds && hi < Config::nlayers_per_seed) continue;
 
     propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[hi],
                            Err[iP], Par[iP], N_proc);
