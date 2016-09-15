@@ -871,26 +871,16 @@ void computeChi2MPlex(const MPlexLS &psErr,  const MPlexLV& psPar, const MPlexQI
   // updateParametersContext ctx;
   //assert((long long)(&updateCtx.propErr.fArray[0]) % 64 == 0);
 
-  MPlexLS propErr;
-  MPlexLV propPar;
-  // do a full propagation step to correct for residual distance from the hit radius - need the charge for this
-  if (Config::useCMSGeom) {
-    propagateHelixToRMPlex(psErr,  psPar, inChg,  msPar, propErr, propPar, N_proc);
-  } else {
-    propErr = psErr;
-    propPar = psPar;
-  }
-
 #ifdef DEBUG
   {
     dmutex_guard;
-    printf("propPar:\n");
+    printf("psPar:\n");
     for (int i = 0; i < 6; ++i) { 
-      printf("%8f ", propPar.ConstAt(0,0,i)); printf("\n");
+      printf("%8f ", psPar.ConstAt(0,0,i)); printf("\n");
     } printf("\n");
-    printf("propErr:\n");
+    printf("psErr:\n");
     for (int i = 0; i < 6; ++i) { for (int j = 0; j < 6; ++j)
-        printf("%8f ", propErr.At(0,i,j)); printf("\n");
+        printf("%8f ", psErr.At(0,i,j)); printf("\n");
     } printf("\n");
     printf("msPar:\n");
     for (int i = 0; i < 3; ++i) {
@@ -916,15 +906,15 @@ void computeChi2MPlex(const MPlexLS &psErr,  const MPlexLV& psPar, const MPlexQI
   MPlexQF rotT01;
   for (int n = 0; n < NN; ++n) {
     const float r = hipo(msPar.ConstAt(n, 0, 0), msPar.ConstAt(n, 1, 0));
-    rotT00.At(n, 0, 0) = -(msPar.ConstAt(n, 1, 0)+propPar.ConstAt(n, 1, 0))/(2*r);
-    rotT01.At(n, 0, 0) =  (msPar.ConstAt(n, 0, 0)+propPar.ConstAt(n, 0, 0))/(2*r);
+    rotT00.At(n, 0, 0) = -(msPar.ConstAt(n, 1, 0)+psPar.ConstAt(n, 1, 0))/(2*r);
+    rotT01.At(n, 0, 0) =  (msPar.ConstAt(n, 0, 0)+psPar.ConstAt(n, 0, 0))/(2*r);
   }
 
   MPlexHV res_glo;   //position residual in global coordinates
-  SubtractFirst3(msPar, propPar, res_glo);
+  SubtractFirst3(msPar, psPar, res_glo);
   
   MPlexHS resErr_glo;//covariance sum in global position coordinates
-  AddIntoUpperLeft3x3(propErr, msErr, resErr_glo);
+  AddIntoUpperLeft3x3(psErr, msErr, resErr_glo);
 
   MPlex2V res_loc;   //position residual in local coordinates
   RotateResidulsOnTangentPlane(rotT00,rotT01,res_glo,res_loc);
