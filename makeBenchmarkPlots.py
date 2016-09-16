@@ -88,8 +88,8 @@ for test in ['BH','CE','CEST','ST','TBBST','FIT']:
     nvu = '8int'
     if 'mic' in hORm: nvu = '16int'
     thvals = [1,3,7,21]
-    if 'TBB' in test or 'BH' in test : thvals = [1,3,7,10,12,14,16,21]
-    if 'mic' in hORm: thvals = [1,3,7,21,42,63,84,105,126,147,168,189,210]
+    if 'TBB' in test or 'BH' in test : thvals = [1,2,3,4,6,8,10,12,16,20,24]
+    if 'mic' in hORm: thvals = [1,3,5,15,30,45,60,75,90,105,120,150,180,210,240]
     g_TH = ROOT.TGraph(len(thvals))
     g_TH_speedup = ROOT.TGraph(len(thvals))
     for th in thvals:
