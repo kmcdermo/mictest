@@ -248,6 +248,7 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
 	  mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end);
 	} else {
 	  mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
+	  //	  mkfp->InputTrackGoodLayers(seedtracks, itrack, end);
 	  //	  mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
 	}
 	mkfp->FitSortedTracks(end - itrack, &ev);

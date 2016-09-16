@@ -120,7 +120,7 @@ public:
   void fillConformalTree(const Event& ev) override;
   void fillConfigTree() override;
   void fillTimeTree(const std::vector<double>& ticks) override;
-  void fillFitTree(int evtID) override;
+  void fillFitTree(const Event& ev) override;
 
   void saveTTrees() override;
 
@@ -350,6 +350,8 @@ public:
   int   nlayers_fit_=0,tkid_fit_=0,evtid_fit_=0;
   float z_prop_fit_[Config::nLayers],ezz_prop_fit_[Config::nLayers],z_hit_fit_[Config::nLayers];
   float phi_prop_fit_[Config::nLayers],ephi_prop_fit_[Config::nLayers],phi_hit_fit_[Config::nLayers];
+  float mc_eta_fit_=0.,mc_phi_fit_=0.,mc_pt_fit_=0.;
+  int   mc_nhits_fit_=0;
 
   std::mutex glock_;
 };

@@ -75,6 +75,7 @@ public:
   void InputTracksAndHits(const std::vector<Track>& tracks, const std::vector<HitVec>& layerHits, int beg, int end);
   void InputSortedTracksAndHits(const std::vector<Track>& tracks, const std::vector<HitVec>& layerHits, int beg, int end);
   void InputTracksAndHits(const std::vector<Track>& tracks, const std::vector<LayerOfHits>& layerHits, int beg, int end);
+  void InputTrackGoodLayers(const std::vector<Track>&  tracks, int beg, int end);
   void SlurpInTracksAndHits(const std::vector<Track>&  tracks, const std::vector<HitVec>& layerHits, int beg, int end);
   void SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks, const std::vector<HitVec>& layerHits, int beg, int end);
   void InputTracksAndHitIdx(const std::vector<Track>& tracks,

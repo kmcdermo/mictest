@@ -184,6 +184,24 @@ void MkFitter::InputTracksAndHits(const std::vector<Track>&  tracks,
   }
 }
 
+void MkFitter::InputTrackGoodLayers(const std::vector<Track>&  tracks,
+				    int beg, int end)
+{
+  int itrack;
+  for (int i = beg; i < end; ++i) {
+    itrack = i - beg;
+    const Track &trk = tracks[i];
+
+    int pos = 0;
+    for (int hi = 0; hi < Config::nLayers; ++hi)
+    {
+      const int hidx = trk.getHitIdx(hi);
+      if (hidx<0) continue;
+      GoodLayer[pos++](itrack, 0, 0) = hi;
+    }
+  }
+}
+
 void MkFitter::SlurpInTracksAndHits(const std::vector<Track>&  tracks,
                                     const std::vector<HitVec>& layerHits,
                                     int beg, int end)
