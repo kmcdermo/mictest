@@ -918,14 +918,16 @@ void TTreeValidation::resetFitBranches()
   }  
 }
 
-void TTreeValidation::fillFitTree(int evtID)
+void TTreeValidation::fillFitTree(const Event& ev)
 {
   std::lock_guard<std::mutex> locker(glock_); 
 
-  evtid_fit_ = evtID;
+  evtid_fit_ = ev.evtID();
+  const auto& simtracks = ev.simTracks_;
   for(auto&& fitvalmapmap : fitValTkMapMap_)
   {
     tkid_fit_ = fitvalmapmap.first;
+    const auto& simtrack = simtracks[tkid_fit_];
     auto& fitvalmap = fitvalmapmap.second;
     resetFitBranches();
     for(int ilayer = 0; ilayer < Config::nLayers; ++ilayer)
@@ -941,6 +943,12 @@ void TTreeValidation::fillFitTree(int evtID)
 	phi_hit_fit_[ilayer]   = fitval.mphi;
       }
     }
+    
+    mc_eta_fit_   = simtrack.momEta();
+    mc_phi_fit_   = simtrack.momPhi();
+    mc_pt_fit_    = simtrack.pT();
+    mc_nhits_fit_ = simtrack.nFoundHits();
+    
     fittree_->Fill();
   } 
 }
