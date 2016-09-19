@@ -33,23 +33,27 @@ inline bool isBadLabel     (const Track& track){return track.label()<0;}
 inline bool isNotEnoughHits(const Track& track){return track.nFoundHits()<Config::nLayers/2;}
 inline bool sortByLessNhits(const Track& track1, const Track& track2){return track1.nFoundHits()<track2.nFoundHits();}
 
-void prepSeedTracks(const std::vector<Track>& simtracks, std::vector<Track>& seedtracks, std::map<int,int>& nHitsToTks)
+void mergeSimTksIntoSeedTks(std::vector<Track>& simtracks, std::vector<Track>& seedtracks)
 {
   seedtracks.erase(std::remove_if(seedtracks.begin(),seedtracks.end(),isBadLabel),seedtracks.end());
-  
+
   for (auto&& seedtrack : seedtracks)
   {
-    const Track& simtrack = simtracks[seedtrack.label()];
+    Track& simtrack = simtracks[seedtrack.label()];
     for (int hi = 0; hi < Config::nLayers; ++hi)
     {
       seedtrack.setHitIdx(hi,simtrack.getHitIdx(hi));
     }
+    simtrack.setNGoodHitIdx(); // for validation
     seedtrack.setNGoodHitIdx();
   }
 
-  seedtracks.erase(std::remove_if(seedtracks.begin(),seedtracks.end(),isNotEnoughHits),seedtracks.end());
-  std::sort(seedtracks.begin(),seedtracks.end(),sortByLessNhits);
+  if (Config::prune_tracks) seedtracks.erase(std::remove_if(seedtracks.begin(),seedtracks.end(),isNotEnoughHits),seedtracks.end()); 
+}
 
+void prepSeedTracks(std::vector<Track>& seedtracks, std::map<int,int>& nHitsToTks)
+{
+  std::sort(seedtracks.begin(),seedtracks.end(),sortByLessNhits);
   for (auto&& seedtrack : seedtracks){nHitsToTks[seedtrack.nFoundHits()]++;}
 }
 
@@ -165,8 +169,6 @@ double runFittingTestPlex(Event& ev, std::vector<Track>& fittracks)
 
    double time = dtime();
 
-   std::cout << Config::numSeedsPerTask/NN << " " << theEnd << " " << count << std::endl;
-   
    tbb::parallel_for(tbb::blocked_range<int>(0, count, std::max(1, Config::numSeedsPerTask/NN)),
      [&](const tbb::blocked_range<int>& i)
    {
@@ -213,18 +215,21 @@ double runFittingTestPlex(Event& ev, std::vector<Track>& fittracks)
 double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
 {
   g_exe_ctx.populate(Config::numThreadsFinder);
+
+  // prepare track collections
   std::vector<Track>& simtracks  = ev.simTracks_;
   std::vector<Track>& seedtracks = ev.seedTracks_;
+  mergeSimTksIntoSeedTks(simtracks,seedtracks);
 
-  std::map<int,int> nHitsToTks;
-  prepSeedTracks(simtracks,seedtracks,nHitsToTks);
-  fittracks.resize(seedtracks.size());
-  
 #ifdef USE_VTUNE_PAUSE
   __itt_resume();
 #endif
   
   double time = dtime();
+
+  std::map<int,int> nHitsToTks;
+  prepSeedTracks(seedtracks,nHitsToTks);
+  fittracks.resize(seedtracks.size());
 
   int previdx = 0;
   for (auto&& indexinfo : nHitsToTks)
@@ -242,15 +247,21 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
       {
 	int itrack = previdx+it*NN;
 	int end = itrack + NN;
-       
-	if (theGlobalEnd < end) {
+
+	// "compactify" matriplexes first with only the relevant layers
+	// even though tracks now grouped by nHits
+	// distribution of hits on layers different between tracks!
+	mkfp->InputTrackGoodLayers(seedtracks, itrack, end); 
+
+	// copy/slurp In equivalents
+       	if (theGlobalEnd < end) {
 	  end = theGlobalEnd;
 	  mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end);
 	} else {
-	  mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
-	  //	  mkfp->InputTrackGoodLayers(seedtracks, itrack, end);
-	  //	  mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
+	  mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
 	}
+	
+	// do the fit over the block and then output the compactified mplexes
 	mkfp->FitSortedTracks(end - itrack, &ev);
 	mkfp->OutputSortedFittedTracks(fittracks, itrack, end);
       }

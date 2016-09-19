@@ -153,6 +153,7 @@ namespace Config
 
   // config on fitting
   extern bool cf_fitting;
+  extern bool prune_tracks;
 
   //fixme: these should not be constant and modified when nTracks is set from reading a file
   constexpr int maxHitsConsidered = 25;

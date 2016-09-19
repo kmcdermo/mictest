@@ -352,6 +352,8 @@ public:
   float phi_prop_fit_[Config::nLayers],ephi_prop_fit_[Config::nLayers],phi_hit_fit_[Config::nLayers];
   float mc_eta_fit_=0.,mc_phi_fit_=0.,mc_pt_fit_=0.;
   int   mc_nhits_fit_=0;
+  int   mc_firstlay_fit_=0,mc_lastlay_fit_=0;
+  float mc_firstlay_eta_fit_=0.,mc_lastlay_eta_fit_=0.;
 
   std::mutex glock_;
 };

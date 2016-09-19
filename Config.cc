@@ -39,6 +39,7 @@ namespace Config
 
   bool  cf_seeding  = false;
   bool  cf_fitting  = false;
+  bool  prune_tracks= false;
 
   bool  super_debug = false;
   bool  normal_val  = false;

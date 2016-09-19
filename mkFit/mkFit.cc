@@ -422,6 +422,7 @@ int main(int argc, const char *argv[])
 	"  --endcap-test            test endcap tracking (def: %i)\n"
 	"  --cf-seeding             enable CF in seeding (def: %s)\n"
 	"  --cf-fitting             enable CF in fitting (def: %s)\n"
+        "  --prune-tracks           only run sorted fit over limited set of tracks above nHits cut (def: false)\n"
 	"  --normal-val             enable ROOT based validation for building [eff, FR, DR] (def: %s)\n"
 	"  --fit-val                enable ROOT based validation for fitting  [phi-z windows] (def: %s)\n"
 	"  --write                  write simulation to file and exit\n"
@@ -543,6 +544,10 @@ int main(int argc, const char *argv[])
     else if (*i == "--cf-fitting")
     {
       Config::cf_fitting = true;
+    }
+    else if (*i == "--prune-tracks")
+    {
+      Config::prune_tracks = true;
     }
     else if (*i == "--normal-val")
     {

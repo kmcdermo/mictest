@@ -665,10 +665,15 @@ void TTreeValidation::initializeFitTree(){
   fittree_->Branch("ephi_prop",&ephi_prop_fit_,"ephi_prop[nlayers_fit_]/F");
   fittree_->Branch("phi_hit",&phi_hit_fit_,"phi_hit[nlayers_fit_]/F");
 
-  fittree_->Branch("mc_eta_fit_",&mc_eta_fit_);
-  fittree_->Branch("mc_phi_fit_",&mc_phi_fit_);
-  fittree_->Branch("mc_pt_fit_",&mc_pt_fit_);
-  fittree_->Branch("mc_nhits_fit_",&mc_nhits_fit_);
+  fittree_->Branch("mc_firstlay",&mc_firstlay_fit_);
+  fittree_->Branch("mc_firstlay_eta",&mc_firstlay_eta_fit_);
+  fittree_->Branch("mc_lastlay",&mc_lastlay_fit_);
+  fittree_->Branch("mc_lastlay_eta",&mc_lastlay_eta_fit_);
+
+  fittree_->Branch("mc_eta",&mc_eta_fit_);
+  fittree_->Branch("mc_phi",&mc_phi_fit_);
+  fittree_->Branch("mc_pt",&mc_pt_fit_);
+  fittree_->Branch("mc_nhits",&mc_nhits_fit_);
 }
 
 void TTreeValidation::alignTrackExtra(TrackVec& evt_tracks, TrackExtraVec& evt_extras){
@@ -929,12 +934,13 @@ void TTreeValidation::fillFitTree(const Event& ev)
 
   evtid_fit_ = ev.evtID();
   const auto& simtracks = ev.simTracks_;
-  const auto& fittracks = ev.fitTracks_;
+  const auto& layHits   = ev.layerHits_;
+
   for(auto&& fitvalmapmap : fitValTkMapMap_)
   {
     tkid_fit_ = fitvalmapmap.first; // seed id (label) is the same as the mcID
-    auto& simtrack = simtracks[tkid_fit_];
-    auto& fittrack = fittracks[tkid_fit_];
+
+    const auto& simtrack = simtracks[tkid_fit_];
     auto& fitvalmap = fitvalmapmap.second;
     resetFitBranches();
     for(int ilayer = 0; ilayer < Config::nLayers; ++ilayer)
@@ -950,12 +956,17 @@ void TTreeValidation::fillFitTree(const Event& ev)
 	phi_hit_fit_[ilayer]   = fitval.mphi;
       }
     }
-    
+
+    mc_firstlay_fit_     = simtrack.getFirstLayerAfterSeed();
+    mc_firstlay_eta_fit_ = (mc_firstlay_fit_>=0)?layHits[mc_firstlay_fit_][simtrack.getHitIdx(mc_firstlay_fit_)].eta():-1000.f;
+    mc_lastlay_fit_      = simtrack.getLastLayer();
+    mc_lastlay_eta_fit_  = layHits[mc_lastlay_fit_][simtrack.getHitIdx(mc_lastlay_fit_)].eta();
+
     mc_eta_fit_   = simtrack.momEta();
     mc_phi_fit_   = simtrack.momPhi();
     mc_pt_fit_    = simtrack.pT();
-    mc_nhits_fit_ = fittrack.nFoundHits(); // at the moment, sim track hits == reco track hits
-    
+    mc_nhits_fit_ = simtrack.nFoundHits(); // at the moment, sim track hits == reco track hits
+
     fittree_->Fill();
   } 
 }

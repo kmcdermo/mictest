@@ -216,6 +216,26 @@ public:
     return hitIdxArr_[hitIdxPos_];
   }
 
+  int getLastLayer() const
+  {
+    int lay = -1;
+    for (int h = 0; h < Config::nLayers; h++)
+    {
+      if (hitIdxArr_[h] >= 0) lay = h;
+    }
+    return lay;
+  }
+
+  int getFirstLayerAfterSeed() const
+  {
+    int lay = -1;
+    for (int h = Config::nlayers_per_seed; h < Config::nLayers; h++)
+    {
+      if (hitIdxArr_[h] >= 0) {lay = h; break;}
+    }
+    return lay;
+  }
+
   void fillEmptyLayers() {
     for (int h = hitIdxPos_+1; h < Config::nLayers; h++){
       setHitIdx(h,-1);
@@ -233,11 +253,35 @@ public:
     }
   }
 
+  void setHitIdxPos() 
+  {
+    hitIdxPos_ = -1;
+    for (int h = 0; h < Config::nLayers; h++)
+    {
+      if (hitIdxArr_[h] >= 0) hitIdxPos_ = h;
+    }  
+  }
+
+  void setPosIndices()
+  {
+    hitIdxPos_   = -1;
+    nGoodHitIdx_ = 0;
+    for (int h = 0; h < Config::nLayers; h++)
+    {
+      if (hitIdxArr_[h] >= 0) {nGoodHitIdx_++; hitIdxPos_ = h;}
+    }  
+  }
+
   void resetHits()
   {
     hitIdxPos_   = -1;
     nGoodHitIdx_ = 0;
+    for (int h = 0; h < Config::nLayers; h++)
+    {
+      hitIdxArr_[h] = -1;
+    }
   }
+
   int  nFoundHits() const { return nGoodHitIdx_; }
   int  nTotalHits() const { return hitIdxPos_+1; }
   

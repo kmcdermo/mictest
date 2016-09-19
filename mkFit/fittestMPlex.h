@@ -10,8 +10,9 @@
 
 #include <map>
 
-void   prepSeedTracks(const std::vector<Track>& simtracks,
-		      std::vector<Track>& seedtracks,
+void   mergeSimTksIntoSeedTks(std::vector<Track>& simtracks,
+			      std::vector<Track>& seedtracks);
+void   prepSeedTracks(std::vector<Track>& seedtracks,
 		      std::map<int,int>& nHitsToTks);
 void   make_validation_tree(const char         *fname,
                             std::vector<Track> &simtracks,
