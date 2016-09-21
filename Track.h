@@ -272,6 +272,15 @@ public:
     }  
   }
 
+  void shiftIndices(int shift)
+  {
+    label_ += shift;
+    for (int h = 0; h < Config::nLayers; h++)
+    {
+      if (hitIdxArr_[ihit] >= 0) hitIdxArr_[ihit] += shift;
+    }
+  }
+
   void resetHits()
   {
     hitIdxPos_   = -1;

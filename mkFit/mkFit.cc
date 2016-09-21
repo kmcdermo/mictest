@@ -277,17 +277,21 @@ void test_standard()
   tbb::task_scheduler_init tbb_init(Config::numThreadsFinder);
   omp_set_num_threads(Config::numThreadsFinder);
 
-  for (int evt = 1; evt <= Config::nEvents; ++evt)
+
+  Event ev(geom, val, 1);
+  int tottracks = 0;
+  int totmchits = 0;
+  for (int evt = 1; evt <= 3; ++evt)
   {
     printf("\n");
     printf("Processing event %d\n", evt);
 
-    Event ev(geom, val, evt);
+    Event iev(geom, val, evt);
 
     if (g_operation == "read")
     {
-      ev.read_in(g_file);
-      ev.resetLayerHitMap(false);//hitIdx's in the sim tracks are already ok 
+      iev.read_in(g_file);
+      iev.resetLayerHitMap(false);//hitIdx's in the sim tracks are already ok 
     }
     else
     {
@@ -295,12 +299,64 @@ void test_standard()
       //task_scheduler_init
       //tbb::task_scheduler_init tbb_init(Config::numThreadsSimulation);
 
-      ev.Simulate();
-      ev.resetLayerHitMap(true);
+      iev.Simulate();
+      iev.resetLayerHitMap(true);
     }
 
     // if (evt!=2985) continue;
 
+    for (auto&& simtrack : iev.simTracks_)
+    {
+      simtrack.shiftIndices(tottracks);
+      simtrack.setPosIndices();
+      ev.simTracks_.push_back(simtrack);
+    }  
+
+    for (auto&& seedtrack : iev.seedTracks_)
+    {
+      seedtrack.shiftIndices(tottracks);
+      ev.seedTracks_.push_back(seedtrack);
+    }  
+     
+    for (auto&& simhit : iev.simHitsInfo_)
+    {
+      simhit.mcTrackID_ += tottracks;
+      simhit.mcHitID_   += totmchits;
+      ev.simHitsInfo_.push_back(simhit);
+    }
+    
+    for (int lay = 0; lay < Config::nLayers; lay++)
+    {
+      auto& layerHits = iev.layerHits_[lay];
+      for (auto&& hit : layerHits)
+      {
+	hit.shiftIndex(totmchits);
+	ev.layerHits_[lay].push_back(hit);
+      }
+    }
+
+    tottracks += Config::nTracks;
+    totmchits += iev.simHitsInfo_.size();
+  }
+
+  for (auto&& simtrack : ev.simTracks_)
+  {
+    if (simtrack.nFoundHits() == 17)
+    {
+      std::cout << "id: " << simtrack.label();
+      for (int hi = 0; hi < simtrack.nFoundHits(); hi++)
+      {
+	std::cout << ev.simHitsInfo_[ev.layerHits_[hi][simtrack.getHitIdx(hi)].mcHitID()].mcTrackID() << " ";
+      } 
+      std::cout << std::endl;
+    }
+  }
+
+  exit(1);
+  
+  Config::nEvents = 1;
+  for (int evt = 1; evt <= Config::nEvents; ++evt)
+  {
     ev.fitTracks_.resize(ev.simTracks_.size());
 
     double t_best[NT] = {0}, t_cur[NT];
@@ -329,7 +385,7 @@ void test_standard()
            t_best[0], t_best[1], t_best[2], t_best[3], t_best[4]);
 
     for (int i = 0; i < NT; ++i) t_sum[i] += t_best[i];
-    if (evt > 1) for (int i = 0; i < NT; ++i) t_skip[i] += t_best[i];
+    for (int i = 0; i < NT; ++i) t_skip[i] += t_best[i];
 
     if (g_run_fit_std) make_validation_tree("validation-plex.root", ev.simTracks_, ev.fitTracks_);
   }

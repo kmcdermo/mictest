@@ -251,6 +251,11 @@ public:
     return getEta(state_.parameters().At(0), state_.parameters().At(1), state_.parameters().At(2));
   }
 
+  void shiftIndex(int shift)
+  {
+    mcHitID_ += shift;
+  }
+
   const MeasurementState& measurementState() const {
     return state_;
   }
