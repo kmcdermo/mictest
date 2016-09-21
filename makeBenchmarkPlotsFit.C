@@ -28,6 +28,7 @@ void makeBenchmarkPlotsFit(bool isMic = false, bool isCMSSW = false, bool isEndc
   g_FIT_VU->GetYaxis()->SetTitleOffset(1.25);
   g_FIT_VU->GetXaxis()->SetRangeUser(1,maxvu);
   g_FIT_VU->GetYaxis()->SetRangeUser(0,(isMic ? 100 : 12));
+  if (isCMSSW) g_FIT_VU->GetYaxis()->SetRangeUser(0,(isMic ? 100 : 0.01));
   g_FIT_VU->SetLineWidth(2);
   g_FIT_VU->SetLineColor(kBlue);
   g_FIT_VU->SetMarkerStyle(kFullCircle);
@@ -71,10 +72,11 @@ void makeBenchmarkPlotsFit(bool isMic = false, bool isCMSSW = false, bool isEndc
   g_FIT_TH->SetTitle("Parallelization benchmark on "+label);
   g_FIT_TH->GetXaxis()->SetTitle("Number of Threads");
   g_FIT_TH->GetYaxis()->SetTitle("Time for 1M tracks [s]");
-  if (isCMSSW) g_FIT_VU->GetYaxis()->SetTitle("Time for 100 TTbarPU35 events [s]");
+  if (isCMSSW) g_FIT_TH->GetYaxis()->SetTitle("Time for 100 TTbarPU35 events [s]");
   g_FIT_TH->GetYaxis()->SetTitleOffset(1.25);
   g_FIT_TH->GetXaxis()->SetRangeUser(1,maxth);
   g_FIT_TH->GetYaxis()->SetRangeUser((isMic ? 0.01 : 0),(isMic ? 20 : 4));
+  if (isCMSSW) g_FIT_TH->GetYaxis()->SetRangeUser((isMic ? 0.01 : 0),(isMic ? 20 : 0.01));
   g_FIT_TH->SetLineWidth(2);
   g_FIT_TH->SetLineColor(kBlue);
   g_FIT_TH->SetMarkerStyle(kFullCircle);
