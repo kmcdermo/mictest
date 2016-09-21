@@ -5,6 +5,7 @@
 #include "Matrix.h"
 #include "Config.h"
 #include <vector>
+#include <map>
 
 typedef std::pair<int,int> SimTkIDInfo;
 typedef std::vector<int> HitIdxVec;
@@ -272,12 +273,12 @@ public:
     }  
   }
 
-  void shiftIndices(int shift)
+  void shiftIndices(int lblshift, std::map<int,int> layshift)
   {
-    label_ += shift;
+    label_ += lblshift;
     for (int h = 0; h < Config::nLayers; h++)
     {
-      if (hitIdxArr_[ihit] >= 0) hitIdxArr_[ihit] += shift;
+      if (hitIdxArr_[h] >= 0) hitIdxArr_[h] += layshift[h];
     }
   }
 

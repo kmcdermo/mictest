@@ -277,15 +277,60 @@ void test_standard()
   tbb::task_scheduler_init tbb_init(Config::numThreadsFinder);
   omp_set_num_threads(Config::numThreadsFinder);
 
-
-  Event ev(geom, val, 1);
-  int tottracks = 0;
-  int totmchits = 0;
-  for (int evt = 1; evt <= 3; ++evt)
+  // get totals for resizing
+  int totsimtracks  = 0;
+  int totmchits     = 0;
+  int totseedtracks = 0;
+  std::map<int,int> totlayhits;
+  for (int ilay = 0; ilay < Config::nLayers; ilay++)
   {
-    printf("\n");
-    printf("Processing event %d\n", evt);
+    totlayhits[ilay] = 0;
+  }
 
+  for (int evt = 1; evt <= Config::nEvents; ++evt)
+  {
+    Event iev(geom, val, evt);
+    if (g_operation == "read")
+    {
+      iev.read_in(g_file);
+      iev.resetLayerHitMap(false);//hitIdx's in the sim tracks are already ok 
+    }
+
+    totsimtracks  += iev.simTracks_.size();
+    totmchits     += iev.simHitsInfo_.size();
+    totseedtracks += iev.seedTracks_.size();
+    for (int ilay = 0; ilay < Config::nLayers; ilay++)
+    {
+      totlayhits[ilay] += iev.layerHits_[ilay].size();
+    }
+  }
+
+  if (g_operation == "read")
+  {
+    close_simtrack_file();
+    Config::nEvents = open_simtrack_file();
+  }
+
+  // do the full resize now
+  Event ev(geom, val, 1);
+  ev.simTracks_.resize(totsimtracks);
+  ev.seedTracks_.resize(totseedtracks);
+  ev.simHitsInfo_.resize(totmchits);
+  for (int ilay = 0; ilay < Config::nLayers; ilay++)
+  {
+    ev.layerHits_[ilay].resize(totlayhits[ilay]);
+  }
+
+  totsimtracks  = 0;
+  totmchits     = 0;
+  totseedtracks = 0;
+  for (int ilay = 0; ilay < Config::nLayers; ilay++)
+  {
+    totlayhits[ilay] = 0;
+  }
+
+  for (int evt = 1; evt <= Config::nEvents; ++evt)
+  {
     Event iev(geom, val, evt);
 
     if (g_operation == "read")
@@ -305,58 +350,70 @@ void test_standard()
 
     // if (evt!=2985) continue;
 
-    for (auto&& simtrack : iev.simTracks_)
+    for (int isim = 0; isim < iev.simTracks_.size(); isim++)
     {
-      simtrack.shiftIndices(tottracks);
+      auto& simtrack = iev.simTracks_[isim];
+      simtrack.shiftIndices(totsimtracks,totlayhits);
       simtrack.setPosIndices();
-      ev.simTracks_.push_back(simtrack);
+      ev.simTracks_[isim+totsimtracks] = simtrack;
     }  
 
-    for (auto&& seedtrack : iev.seedTracks_)
+    for (int iseed = 0; iseed < iev.seedTracks_.size(); iseed++)
     {
-      seedtrack.shiftIndices(tottracks);
-      ev.seedTracks_.push_back(seedtrack);
+      auto& seedtrack = iev.seedTracks_[iseed];
+      seedtrack.shiftIndices(totseedtracks,totlayhits);
+      seedtrack.setPosIndices();
+      ev.seedTracks_[iseed+totseedtracks] = seedtrack;
     }  
      
-    for (auto&& simhit : iev.simHitsInfo_)
+    for (int imchit = 0; imchit < iev.simHitsInfo_.size(); imchit++)
     {
-      simhit.mcTrackID_ += tottracks;
+      auto& simhit = iev.simHitsInfo_[imchit];
+      simhit.mcTrackID_ += totsimtracks;
       simhit.mcHitID_   += totmchits;
-      ev.simHitsInfo_.push_back(simhit);
+      ev.simHitsInfo_[imchit+totmchits] = simhit;
     }
     
     for (int lay = 0; lay < Config::nLayers; lay++)
     {
       auto& layerHits = iev.layerHits_[lay];
-      for (auto&& hit : layerHits)
+      for (int ihit = 0; ihit < layerHits.size(); ihit++)
       {
+	auto& hit = layerHits[ihit];
 	hit.shiftIndex(totmchits);
-	ev.layerHits_[lay].push_back(hit);
+	ev.layerHits_[lay][ihit+totlayhits[lay]] = hit;
       }
     }
 
-    tottracks += Config::nTracks;
-    totmchits += iev.simHitsInfo_.size();
-  }
-
-  for (auto&& simtrack : ev.simTracks_)
-  {
-    if (simtrack.nFoundHits() == 17)
+    totsimtracks  += iev.simTracks_.size();
+    totmchits     += iev.simHitsInfo_.size();
+    totseedtracks += iev.seedTracks_.size();
+    for (int ilay = 0; ilay < Config::nLayers; ilay++)
     {
-      std::cout << "id: " << simtrack.label();
-      for (int hi = 0; hi < simtrack.nFoundHits(); hi++)
-      {
-	std::cout << ev.simHitsInfo_[ev.layerHits_[hi][simtrack.getHitIdx(hi)].mcHitID()].mcTrackID() << " ";
-      } 
-      std::cout << std::endl;
+      totlayhits[ilay] += iev.layerHits_[ilay].size();
     }
   }
 
-  exit(1);
+  // for (auto&& simtrack : ev.simTracks_)
+  // {
+  //   if (simtrack.nFoundHits() == 17)
+  //   {
+  //     std::cout << simtrack.label() << ": ";
+  //     for (int hi = 0; hi < simtrack.nFoundHits(); hi++)
+  //     {
+  // 	std::cout << ev.simHitsInfo_[ev.layerHits_[hi][simtrack.getHitIdx(hi)].mcHitID()].mcTrackID() << " ";
+  //     } 
+  //     std::cout << std::endl;
+  //   }
+  // }
+
+  // exit(1);
   
-  Config::nEvents = 1;
-  for (int evt = 1; evt <= Config::nEvents; ++evt)
+  for (int evt = 1; evt <= 1; ++evt)
   {
+    printf("\n");
+    printf("Processing event %d\n", evt);
+
     ev.fitTracks_.resize(ev.simTracks_.size());
 
     double t_best[NT] = {0}, t_cur[NT];
