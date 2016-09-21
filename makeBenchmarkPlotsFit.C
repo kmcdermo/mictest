@@ -1,18 +1,16 @@
-void makeBenchmarkPlotsFit(bool isMic = false, bool isEndcap = false)
+void makeBenchmarkPlotsFit(bool isMic = false, bool isCMSSW = false, bool isEndcap = false)
 {
   
   TString hORm = "host";
   if (isMic) hORm = "mic";
 
-  TString label = "Xeon";
-  if (isMic) label+=" Phi";
+  TString label = "Xeon SNB";
+  if (isMic) label ="KNC";
 
   if (isEndcap) {
     hORm+="_endcap";
     label+=" (endcap)";
   }
-
-  TString ntrk = "1M";
 
   float maxvu = 8;
   if (isMic) maxvu = 16;
@@ -25,7 +23,8 @@ void makeBenchmarkPlotsFit(bool isMic = false, bool isEndcap = false)
   TGraph* g_FIT_VU = (TGraph*) f->Get("g_FIT_VU");
   g_FIT_VU->SetTitle("Vectorization benchmark on "+label);
   g_FIT_VU->GetXaxis()->SetTitle("Vector Width");
-  g_FIT_VU->GetYaxis()->SetTitle("Time for "+ntrk+" tracks [s]");
+  g_FIT_VU->GetYaxis()->SetTitle("Time for 1M tracks [s]");
+  if (isCMSSW) g_FIT_VU->GetYaxis()->SetTitle("Time for 100 TTbarPU35 events [s]");
   g_FIT_VU->GetYaxis()->SetTitleOffset(1.25);
   g_FIT_VU->GetXaxis()->SetRangeUser(1,maxvu);
   g_FIT_VU->GetYaxis()->SetRangeUser(0,(isMic ? 100 : 12));
@@ -40,7 +39,8 @@ void makeBenchmarkPlotsFit(bool isMic = false, bool isEndcap = false)
   leg_VU->Draw();
   c1.SetGridy();
   c1.Update();
-  c1.SaveAs(hORm+"_vu_fittime.png");
+  if (isCMSSW) c1.SaveAs("cmssw_"+hORm+"_vu_fittime.png");
+  else c1.SaveAs(hORm+"_vu_fittime.png");
 
   TCanvas c2;
   TGraph* g_FIT_VU_speedup = (TGraph*) f->Get("g_FIT_VU_speedup");
@@ -62,14 +62,16 @@ void makeBenchmarkPlotsFit(bool isMic = false, bool isEndcap = false)
   leg_VU_speedup->Draw();
   c2.SetGridy();
   c2.Update();
-  c2.SaveAs(hORm+"_vu_fitspeedup.png");
+  if (isCMSSW) c2.SaveAs("cmssw_"+hORm+"_vu_fitspeedup.png");
+  else c2.SaveAs(hORm+"_vu_fitspeedup.png");
 
   TCanvas c3;
   if (isMic) c3.SetLogy();
   TGraph* g_FIT_TH = (TGraph*) f->Get("g_FIT_TH");
   g_FIT_TH->SetTitle("Parallelization benchmark on "+label);
   g_FIT_TH->GetXaxis()->SetTitle("Number of Threads");
-  g_FIT_TH->GetYaxis()->SetTitle("Time for "+ntrk+" tracks [s]");
+  g_FIT_TH->GetYaxis()->SetTitle("Time for 1M tracks [s]");
+  if (isCMSSW) g_FIT_VU->GetYaxis()->SetTitle("Time for 100 TTbarPU35 events [s]");
   g_FIT_TH->GetYaxis()->SetTitleOffset(1.25);
   g_FIT_TH->GetXaxis()->SetRangeUser(1,maxth);
   g_FIT_TH->GetYaxis()->SetRangeUser((isMic ? 0.01 : 0),(isMic ? 20 : 4));
@@ -84,7 +86,8 @@ void makeBenchmarkPlotsFit(bool isMic = false, bool isEndcap = false)
   leg_TH->Draw();
   c3.SetGridy();
   c3.Update();
-  c3.SaveAs(hORm+"_th_fittime.png");
+  if (isCMSSW) c3.SaveAs("cmssw_"+hORm+"_th_fittime.png");
+  else c3.SaveAs(hORm+"_th_fittime.png");
 
   TCanvas c4;
   TGraph* g_FIT_TH_speedup = (TGraph*) f->Get("g_FIT_TH_speedup");
@@ -106,6 +109,6 @@ void makeBenchmarkPlotsFit(bool isMic = false, bool isEndcap = false)
   leg_TH_speedup->Draw();
   c4.SetGridy();
   c4.Update();
-  c4.SaveAs(hORm+"_th_fitspeedup.png");
-
+  if (isCMSSW) c4.SaveAs("cmssw_"+hORm+"_th_fitspeedup.png");
+  else c4.SaveAs(hORm+"_th_fitspeedup.png");
 }

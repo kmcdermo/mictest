@@ -16,8 +16,8 @@ if hORm!='host' and hORm!='host_endcap' and hORm!='mic' and hORm!='mic_endcap': 
 g = ROOT.TFile('benchmark_'+hORm+'.root',"recreate")
 
 for test in ['BH','CE','CEST','ST','TBBST','FIT']:
-    if isCMSSW and test=='FIT': continue
     if 'endcap' in hORm and not isCMSSW and 'FIT' not in test: continue
+    if 'endcap' in hORm and isCMSSW and 'FIT' in test: continue
     print test
     pos = 14
     ntks = '10x20k'
@@ -30,7 +30,8 @@ for test in ['BH','CE','CEST','ST','TBBST','FIT']:
     if 'ST' == test: pos = 11
     if 'FIT' in test: 
         pos = 3
-        ntks = '10x1M'
+        if not isCMSSW:
+            ntks = '10x1M'
     g_VU = ROOT.TGraph(4)
     g_VU_speedup = ROOT.TGraph(4)
     point = 0

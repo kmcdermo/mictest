@@ -2,39 +2,47 @@
 
 [ -z "$ROOTSYS" ] && source ~matevz/root/bin/thisroot.sh
 
-./benchmark.sh
-./benchmark-fit.sh
+#Xeon Sandy Bridge Tests
+
+./benchmark-host-build-toymc-barrel.sh
+./benchmark-host-fit-toymc-barrel.sh
 python makeBenchmarkPlots.py host
 root -b -q -l makeBenchmarkPlots.C
 root -b -q -l makeBenchmarkPlotsFit.C
 
-./benchmark-fit-endcap.sh
+./benchmark-host-fit-toymc-endcap.sh
 python makeBenchmarkPlots.py host_endcap
-root -b -q -l makeBenchmarkPlotsFit.C\(0,1\)
+root -b -q -l makeBenchmarkPlotsFit.C\(0,0,1\)
 
-./benchmark-cmssw.sh
+./benchmark-host-build-cmssw-barrel.sh
+./benchmark-host-fit-cmssw-barrel.sh
 python makeBenchmarkPlots.py host cmssw
 root -b -q -l makeBenchmarkPlots.C\(0,1\)
+root -b -q -l makeBenchmarkPlotsFit.C\(0,1\)
 
-./benchmark-cmssw-endcap.sh
+./benchmark-host-build-cmssw-endcap.sh
 python makeBenchmarkPlots.py host_endcap cmssw
 root -b -q -l makeBenchmarkPlots.C\(0,1,1\)
 
-./benchmark-mic.sh
-./benchmark-mic-fit.sh
+#Knight's Corner (Xeon Phi MIC) Tests
+
+./benchmark-mic-build-toymc-barrel.sh
+./benchmark-mic-fit-toymc-barrel.sh
 python makeBenchmarkPlots.py mic
 root -b -q -l makeBenchmarkPlots.C\(1\)
 root -b -q -l makeBenchmarkPlotsFit.C\(1\)
 
-./benchmark-mic-fit-endcap.sh
+./benchmark-mic-fit-toymc-endcap.sh
 python makeBenchmarkPlots.py mic_endcap
-root -b -q -l makeBenchmarkPlotsFit.C\(1,1\)
+root -b -q -l makeBenchmarkPlotsFit.C\(1,0,1\)
 
-./benchmark-cmssw-mic.sh
+./benchmark-mic-build-cmssw-barrel.sh
+./benchmark-mic-fit-cmssw-barrel.sh
 python makeBenchmarkPlots.py mic cmssw
 root -b -q -l makeBenchmarkPlots.C\(1,1\)
+root -b -q -l makeBenchmarkPlotsFit.C\(1,1\)
 
-# ./benchmark-cmssw-endcap-mic.sh
+# ./benchmark-mic-build-cmssw-endcap.sh
 # python makeBenchmarkPlots.py mic_endcap cmssw
 # root -b -q -l makeBenchmarkPlots.C\(1,1,1\)
 

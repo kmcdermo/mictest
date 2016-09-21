@@ -4,8 +4,8 @@ void makeBenchmarkPlots(bool isMic = false, bool isCMSSW = false, bool isEndcap 
   TString hORm = "host";
   if (isMic) hORm = "mic";
 
-  TString label = "Xeon";
-  if (isMic) label+=" Phi";
+  TString label = "Xeon SNB";
+  if (isMic) label ="KNC";
 
   if (isEndcap) {
     hORm+="_endcap";
