@@ -29,9 +29,12 @@
 #include "ittnotify.h"
 #endif
 
+typedef std::pair<int,int> IIPair;
+
 inline bool isBadLabel     (const Track& track){return track.label()<0;}
 inline bool isNotEnoughHits(const Track& track){return track.nFoundHits()<Config::nLayers/2;}
-inline bool sortByLessNhits(const Track& track1, const Track& track2){return track1.nFoundHits()<track2.nFoundHits();}
+//inline bool sortByLessNhits(const Track& track1, const Track& track2){return track1.nFoundHits()<track2.nFoundHits();}
+inline bool sortByLessNhits(const IIPair& pair1, const IIPair& pair2){return pair1.second<pair2.second;}
 
 void mergeSimTksIntoSeedTks(std::vector<Track>& simtracks, std::vector<Track>& seedtracks)
 {
@@ -51,10 +54,11 @@ void mergeSimTksIntoSeedTks(std::vector<Track>& simtracks, std::vector<Track>& s
   if (Config::prune_tracks) seedtracks.erase(std::remove_if(seedtracks.begin(),seedtracks.end(),isNotEnoughHits),seedtracks.end()); 
 }
 
-void prepSeedTracks(std::vector<Track>& seedtracks, std::map<int,int>& nHitsToTks)
+void prepSeedTracks(const std::vector<Track>& seedtracks, VecOfIIPairs& tkidxsTonHits, std::map<int,int>& nHitsTonTks)
 {
-  std::sort(seedtracks.begin(),seedtracks.end(),sortByLessNhits);
-  for (auto&& seedtrack : seedtracks){nHitsToTks[seedtrack.nFoundHits()]++;}
+  for (int iseed = 0; iseed < seedtracks.size(); iseed++){tkidxsTonHits[iseed] = std::make_pair(iseed,seedtracks[iseed].nFoundHits());}
+  std::sort(tkidxsTonHits.begin(),tkidxsTonHits.end(),sortByLessNhits);
+  for (auto&& tkidxnhitspair : tkidxsTonHits){nHitsTonTks[tkidxnhitspair.second]++;}
 }
 
 //==============================================================================
@@ -220,6 +224,7 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
   std::vector<Track>& simtracks  = ev.simTracks_;
   std::vector<Track>& seedtracks = ev.seedTracks_;
   mergeSimTksIntoSeedTks(simtracks,seedtracks);
+  fittracks.resize(seedtracks.size());
 
 #ifdef USE_VTUNE_PAUSE
   __itt_resume();
@@ -227,17 +232,19 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
   
   double time = dtime();
 
-  std::map<int,int> nHitsToTks;
-  prepSeedTracks(seedtracks,nHitsToTks);
-  fittracks.resize(seedtracks.size());
+  VecOfIIPairs tkidxsTonHits(seedtracks.size());
+  std::map<int,int> nHitsTonTks;
+  prepSeedTracks(seedtracks,tkidxsTonHits,nHitsTonTks);
 
   int previdx = 0;
-  for (auto&& indexinfo : nHitsToTks)
+  for (auto&& indexinfo : nHitsTonTks)
   {
     const int theLocalEnd  = indexinfo.second;
     const int theGlobalEnd = previdx+theLocalEnd;
     const int count = (theLocalEnd + NN - 1)/NN;
     
+    std::cout << theLocalEnd << " " << theGlobalEnd << " " << count << std::endl;
+
     tbb::parallel_for(tbb::blocked_range<int>(0, count, std::max(1, Config::numSeedsPerTask/NN)),
       [&](const tbb::blocked_range<int>& i)
     {
@@ -251,19 +258,19 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
 	// "compactify" matriplexes first with only the relevant layers
 	// even though tracks now grouped by nHits
 	// distribution of hits on layers different between tracks!
-	mkfp->InputTrackGoodLayers(seedtracks, itrack, end); 
 
 	// copy/slurp In equivalents
        	if (theGlobalEnd < end) {
 	  end = theGlobalEnd;
-	  mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end);
+	  mkfp->InputTrackGoodLayers(seedtracks, itrack, end, tkidxsTonHits); 
+	  mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end, tkidxsTonHits);
 	} else {
-	  mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
+	  mkfp->InputTrackGoodLayers(seedtracks, itrack, end, tkidxsTonHits); 
+	  mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end, tkidxsTonHits); // only safe for a full matriplex
 	}
-	
 	// do the fit over the block and then output the compactified mplexes
 	mkfp->FitSortedTracks(end - itrack, &ev);
-	mkfp->OutputSortedFittedTracks(fittracks, itrack, end);
+	mkfp->OutputSortedFittedTracks(fittracks, itrack, end, tkidxsTonHits);
       }
     });
     previdx += theLocalEnd;

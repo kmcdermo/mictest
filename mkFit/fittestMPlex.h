@@ -12,7 +12,8 @@
 
 void   mergeSimTksIntoSeedTks(std::vector<Track>& simtracks,
 			      std::vector<Track>& seedtracks);
-void   prepSeedTracks(std::vector<Track>& seedtracks,
+void   prepSeedTracks(const std::vector<Track>& seedtracks, 
+		      const VecOfIIPairs& tkidxsTonHits,
 		      std::map<int,int>& nHitsToTks);
 void   make_validation_tree(const char         *fname,
                             std::vector<Track> &simtracks,
