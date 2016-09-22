@@ -40,7 +40,7 @@ void mergeSimTksIntoSeedTks(std::vector<Track>& simtracks, std::vector<Track>& s
   for (auto&& seedtrack : seedtracks)
   {
     Track& simtrack = simtracks[seedtrack.label()];
-    for (int hi = 0; hi < Config::nLayers; ++hi)
+    for (int hi = Config::nlayers_per_seed; hi < Config::nLayers; ++hi)
     {
       seedtrack.setHitIdx(hi,simtrack.getHitIdx(hi));
     }
