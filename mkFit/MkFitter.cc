@@ -343,6 +343,7 @@ void MkFitter::SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks,
     msErr[hi].SlurpIn(varr + off_error, idx);
     msPar[hi].SlurpIn(varr + off_param, idx);
 #endif
+    std::cout << "blach" << std::endl;
   }
 }
 

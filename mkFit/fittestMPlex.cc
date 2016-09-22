@@ -284,7 +284,7 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
 	mkfp->InputTrackGoodLayers(seedtracks, itrack, end); 
 
 	if (itrack ==1659){
-	  for (int itk = itrack; itk <= end; itk++)
+	  for (int itk = itrack; itk < end; itk++)
 	  {
 	    std::cout << seedtracks[itk].label() << ": ";
 	    for (int ilay = 0; ilay < Config::nLayers; ilay++)
@@ -304,8 +304,8 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
 	  end = theGlobalEnd;
 	  mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end);
 	} else {
-	  mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end);
-	  //	  mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
+	  //mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end);
+	  mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
 	}
 	std::cout << "00" << std::endl;
 	// do the fit over the block and then output the compactified mplexes
