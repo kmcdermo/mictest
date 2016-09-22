@@ -323,6 +323,7 @@ void MkFitter::SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks,
     const int   off_error = (char*) hit.errArray() - varr;
     const int   off_param = (char*) hit.posArray() - varr;
 
+    std::cout << hi << ": ";
     for (int i = beg; i < end; ++i)
     {
       itrack = i - beg;
@@ -331,8 +332,9 @@ void MkFitter::SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks,
       const Hit  &hit  = layerHits[glay][hidx];
       idx[itrack] = (char*) &hit - varr;
       HitsIdx[hi](itrack, 0, 0) = hidx;
+      std::cout << hidx << " ";
     }
-
+    std::cout << std::endl;
 #ifdef MIC_INTRINSICS
     __m512i vi      = _mm512_load_epi32(idx);
     msErr[hi].SlurpIn(varr + off_error, vi);

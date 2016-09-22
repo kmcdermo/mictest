@@ -265,11 +265,11 @@ public:
 
   void setPosIndices()
   {
-    hitIdxPos_   = -1;
+    hitIdxPos_   = Config::nLayers-1;
     nGoodHitIdx_ = 0;
     for (int h = 0; h < Config::nLayers; h++)
     {
-      if (hitIdxArr_[h] >= 0) {nGoodHitIdx_++; hitIdxPos_ = h;}
+      if (hitIdxArr_[h] >= 0) {nGoodHitIdx_++;}
     }  
   }
 
