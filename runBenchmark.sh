@@ -63,5 +63,5 @@ for test in BH CE CEST ST TBBST; do
     python makePlotsFromDump.py _host_endcap_100xTTbarPU35_${test}_NVU8int_NTH21
     python makePlotsFromDump.py _mic_endcap_100xTTbarPU35_${test}_NVU1_NTH1
     python makePlotsFromDump.py _mic_endcap_100xTTbarPU35_${test}_NVU16int_NTH210
-    root -b -q -l makePlotsFromDump.C\(\"${test}\",1\)
+    root -b -q -l makePlotsFromDump.C\(\"${test}\",1,1\)
 done

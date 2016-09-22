@@ -15,7 +15,7 @@ h_MX3 = ROOT.TH1F("h_MX3", "h_MX3", 300, 0, 300)
 h_MX6 = ROOT.TH1F("h_MX6", "h_MX6", 300, 0, 300)
 h_MX9 = ROOT.TH1F("h_MX9", "h_MX9", 300, 0, 300)
 
-h_MXNH  = ROOT.TH1F("h_MXNH", "h_MXNH", 11, 0, 11)
+h_MXNH  = ROOT.TH1F("h_MXNH", "h_MXNH", 20, 0, 20)
 h_MXNH.GetXaxis().SetTitle("nHits_{found}")
 h_MXC2  = ROOT.TH1F("h_MXC2", "h_MXC2", 40, 0, 20)
 h_MXPT  = ROOT.TH1F("h_MXPT", "h_MXPT", 20, 0, 20)

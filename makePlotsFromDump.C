@@ -53,7 +53,12 @@ void makePlotsFromDump(TString test, bool isCMSSW = false, bool isEndcap = false
   leg->AddEntry(h4,"mic NVU16int NTH210","LP");
   leg->Draw();
 
-  if (isCMSSW) c1.SaveAs("cmssw_nHits_"+test+".png");
-  else c1.SaveAs("nHits_"+test+".png");
-
+  if (!isEndcap)
+  {
+    if (isCMSSW) c1.SaveAs("cmssw_nHits_"+test+".png");
+    else c1.SaveAs("nHits_"+test+".png");
+  } else {
+    if (isCMSSW) c1.SaveAs("cmssw_nHits_"+test+"_endcap.png");
+    else c1.SaveAs("nHits_"+test+"_endcap.png");
+  }
 }
