@@ -251,13 +251,14 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
 	// "compactify" matriplexes first with only the relevant layers
 	// even though tracks now grouped by nHits
 	// distribution of hits on layers different between tracks!
-	mkfp->InputTrackGoodLayers(seedtracks, itrack, end); 
 
 	// copy/slurp In equivalents
        	if (theGlobalEnd < end) {
 	  end = theGlobalEnd;
+	  mkfp->InputTrackGoodLayers(seedtracks, itrack, end); 
 	  mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end);
 	} else {
+	  mkfp->InputTrackGoodLayers(seedtracks, itrack, end); 
 	  mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
 	}
 	
