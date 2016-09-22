@@ -53,6 +53,14 @@ void applyMaterialEffects(const MPlexQF &hitsRl, const MPlexQF& hitsXi,
                                 MPlexLS &outErr, MPlexLV& outPar,
                           const int      N_proc);
 
+void applyMultScat(const MPlexQF &hitsRl, const MPlexQF& hitsXi, 
+		   MPlexLS &outErr, MPlexLV& outPar,
+		   const int      N_proc);
+
+void applyEnergyLoss(const MPlexQF &hitsRl, const MPlexQF& hitsXi, 
+		     MPlexLS &outErr, MPlexLV& outPar,
+		     const int      N_proc);
+
 inline float getRlVal(const float r, const float zin) {
   float z = std::abs(zin);
   //pixel barrel
