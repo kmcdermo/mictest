@@ -231,39 +231,10 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
   std::map<int,int> nHitsToTks;
   prepSeedTracks(seedtracks,nHitsToTks);
   fittracks.resize(seedtracks.size());
-
-  // int prev = 0;
-  // for (int ilay = Config::nlayers_per_seed; ilay < Config::nLayers; ilay++)
-  // {
-  //   std::sort(seedtracks.begin()+prev,seedtracks.begin()+prev+nHitsToTks[ilay],sortLessLabel);
-  //   prev += nHitsToTks[ilay];
-  // }  
-
-  // for (auto&& seedtrack : seedtracks)
-  // {
-  //   if (seedtrack.nFoundHits() == 17)
-  //   {
-  //     std::cout << seedtrack.label() << ": ";
-  //     for (int hi = 0; hi < seedtrack.nFoundHits(); hi++)
-  //     {
-  //  	std::cout << ev.simHitsInfo_[ev.layerHits_[hi][seedtrack.getHitIdx(hi)].mcHitID()].mcTrackID() << " ";
-  //     } 
-  //     std::cout << std::endl;
-  //   }
-  // }
-
-
-  // exit(0);
- 
-  for (auto&& htpair : nHitsToTks){
-    std::cout << htpair.first << " " << htpair.second << std::endl;
-  }
-
+  
   int previdx = 0;
   for (auto&& indexinfo : nHitsToTks)
   {
-    std::cout << "here" << std::endl;
-
     const int theLocalEnd  = indexinfo.second;
     const int theGlobalEnd = previdx+theLocalEnd;
     const int count = (theLocalEnd + NN - 1)/NN;
@@ -281,41 +252,23 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
 	// "compactify" matriplexes first with only the relevant layers
 	// even though tracks now grouped by nHits
 	// distribution of hits on layers different between tracks!
-	mkfp->InputTrackGoodLayers(seedtracks, itrack, end); 
 
-	if (itrack ==1659){
-	  for (int itk = itrack; itk < end; itk++)
-	  {
-	    std::cout << seedtracks[itk].label() << ": ";
-	    for (int ilay = 0; ilay < Config::nLayers; ilay++)
-	    {
-	      //	      std::cout << ((seedtracks[itk].getHitIdx(ilay) >= 0) ? ev.layerHits_[ilay][seedtracks[itk].getHitIdx(ilay)].z() : -1000) << " ";
-	      std::cout << seedtracks[itk].getHitIdx(ilay) << " ";
-	    }
-	    std::cout << std::endl;
-	  }
-	  std::cout << "===" << std::endl;
-	}
-
-	std::cout << "++" << std::endl;
-	
 	// copy/slurp In equivalents
        	if (theGlobalEnd < end) {
 	  end = theGlobalEnd;
+	  mkfp->InputTrackGoodLayers(seedtracks, itrack, end); 
 	  mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end);
 	} else {
-	  //mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end);
+	  mkfp->InputTrackGoodLayers(seedtracks, itrack, end); 
 	  mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
 	}
-	std::cout << "00" << std::endl;
+
 	// do the fit over the block and then output the compactified mplexes
 	mkfp->FitSortedTracks(end - itrack, &ev);
 	mkfp->OutputSortedFittedTracks(fittracks, itrack, end);
       }
     });
     previdx += theLocalEnd;
-
-    std::cout << "here1" << std::endl;
   }
 
   time = dtime() - time;

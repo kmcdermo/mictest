@@ -313,7 +313,11 @@ void MkFitter::SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks,
   Err[iC].SlurpIn(varr + off_error, idx);
   Par[iC].SlurpIn(varr + off_param, idx);
 #endif
-  
+
+  std::cout << std::endl;
+  std::cout << beg << "-" << end << ": ";
+  for (int it = beg; it < end; ++it){std::cout << tracks[it].label() << " ";}
+  std::cout << std::endl;
   for (int hi = 0; hi < Nhits; ++hi)
   {
     const int   glay      = GoodLayer[hi](0, 0, 0); // beg track is the first loaded in matriplex
@@ -332,7 +336,8 @@ void MkFitter::SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks,
       const Hit  &hit  = layerHits[glay][hidx];
       idx[itrack] = (char*) &hit - varr;
       HitsIdx[hi](itrack, 0, 0) = hidx;
-      std::cout << hidx << " ";
+      //      std::cout << hit.z() << " ";
+      std::cout << GoodLayer[hi](itrack, 0, 0) << " ";
     }
     std::cout << std::endl;
 #ifdef MIC_INTRINSICS
@@ -343,7 +348,6 @@ void MkFitter::SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks,
     msErr[hi].SlurpIn(varr + off_error, idx);
     msPar[hi].SlurpIn(varr + off_param, idx);
 #endif
-    std::cout << "blach" << std::endl;
   }
 }
 

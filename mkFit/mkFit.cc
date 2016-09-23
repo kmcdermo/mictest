@@ -308,9 +308,6 @@ void test_standard()
       if (seedtrack.label() >= 0) goodseeds++;
     }  
     totseedtracks += goodseeds;
-
-    //    std::cout << totseedtracks << " " << goodseeds << " " << iev.seedTracks_.size() << std::endl;
-
     for (int ilay = 0; ilay < Config::nLayers; ilay++)
     {
       totlayhits[ilay] += iev.layerHits_[ilay].size();
@@ -328,9 +325,6 @@ void test_standard()
   Event ev(geom, val, 1);
   ev.simTracks_.resize(totsimtracks);
   ev.seedTracks_.resize(totseedtracks);
-
-  //  std::cout << ev.seedTracks_.size() << std::endl;
-
   ev.simHitsInfo_.resize(totmchits);
   for (int ilay = 0; ilay < Config::nLayers; ilay++)
   {
@@ -355,32 +349,6 @@ void test_standard()
       iev.resetLayerHitMap(false);//hitIdx's in the sim tracks are already ok 
     }
 
-    // std::cout << "EVENT: " << evt << " nsimtks: " << iev.simTracks_.size() << " nseedtks: " << iev.seedTracks_.size() << " nmchits: " << iev.simHitsInfo_.size() << std::endl;
-
-    // for (auto&& seedtrack : iev.seedTracks_)
-    // {
-    //   int id = seedtrack.label();
-    //   if (id < 0) continue;
-    //   std::cout << id << ": ";
-    //   for (int ilay = 0; ilay < Config::nLayers; ilay++)
-    //   {
-    // 	int hitid = (seedtrack.getHitIdx(ilay) >= 0) ? iev.simHitsInfo_[iev.layerHits_[ilay][seedtrack.getHitIdx(ilay)].mcHitID()].mcTrackID() : -1;
-    // 	std::cout << hitid << " ";
-    //   }
-    //   std::cout << std::endl;
- 
-    //   auto& simtrack = iev.simTracks_[seedtrack.label()];
-    //   int sid = simtrack.label();
-    //   std::cout << sid << ": ";
-    //   for (int ilay = 0; ilay < Config::nLayers; ilay++)
-    //   {
-    // 	int hitid = (simtrack.getHitIdx(ilay) >= 0) ? iev.simHitsInfo_[iev.layerHits_[ilay][simtrack.getHitIdx(ilay)].mcHitID()].mcTrackID() : -1;
-    // 	std::cout << hitid << " ";
-    //   }
-    //   std::cout << std::endl;
-    //   std::cout << "------------------------------------------------------------------------------------------" << std::endl;
-    // }
-
     for (int isim = 0; isim < iev.simTracks_.size(); isim++)
     {
       auto& simtrack = iev.simTracks_[isim];
@@ -393,7 +361,6 @@ void test_standard()
     for (auto&& seedtrack : iev.seedTracks_)
     {
       if (seedtrack.label() < 0) continue;
-      //      std::cout << seedtrack.label() << std::endl;
       seedtrack.shiftIndices(totsimtracks,totlayhits);
       seedtrack.setPosIndices();
       ev.seedTracks_[goodseeds+totseedtracks] = seedtrack;
@@ -427,62 +394,7 @@ void test_standard()
       totlayhits[ilay] += iev.layerHits_[ilay].size();
     }
   }
-
-
-  // std::cout << "=======================================================================================" << std::endl;
-
-    // for (auto&& seedtrack : ev.seedTracks_)
-    // {
-    //   std::cout << id << ": ";
-    //   for (int ilay = 0; ilay < Config::nLayers; ilay++)
-    //   {
-    // 	int hitid = (seedtrack.getHitIdx(ilay) >= 0) ? ev.simHitsInfo_[ev.layerHits_[ilay][seedtrack.getHitIdx(ilay)].mcHitID()].mcTrackID() : -1;
-    // 	std::cout << hitid << " ";
-    //   }
-    //   std::cout << std::endl;
- 
-    //   auto& simtrack = ev.simTracks_[seedtrack.label()];
-    //   int sid = simtrack.label();
-    //   std::cout << sid << ": ";
-    //   for (int ilay = 0; ilay < Config::nLayers; ilay++)
-    //   {
-    // 	int hitid = (simtrack.getHitIdx(ilay) >= 0) ? ev.simHitsInfo_[ev.layerHits_[ilay][simtrack.getHitIdx(ilay)].mcHitID()].mcTrackID() : -1;
-    // 	std::cout << hitid << " ";
-    //   }
-    //   std::cout << std::endl;
-    //   std::cout << "------------------------------------------------------------------------------------------" << std::endl;
-    // }
-
-  //  int correct = 0;
-  // int incorrect = 0;
-  // int evpos = 0;
-  //   for (auto&& seedtrack : ev.seedTracks_)
-  //   {
-  //     //      std::cout << seedtrack.label() << std::endl;
-  //     int id = seedtrack.label();
-  //     if (id >= evbounds[evpos+1]) evpos++;
-  //     auto& simtrack = ev.simTracks_[seedtrack.label()];
-  //     for (int ilay = 0; ilay < Config::nlayers_per_seed; ilay++)
-  //     {
-  //   	int seedhitid = (seedtrack.getHitIdx(ilay) >= 0) ? ev.simHitsInfo_[ev.layerHits_[ilay][seedtrack.getHitIdx(ilay)].mcHitID()].mcTrackID()  : -1;
-  //   	int simhitid  = ( simtrack.getHitIdx(ilay) >= 0) ? ev.simHitsInfo_[ev.layerHits_[ilay][ simtrack.getHitIdx(ilay)].mcHitID()].mcTrackID() : -1;
-  // 	if (simhitid != seedhitid) {
-  // 	  if (simhitid >= 0) simhitid -= evbounds[evpos] ;
-  // 	  int simhitidx = simtrack.getHitIdx(ilay);
-  // 	  if (simhitidx >= 0) simhitidx -= evlaybounds[ilay][evpos];
-  // 	  std::cout << id - evbounds[evpos] << " " << simtrack.label() - evbounds[evpos] << " (" << seedhitid - evbounds[evpos] << ":" << simhitid << ") - " << evpos+1 
-  // 		    << " (" << seedtrack.getHitIdx(ilay) - evlaybounds[ilay][evpos] << ":" << simhitidx <<  ") " << std::endl;
-  // 	  incorrect++;
-  // 	}
-  // 	else correct++;
-  //     }
-  //     //      std::cout << seedtrack.label() << std::endl;
-  //   }
     
-  //   std::cout << correct << " :  " << incorrect << std::endl;
-    
-  //   exit(0);
-
   for (int evt = 1; evt <= 1; ++evt)
   {
     printf("\n");
