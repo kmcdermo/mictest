@@ -56,6 +56,14 @@ void prepSeedTracks(std::vector<Track>& seedtracks, std::map<int,int>& nHitsToTk
 {
   std::sort(seedtracks.begin(),seedtracks.end(),sortByLessNhits);
   for (auto&& seedtrack : seedtracks){nHitsToTks[seedtrack.nFoundHits()]++;}
+
+  int start = 0;
+  for (int nhits = Config::nlayers_per_seed; nhits <= Config::nLayers; nhits++)
+  {
+    int end = start + nHitsToTks[nhits];
+    std::sort(seedtracks.begin()+start, seedtracks.begin()+end, sortLessLabel);
+    start += nHitsToTks[nhits];
+  }
 }
 
 //==============================================================================
@@ -209,7 +217,7 @@ double runFittingTestPlex(Event& ev, std::vector<Track>& fittracks)
 #endif
 
    ev.Validate();
-
+   
    return time;
 }
 
@@ -227,12 +235,32 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
 #endif
   
   double time = dtime();
-
+  
   std::map<int,int> nHitsToTks;
   prepSeedTracks(seedtracks,nHitsToTks);
   fittracks.resize(seedtracks.size());
-  
+
   int previdx = 0;
+  //  int maxdiff = 0;
+
+  long long crap = 0;
+  for (int il =0 ; il < Config::nLayers; il++)
+  {
+    crap += ev.layerHits_[il].size();
+  }
+  //  std::cout << crap << std::endl;
+
+  for (auto&& seedtrack : seedtracks)
+  {
+    for (int il = 0; il < Config::nLayers; il++)
+    {
+      int idx = seedtrack.getHitIdx(il);
+      if (idx == -1) continue;
+      float delta =  ev.layerHits_[il][idx].r() - Config::cmsAvgRads[il];
+      if (std::abs(delta) > 2.8) std::cout << seedtrack.label() << " " << il << " " << idx << std::endl;
+    }
+  }  
+  std::cout << "-----" << std::endl;
   for (auto&& indexinfo : nHitsToTks)
   {
     const int theLocalEnd  = indexinfo.second;
@@ -256,9 +284,16 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
 	// copy/slurp In equivalents
        	if (theGlobalEnd < end) {
 	  end = theGlobalEnd;
+	  // for (int tk = itrack; tk < end-1; tk++)
+	  // {
+	  // }
+	  // int diff = seedtracks[end-1].label() - seedtracks[itrack].label();
+	  // if (diff > maxdiff) {maxdiff = diff; std::cout << itrack << " " << end << std::endl;}
 	  mkfp->InputTrackGoodLayers(seedtracks, itrack, end); 
 	  mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end);
 	} else {
+	  // int diff = seedtracks[end-1].label() - seedtracks[itrack].label();
+	  // if (diff > maxdiff) {maxdiff = diff; std::cout << itrack << " " << end << std::endl;}
 	  mkfp->InputTrackGoodLayers(seedtracks, itrack, end); 
 	  mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
 	}

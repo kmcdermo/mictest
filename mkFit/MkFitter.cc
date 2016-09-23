@@ -314,10 +314,10 @@ void MkFitter::SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks,
   Par[iC].SlurpIn(varr + off_param, idx);
 #endif
 
-  std::cout << std::endl;
-  std::cout << beg << "-" << end << ": ";
-  for (int it = beg; it < end; ++it){std::cout << tracks[it].label() << " ";}
-  std::cout << std::endl;
+  // std::cout << std::endl;
+  // std::cout << beg << "-" << end << ": ";
+  // for (int it = beg; it < end; ++it){std::cout << tracks[it].label() << " ";}
+  // std::cout << std::endl;
   for (int hi = 0; hi < Nhits; ++hi)
   {
     const int   glay      = GoodLayer[hi](0, 0, 0); // beg track is the first loaded in matriplex
@@ -327,7 +327,8 @@ void MkFitter::SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks,
     const int   off_error = (char*) hit.errArray() - varr;
     const int   off_param = (char*) hit.posArray() - varr;
 
-    std::cout << hi << ": ";
+    //    std::cout << hi << ": ";
+    int maxl = -1, minl = 18, maxt = -1, mint = -1;
     for (int i = beg; i < end; ++i)
     {
       itrack = i - beg;
@@ -337,9 +338,33 @@ void MkFitter::SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks,
       idx[itrack] = (char*) &hit - varr;
       HitsIdx[hi](itrack, 0, 0) = hidx;
       //      std::cout << hit.z() << " ";
-      std::cout << GoodLayer[hi](itrack, 0, 0) << " ";
+      //      std::cout << GoodLayer[hi](itrack, 0, 0) << " ";
+
+      if (glay > maxl) {maxl = glay; maxt = i;}
+      if (glay < minl) {minl = glay; mint = i;}
     }
-    std::cout << std::endl;
+    //    std::cout << std::endl;
+
+    if (minl == maxl) {mint = beg; maxt = end - 1;}
+    
+    // const Hit * hit1 = &layerHits[maxl][tracks[maxt].getHitIdx(maxl)];
+    // const Hit * hit2 = &layerHits[minl][tracks[mint].getHitIdx(minl)];
+    // long long diff1 = std::abs(hit1 - hit2);
+    // long long diff2 = diff1 * sizeof(Hit);
+    // double gbs = diff2 / double(1073741824);
+
+    // if (gbs > 2) std::cout << diff1 << " " << diff2 << ": " << gbs << std::endl
+    // 			   << hit1 << " " << hit2 << std::endl
+    // 			   << hit1->r() << " " << hit2->r() << std::endl;
+			   
+    long long diff1 = std::abs(&layerHits[maxl][tracks[maxt].getHitIdx(maxl)] -  &layerHits[minl][tracks[mint].getHitIdx(minl)]);
+    long long diff2 = diff1 * sizeof(Hit);
+    double gbs = diff2 / double(1073741824);
+
+    if (gbs > 2) std::cout << diff1 << " " << diff2 << ": " << gbs << std::endl
+    			   << &layerHits[maxl][tracks[maxt].getHitIdx(maxl)] << " " << &layerHits[minl][tracks[mint].getHitIdx(minl)] << std::endl
+    			   << (&layerHits[maxl][tracks[maxt].getHitIdx(maxl)])->r() << " " << (&layerHits[minl][tracks[mint].getHitIdx(minl)])->r() << std::endl;
+			   
 #ifdef MIC_INTRINSICS
     __m512i vi      = _mm512_load_epi32(idx);
     msErr[hi].SlurpIn(varr + off_error, vi);
