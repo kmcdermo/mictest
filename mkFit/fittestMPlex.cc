@@ -39,6 +39,9 @@ void mergeSimTksIntoSeedTks(std::vector<Track>& simtracks, std::vector<Track>& s
 
   for (auto&& seedtrack : seedtracks)
   {
+    // since seedtrack.label() == mcTrackID
+    // and simtracks indices == mcTrackID
+    // just append seedtrack with hit indices AFTER the seed's hits
     Track& simtrack = simtracks[seedtrack.label()];
     for (int hi = Config::nlayers_per_seed; hi < Config::nLayers; ++hi)
     {
@@ -54,7 +57,17 @@ void mergeSimTksIntoSeedTks(std::vector<Track>& simtracks, std::vector<Track>& s
 void prepSeedTracks(std::vector<Track>& seedtracks, std::map<int,int>& nHitsToTks)
 {
   std::sort(seedtracks.begin(),seedtracks.end(),sortByLessNhits);
-  for (auto&& seedtrack : seedtracks){nHitsToTks[seedtrack.nFoundHits()]++;}
+  std::map<int,int> rawCounts;
+  for (auto&& seedtrack : seedtracks){
+    rawCounts[seedtrack.nFoundHits()]++;
+  }
+
+  // make map of start/end of sorted tracks by nHits (from 3 hits --only seeds, to 17 hits --all layers)
+  nHitsToTks[Config::nlayers_per_seed-1] = 0;
+  for (int ilay = Config::nlayers_per_seed; ilay < Config::nLayers+1; ilay++)
+  {
+    nHitsToTks[ilay] = rawCounts[ilay] + nHitsToTks[ilay-1];
+  }
 }
 
 //==============================================================================
@@ -224,51 +237,48 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
 #ifdef USE_VTUNE_PAUSE
   __itt_resume();
 #endif
-  
+
   double time = dtime();
 
   std::map<int,int> nHitsToTks;
   prepSeedTracks(seedtracks,nHitsToTks);
   fittracks.resize(seedtracks.size());
 
-  int previdx = 0;
-  for (auto&& indexinfo : nHitsToTks)
+  tbb::parallel_for(tbb::blocked_range<int>(Config::nlayers_per_seed, Config::nLayers+1),
+		    [&](const tbb::blocked_range<int>& nhits)
   {
-    const int theLocalEnd  = indexinfo.second;
-    const int theGlobalEnd = previdx+theLocalEnd;
-    const int count = (theLocalEnd + NN - 1)/NN;
-    
-    tbb::parallel_for(tbb::blocked_range<int>(0, count, std::max(1, Config::numSeedsPerTask/NN)),
-      [&](const tbb::blocked_range<int>& i)
+    for (int nhit = nhits.begin(); nhit != nhits.end(); ++nhit)
     {
-      std::unique_ptr<MkFitter, decltype(retfitr)> mkfp(g_exe_ctx.m_fitters.GetFromPool(), retfitr);
-      mkfp->SetNhits(indexinfo.first);
-      for (int it = i.begin(); it < i.end(); ++it)
+      const int theBeg = ((nhit != Config::nlayers_per_seed) ? nHitsToTks[nhit-1] : 0);
+      const int theEnd = nHitsToTks[nhit];
+      const int count  = (theEnd - theBeg + NN - 1)/NN;
+    
+      tbb::parallel_for(tbb::blocked_range<int>(0, count, std::max(1, Config::numSeedsPerTask/NN)),
+			[&](const tbb::blocked_range<int>& i)
       {
-	int itrack = previdx+it*NN;
-	int end = itrack + NN;
+	std::unique_ptr<MkFitter, decltype(retfitr)> mkfp(g_exe_ctx.m_fitters.GetFromPool(), retfitr);
+	mkfp->SetNhits(nhit);
+	for (int it = i.begin(); it < i.end(); ++it)
+	{
+	  int itrack = theBeg+it*NN;
+	  int end = itrack + NN;
 
-	// "compactify" matriplexes first with only the relevant layers
-	// even though tracks now grouped by nHits
-	// distribution of hits on layers different between tracks!
-
-	// copy/slurp In equivalents
-       	if (theGlobalEnd < end) {
-	  end = theGlobalEnd;
-	  mkfp->InputTrackGoodLayers(seedtracks, itrack, end); 
-	  mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end);
-	} else {
-	  mkfp->InputTrackGoodLayers(seedtracks, itrack, end); 
-	  mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
+	  // copy/slurp In equivalents
+	  if (theEnd < end) 
+          {
+	    end = theEnd;
+	    mkfp->InputTrackGoodLayers(seedtracks, itrack, end);
+	    mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end);
+	  } else {
+	    mkfp->InputTrackGoodLayers(seedtracks, itrack, end);
+	    mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
+	  }
+	  mkfp->FitSortedTracks(end - itrack, &ev);
+	  mkfp->OutputSortedFittedTracks(fittracks, itrack, end);
 	}
-	
-	// do the fit over the block and then output the compactified mplexes
-	mkfp->FitSortedTracks(end - itrack, &ev);
-	mkfp->OutputSortedFittedTracks(fittracks, itrack, end);
-      }
-    });
-    previdx += theLocalEnd;
-  }
+      });
+    }
+  });
 
   time = dtime() - time;
 
