@@ -36,19 +36,29 @@ inline bool isNotEnoughHits(const Track& track){return track.nFoundHits()<Config
 //inline bool sortByLessNhits(const Track& track1, const Track& track2){return track1.nFoundHits()<track2.nFoundHits();}
 inline bool sortByLessNhits(const IIPair& pair1, const IIPair& pair2){return pair1.second<pair2.second;}
 
-void mergeSimTksIntoSeedTks(std::vector<Track>& simtracks, std::vector<Track>& seedtracks)
+void mergeSimTksIntoSeedTks(std::vector<Track>& simtracks, std::vector<Track>& seedtracks, VecOfLayArr& goodLayers)
 {
   seedtracks.erase(std::remove_if(seedtracks.begin(),seedtracks.end(),isBadLabel),seedtracks.end());
+  goodLayers.resize(seedtracks.size());
 
-  for (auto&& seedtrack : seedtracks)
-  {
+  for (int iseed = 0; iseed < seedtracks.size(); iseed++)
+  {   
+    auto& seedtrack = seedtracks[iseed];
+    auto& goodlayer = goodLayers[iseed];
+
+    // seed is already "good"
+    for (int hi = 0; hi < Config::nlayers_per_seed; hi++){goodlayer[hi] = hi;}
+
     // since seedtrack.label() == mcTrackID
     // and simtracks indices == mcTrackID
     // just append seedtrack with hit indices AFTER the seed's hits
     Track& simtrack = simtracks[seedtrack.label()];
+    int pos = Config::nlayers_per_seed;
     for (int hi = Config::nlayers_per_seed; hi < Config::nLayers; ++hi)
     {
-      seedtrack.setHitIdx(hi,simtrack.getHitIdx(hi));
+      const int hidx = simtrack.getHitIdx(hi);
+      seedtrack.setHitIdx(hi,hidx);
+      if (hidx >= 0) goodlayer[pos++] = hi;
     }
     simtrack.setNGoodHitIdx(); // for validation
     seedtrack.setNGoodHitIdx();
@@ -60,16 +70,21 @@ void mergeSimTksIntoSeedTks(std::vector<Track>& simtracks, std::vector<Track>& s
 void prepSeedTracks(const std::vector<Track>& seedtracks, VecOfIIPairs& tkidxsTonHits, std::map<int,int>& nHitsToTks)
 {
   // make map of track indices + nhits, sort it by nhits
-  for (int iseed = 0; iseed < seedtracks.size(); iseed++){tkidxsTonHits[iseed] = std::make_pair(iseed,seedtracks[iseed].nFoundHits());}
-  std::sort(tkidxsTonHits.begin(),tkidxsTonHits.end(),sortByLessNhits);
-
   // make temp map of raw nhit counts
   std::map<int,int> rawCounts;
-  for (auto&& pair : tkidxsTonHits){rawCounts[pair.second]++;}
+  for (int iseed = 0; iseed < seedtracks.size(); iseed++)
+  {
+    const int nhits = seedtracks[iseed].nFoundHits();
+    tkidxsTonHits[iseed] = std::make_pair(iseed,nhits);
+    rawCounts[nhits]++;
+  }
+  std::sort(tkidxsTonHits.begin(),tkidxsTonHits.end(),sortByLessNhits);
 
   // make map of start/end of sorted tracks by nHits (from 3 hits --only seeds, to 17 hits --all layers)
   nHitsToTks[Config::nlayers_per_seed-1] = 0;
-  for (int ilay = Config::nlayers_per_seed; ilay < Config::nLayers+1; ilay++){nHitsToTks[ilay] = rawCounts[ilay] + nHitsToTks[ilay-1];}
+  for (int ilay = Config::nlayers_per_seed; ilay < Config::nLayers+1; ilay++){
+    nHitsToTks[ilay] = rawCounts[ilay] + nHitsToTks[ilay-1];
+  }
 }
 
 //==============================================================================
@@ -234,7 +249,8 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
   // prepare track collections
   std::vector<Track>& simtracks  = ev.simTracks_;
   std::vector<Track>& seedtracks = ev.seedTracks_;
-  mergeSimTksIntoSeedTks(simtracks,seedtracks);
+  VecOfLayArr goodLayers;
+  mergeSimTksIntoSeedTks(simtracks,seedtracks,goodLayers);
   fittracks.resize(seedtracks.size());
 
 #ifdef USE_VTUNE_PAUSE
@@ -270,14 +286,12 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
 	  if (theEnd < end) 
           {
 	    end = theEnd;
-	    mkfp->InputTrackGoodLayers(seedtracks, itrack, end, tkidxsTonHits);
-	    mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end, tkidxsTonHits);
+	    mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end, tkidxsTonHits, goodLayers);
 	  } else {
-	    mkfp->InputTrackGoodLayers(seedtracks, itrack, end, tkidxsTonHits);
-	    mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end, tkidxsTonHits); // only safe for a full matriplex
+	    mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end, tkidxsTonHits, goodLayers); // only safe for a full matriplex
 	  }
 	  mkfp->FitSortedTracks(end - itrack, &ev);
-	  mkfp->OutputSortedFittedTracks(fittracks, itrack, end, tkidxsTonHits);
+	  mkfp->OutputSortedFittedTracks(fittracks, itrack, end, tkidxsTonHits, goodLayers);
 	}
       });
     }

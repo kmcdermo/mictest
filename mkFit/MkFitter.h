@@ -33,7 +33,7 @@ struct MkFitter
   MPlexQI SeedIdx;//this is the seed index in local thread (for bookkeeping at thread level)
   MPlexQI CandIdx;//this is the candidate index for the given seed (for bookkeeping of clone engine)
   MPlexQI HitsIdx[Config::nLayers];
-  MPlexQI GoodLayer[Config::nLayers];
+  //  MPlexQI GoodLayer[Config::nLayers];
 
   // Hold hit indices to explore at current layer.
   MPlexQI     XHitSize;
@@ -74,12 +74,12 @@ public:
 
   void InputTracksAndHits(const std::vector<Track>& tracks, const std::vector<HitVec>& layerHits, int beg, int end);
   void InputSortedTracksAndHits(const std::vector<Track>& tracks, const std::vector<HitVec>& layerHits, 
-				int beg, int end, const VecOfIIPairs& tkidxsTonHits);
+				int beg, int end, const VecOfIIPairs& tkidxsTonHits, const VecOfLayArr& goodLayers);
   void InputTracksAndHits(const std::vector<Track>& tracks, const std::vector<LayerOfHits>& layerHits, int beg, int end);
   void InputTrackGoodLayers(const std::vector<Track>&  tracks, int beg, int end, const VecOfIIPairs& tkidxsTonHits);
   void SlurpInTracksAndHits(const std::vector<Track>&  tracks, const std::vector<HitVec>& layerHits, int beg, int end);
   void SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks, const std::vector<HitVec>& layerHits,
-				  int beg, int end, const VecOfIIPairs& tkidxsTonHits);
+				  int beg, int end, const VecOfIIPairs& tkidxsTonHits, const VecOfLayArr& goodLayers);
   void InputTracksAndHitIdx(const std::vector<Track>& tracks,
                             int beg, int end, bool inputProp);
   void InputTracksAndHitIdx(const std::vector<std::vector<Track> >& tracks, const std::vector<std::pair<int,int> >& idxs,
@@ -96,13 +96,14 @@ public:
   void CollectSortedFitValidation(const int hi, const int N_proc, const Event * ev) const;
 
   void OutputTracks(std::vector<Track>& tracks, int beg, int end, int iCP) const;
-  void OutputSortedFittedTracksAndHitIdx(std::vector<Track>& tracks, int beg, int end, bool outputProp, const VecOfIIPairs& tkidxsTonHits) const;
+  void OutputSortedFittedTracksAndHitIdx(std::vector<Track>& tracks, int beg, int end, bool outputProp, 
+					 const VecOfIIPairs& tkidxsTonHits, const VecOfLayArr& goodLayers) const;
 
   void OutputFittedTracks(std::vector<Track>& tracks, int beg, int end) const
   { return OutputTracks(tracks,beg,end,iC); }
 
-  void OutputSortedFittedTracks(std::vector<Track>& tracks, int beg, int end, const VecOfIIPairs& tkidxsTonHits) const
-  { return OutputSortedFittedTracksAndHitIdx(tracks,beg,end,iC,tkidxsTonHits); }
+  void OutputSortedFittedTracks(std::vector<Track>& tracks, int beg, int end, const VecOfIIPairs& tkidxsTonHits, const VecOfLayArr& goodLayers) const
+  { return OutputSortedFittedTracksAndHitIdx(tracks,beg,end,iC,tkidxsTonHits,goodLayers); }
 
   void OutputPropagatedTracks(std::vector<Track>& tracks, int beg, int end) const
   { return OutputTracks(tracks,beg,end,iP); }

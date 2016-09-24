@@ -107,12 +107,14 @@ void MkFitter::InputTracksAndHits(const std::vector<Track>&  tracks,
 void MkFitter::InputSortedTracksAndHits(const std::vector<Track>&  tracks,
 					const std::vector<HitVec>& layerHits,
 					int beg, int end,
-					const VecOfIIPairs& tkidxsTonHits)
+					const VecOfIIPairs& tkidxsTonHits,
+					const VecOfLayArr& goodLayers)
 {
   int itrack;
   for (int i = beg; i < end; ++i) {
     itrack = i - beg;
     const Track &trk = tracks[tkidxsTonHits[i].first];
+    const auto& goodlayer = goodLayers[tkidxsTonHits[i].first];
 
     Label(itrack, 0, 0) = trk.label();
 
@@ -124,7 +126,7 @@ void MkFitter::InputSortedTracksAndHits(const std::vector<Track>&  tracks,
 
     for (int hi = 0; hi < Nhits; ++hi)
     {
-      const int glay = GoodLayer[hi](itrack, 0, 0);
+      const int glay = goodlayer[hi];
       const int hidx = trk.getHitIdx(glay);
       HitsIdx[hi](itrack, 0, 0) = hidx;
 
@@ -197,7 +199,7 @@ void MkFitter::InputTrackGoodLayers(const std::vector<Track>&  tracks,
     {
       const int hidx = trk.getHitIdx(hi);
       if (hidx<0) continue;
-      GoodLayer[pos++](itrack, 0, 0) = hi;
+      //      GoodLayer[pos++](itrack, 0, 0) = hi;
     }
   }
 }
@@ -284,7 +286,8 @@ void MkFitter::SlurpInTracksAndHits(const std::vector<Track>&  tracks,
 void MkFitter::SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks,
 					  const std::vector<HitVec>& layerHits,
 					  int beg, int end,
-					  const VecOfIIPairs& tkidxsTonHits)
+					  const VecOfIIPairs& tkidxsTonHits,
+					  const VecOfLayArr& goodLayers)
 {
   // Assign track parameters to initial state and copy hit values in.
 
@@ -319,8 +322,9 @@ void MkFitter::SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks,
   
   for (int hi = 0; hi < Nhits; ++hi)
   {
-    const int   glay      = GoodLayer[hi](0, 0, 0); // beg track is the first loaded in matriplex
-    const int   hidx      = tracks[tkidxsTonHits[beg].first].getHitIdx(glay);
+    const int   tidx      = tkidxsTonHits[beg].first;
+    const int   glay      = goodLayers[tidx][hi];
+    const int   hidx      = tracks[tidx].getHitIdx(glay);
     const Hit  &hit       = layerHits[glay][hidx];
     const char *varr      = (char*) &hit;
     const int   off_error = (char*) hit.errArray() - varr;
@@ -329,8 +333,9 @@ void MkFitter::SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks,
     for (int i = beg; i < end; ++i)
     {
       itrack = i - beg;
-      const int   glay = GoodLayer[hi](itrack, 0, 0);
-      const int   hidx = tracks[tkidxsTonHits[i].first].getHitIdx(glay);
+      const int   tidx = tkidxsTonHits[i].first;
+      const int   glay = goodLayers[tidx][hi];
+      const int   hidx = tracks[tidx].getHitIdx(glay);
       const Hit  &hit  = layerHits[glay][hidx];
       idx[itrack] = (char*) &hit - varr;
       HitsIdx[hi](itrack, 0, 0) = hidx;
@@ -629,7 +634,7 @@ void MkFitter::CollectSortedFitValidation(const int hi, const int N_proc, const 
     const float pephi = getPhiErr2(Par[iP](n,0,0),Par[iP](n,1,0),Err[iP](n,0,0),Err[iP](n,1,1),Err[iP](n,0,1));
     const float mphi  = getPhi(msPar[hi](n,0,0),msPar[hi](n,1,0));
 
-    ev->validation_.collectFitInfo(Par[iP](n,2,0),Err[iP](n,2,2),msPar[hi](n,2,0),pphi,pephi,mphi,GoodLayer[hi](n,0,0),Label(n,0,0));
+    //    ev->validation_.collectFitInfo(Par[iP](n,2,0),Err[iP](n,2,2),msPar[hi](n,2,0),pphi,pephi,mphi,GoodLayer[hi](n,0,0),Label(n,0,0)); //fixme 
   }
 }
 
@@ -735,7 +740,8 @@ void MkFitter::OutputFittedTracksAndHitIdx(std::vector<Track>& tracks, int beg, 
 }
 
 void MkFitter::OutputSortedFittedTracksAndHitIdx(std::vector<Track>& tracks, int beg, int end,
-						 bool outputProp, const VecOfIIPairs& tkidxsTonHits) const
+						 bool outputProp, const VecOfIIPairs& tkidxsTonHits,
+						 const VecOfLayArr& goodLayers) const
 {
   // Copies last track parameters (updated) into Track objects and up to Nhits.
   // The tracks vector should be resized to allow direct copying.
@@ -745,23 +751,24 @@ void MkFitter::OutputSortedFittedTracksAndHitIdx(std::vector<Track>& tracks, int
   int itrack = 0;
   for (int i = beg; i < end; ++i, ++itrack)
   {
-    const int tkidx = tkidxsTonHits[i].first;
+    const int tidx = tkidxsTonHits[i].first;
+    const auto & goodLayer = goodLayers[tidx];
 
-    Err[iO].CopyOut(itrack, tracks[tkidx].errors_nc().Array());
-    Par[iO].CopyOut(itrack, tracks[tkidx].parameters_nc().Array());
+    Err[iO].CopyOut(itrack, tracks[tidx].errors_nc().Array());
+    Par[iO].CopyOut(itrack, tracks[tidx].parameters_nc().Array());
 
-    tracks[tkidx].setCharge(Chg(itrack, 0, 0));
-    tracks[tkidx].setChi2(Chi2(itrack, 0, 0));
-    tracks[tkidx].setLabel(Label(itrack, 0, 0));
+    tracks[tidx].setCharge(Chg(itrack, 0, 0));
+    tracks[tidx].setChi2(Chi2(itrack, 0, 0));
+    tracks[tidx].setLabel(Label(itrack, 0, 0));
 
     // XXXXX chi2 is not set (also not in SMatrix fit, it seems)
 
-    tracks[tkidx].resetHits();
+    tracks[tidx].resetHits();
     for (int hi = 0; hi < Nhits; ++hi)
     {
-      tracks[tkidx].setHitIdx(GoodLayer[hi](itrack, 0, 0),HitsIdx[hi](itrack, 0, 0));
+      tracks[tidx].setHitIdx(goodLayer[hi],HitsIdx[hi](itrack, 0, 0));
     }
-    tracks[tkidx].setPosIndices();
+    tracks[tidx].setPosIndices();
   }
 }
 

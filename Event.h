@@ -7,6 +7,8 @@
 #include "BinInfoUtils.h"
 #include "Config.h"
 
+#include <array>
+
 struct HitID {
   HitID() : layer(-1), index(-1) {}
   HitID(int l, int i) : layer(l), index(i) {}
@@ -16,6 +18,7 @@ struct HitID {
 
 typedef std::vector<HitID> HitIDVec;
 typedef std::vector<std::pair<int,int> > VecOfIIPairs;
+typedef std::vector<std::array<int,Config::nLayers> > VecOfLayArr;
 
 class Event {
 public:
