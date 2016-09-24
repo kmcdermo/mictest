@@ -29,9 +29,12 @@
 #include "ittnotify.h"
 #endif
 
+typedef std::pair<int,int> IIPair;
+
 inline bool isBadLabel     (const Track& track){return track.label()<0;}
 inline bool isNotEnoughHits(const Track& track){return track.nFoundHits()<Config::nLayers/2;}
-inline bool sortByLessNhits(const Track& track1, const Track& track2){return track1.nFoundHits()<track2.nFoundHits();}
+//inline bool sortByLessNhits(const Track& track1, const Track& track2){return track1.nFoundHits()<track2.nFoundHits();}
+inline bool sortByLessNhits(const IIPair& pair1, const IIPair& pair2){return pair1.second<pair2.second;}
 
 void mergeSimTksIntoSeedTks(std::vector<Track>& simtracks, std::vector<Track>& seedtracks)
 {
@@ -54,20 +57,19 @@ void mergeSimTksIntoSeedTks(std::vector<Track>& simtracks, std::vector<Track>& s
   if (Config::prune_tracks) seedtracks.erase(std::remove_if(seedtracks.begin(),seedtracks.end(),isNotEnoughHits),seedtracks.end()); 
 }
 
-void prepSeedTracks(std::vector<Track>& seedtracks, std::map<int,int>& nHitsToTks)
+void prepSeedTracks(const std::vector<Track>& seedtracks, VecOfIIPairs& tkidxsTonHits, std::map<int,int>& nHitsToTks)
 {
-  std::sort(seedtracks.begin(),seedtracks.end(),sortByLessNhits);
+  // make map of track indices + nhits, sort it by nhits
+  for (int iseed = 0; iseed < seedtracks.size(); iseed++){tkidxsTonHits[iseed] = std::make_pair(iseed,seedtracks[iseed].nFoundHits());}
+  std::sort(tkidxsTonHits.begin(),tkidxsTonHits.end(),sortByLessNhits);
+
+  // make temp map of raw nhit counts
   std::map<int,int> rawCounts;
-  for (auto&& seedtrack : seedtracks){
-    rawCounts[seedtrack.nFoundHits()]++;
-  }
+  for (auto&& pair : tkidxsTonHits){rawCounts[pair.second]++;}
 
   // make map of start/end of sorted tracks by nHits (from 3 hits --only seeds, to 17 hits --all layers)
   nHitsToTks[Config::nlayers_per_seed-1] = 0;
-  for (int ilay = Config::nlayers_per_seed; ilay < Config::nLayers+1; ilay++)
-  {
-    nHitsToTks[ilay] = rawCounts[ilay] + nHitsToTks[ilay-1];
-  }
+  for (int ilay = Config::nlayers_per_seed; ilay < Config::nLayers+1; ilay++){nHitsToTks[ilay] = rawCounts[ilay] + nHitsToTks[ilay-1];}
 }
 
 //==============================================================================
@@ -233,6 +235,7 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
   std::vector<Track>& simtracks  = ev.simTracks_;
   std::vector<Track>& seedtracks = ev.seedTracks_;
   mergeSimTksIntoSeedTks(simtracks,seedtracks);
+  fittracks.resize(seedtracks.size());
 
 #ifdef USE_VTUNE_PAUSE
   __itt_resume();
@@ -240,9 +243,9 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
 
   double time = dtime();
 
+  VecOfIIPairs tkidxsTonHits(seedtracks.size());
   std::map<int,int> nHitsToTks;
-  prepSeedTracks(seedtracks,nHitsToTks);
-  fittracks.resize(seedtracks.size());
+  prepSeedTracks(seedtracks,tkidxsTonHits,nHitsToTks);
 
   tbb::parallel_for(tbb::blocked_range<int>(Config::nlayers_per_seed, Config::nLayers+1),
 		    [&](const tbb::blocked_range<int>& nhits)
@@ -267,14 +270,14 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
 	  if (theEnd < end) 
           {
 	    end = theEnd;
-	    mkfp->InputTrackGoodLayers(seedtracks, itrack, end);
-	    mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end);
+	    mkfp->InputTrackGoodLayers(seedtracks, itrack, end, tkidxsTonHits);
+	    mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end, tkidxsTonHits);
 	  } else {
-	    mkfp->InputTrackGoodLayers(seedtracks, itrack, end);
-	    mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
+	    mkfp->InputTrackGoodLayers(seedtracks, itrack, end, tkidxsTonHits);
+	    mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end, tkidxsTonHits); // only safe for a full matriplex
 	  }
 	  mkfp->FitSortedTracks(end - itrack, &ev);
-	  mkfp->OutputSortedFittedTracks(fittracks, itrack, end);
+	  mkfp->OutputSortedFittedTracks(fittracks, itrack, end, tkidxsTonHits);
 	}
       });
     }

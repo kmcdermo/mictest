@@ -73,11 +73,13 @@ public:
   int countInvalidHits(int itrack) const { return countInvalidHits(itrack, Nhits); }
 
   void InputTracksAndHits(const std::vector<Track>& tracks, const std::vector<HitVec>& layerHits, int beg, int end);
-  void InputSortedTracksAndHits(const std::vector<Track>& tracks, const std::vector<HitVec>& layerHits, int beg, int end);
+  void InputSortedTracksAndHits(const std::vector<Track>& tracks, const std::vector<HitVec>& layerHits, 
+				int beg, int end, const VecOfIIPairs& tkidxsTonHits);
   void InputTracksAndHits(const std::vector<Track>& tracks, const std::vector<LayerOfHits>& layerHits, int beg, int end);
-  void InputTrackGoodLayers(const std::vector<Track>&  tracks, int beg, int end);
+  void InputTrackGoodLayers(const std::vector<Track>&  tracks, int beg, int end, const VecOfIIPairs& tkidxsTonHits);
   void SlurpInTracksAndHits(const std::vector<Track>&  tracks, const std::vector<HitVec>& layerHits, int beg, int end);
-  void SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks, const std::vector<HitVec>& layerHits, int beg, int end);
+  void SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks, const std::vector<HitVec>& layerHits,
+				  int beg, int end, const VecOfIIPairs& tkidxsTonHits);
   void InputTracksAndHitIdx(const std::vector<Track>& tracks,
                             int beg, int end, bool inputProp);
   void InputTracksAndHitIdx(const std::vector<std::vector<Track> >& tracks, const std::vector<std::pair<int,int> >& idxs,
@@ -94,13 +96,13 @@ public:
   void CollectSortedFitValidation(const int hi, const int N_proc, const Event * ev) const;
 
   void OutputTracks(std::vector<Track>& tracks, int beg, int end, int iCP) const;
-  void OutputSortedFittedTracksAndHitIdx(std::vector<Track>& tracks, int beg, int end, bool outputProp) const;
+  void OutputSortedFittedTracksAndHitIdx(std::vector<Track>& tracks, int beg, int end, bool outputProp, const VecOfIIPairs& tkidxsTonHits) const;
 
   void OutputFittedTracks(std::vector<Track>& tracks, int beg, int end) const
   { return OutputTracks(tracks,beg,end,iC); }
 
-  void OutputSortedFittedTracks(std::vector<Track>& tracks, int beg, int end) const
-  { return OutputSortedFittedTracksAndHitIdx(tracks,beg,end,iC); }
+  void OutputSortedFittedTracks(std::vector<Track>& tracks, int beg, int end, const VecOfIIPairs& tkidxsTonHits) const
+  { return OutputSortedFittedTracksAndHitIdx(tracks,beg,end,iC,tkidxsTonHits); }
 
   void OutputPropagatedTracks(std::vector<Track>& tracks, int beg, int end) const
   { return OutputTracks(tracks,beg,end,iP); }

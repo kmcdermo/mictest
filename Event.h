@@ -15,6 +15,8 @@ struct HitID {
 };
 
 typedef std::vector<HitID> HitIDVec;
+typedef std::vector<std::pair<int,int> > VecOfIIPairs;
+
 class Event {
 public:
   Event(const Geometry& g, Validation& v, int evtID, int threads = 1);
