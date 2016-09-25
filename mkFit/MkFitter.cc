@@ -8,7 +8,7 @@
 #include "FitterCU.h"
 #endif
 
-//#define DEBUG
+#define DEBUG
 #include "Debug.h"
 
 #include <sstream>
@@ -590,6 +590,49 @@ void MkFitter::FitTracks(const int N_proc, const Event * ev)
   // XXXXX What's with chi2?
 }
 
+void MkFitter::FitOneTrack(const Event * ev)
+{
+  // Fitting loop.
+  const int N_proc = 1;
+  const int tkidx = Label(0,0,0);
+  Track tmptk;
+
+  for (int hi = Config::nlayers_per_seed; hi < Nhits; ++hi)
+  {
+    if (HitsIdx[hi](0, 0, 0) >= 0) 
+    {
+      propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[hi],
+			     Err[iP], Par[iP], N_proc);
+
+      Err[iP].CopyOut(0, tmptk.errors_nc().Array());
+      Par[iP].CopyOut(0, tmptk.parameters_nc().Array());
+      std::cout << tkidx << "-P: " << hi << std::endl;
+      print(tmptk.state());
+      
+      updateParametersMPlex(Err[iP], Par[iP], Chg, msErr[hi], msPar[hi],
+			    Err[iC], Par[iC], N_proc);
+
+      Err[iC].CopyOut(0, tmptk.errors_nc().Array());
+      Par[iC].CopyOut(0, tmptk.parameters_nc().Array());
+      std::cout << tkidx << "-U: " << hi << std::endl;
+      print(tmptk.state());
+
+    } else {
+
+      MPlexLS tmp_err;
+      MPlexLV tmp_par;
+
+      propagateHelixToRMPlex(Err[iC], Par[iC], Chg, ev->geom_.Radius(hi),
+			     tmp_err, tmp_par, N_proc);
+
+      tmp_err.CopyOut(0, tmptk.errors_nc().Array());
+      tmp_par.CopyOut(0, tmptk.parameters_nc().Array());
+      std::cout << tkidx << "-T: " << hi << std::endl;
+      print(tmptk.state());
+    }
+  }
+}
+
 void MkFitter::CollectFitValidation(const int hi, const int N_proc, const Event * ev) const
 {
   for (int n = 0; n < N_proc; ++n)
@@ -611,10 +654,39 @@ void MkFitter::FitSortedTracks(const int N_proc, const Event * ev)
     propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[hi],
                            Err[iP], Par[iP], N_proc);
 
+    for (int i = 0; i < N_proc; i++)
+    {
+      const int tkidx = Label(i,0,0);
+      //      if (tkidx == 64 || tkidx == 86 || tkidx == 52 || tkidx == 88)
+      if (tkidx == 18029)
+      {
+	Track local;
+	Err[iP].CopyOut(i, local.errors_nc().Array());
+	Par[iP].CopyOut(i, local.parameters_nc().Array());
+	std::cout << tkidx << "-P: " << hi << std::endl;
+	print(local.state());
+      }
+    }
+    
     if (Config::fit_val) MkFitter::CollectSortedFitValidation(hi,N_proc,ev); // iP is output
 
     updateParametersMPlex(Err[iP], Par[iP], Chg, msErr[hi], msPar[hi],
                           Err[iC], Par[iC], N_proc);
+
+    for (int i = 0; i < N_proc; i++)
+    {
+      const int tkidx = Label(i,0,0);
+      //      if (tkidx == 64 || tkidx == 86 || tkidx == 52 || tkidx == 88)
+      if (tkidx == 18029)
+      {
+	Track local;
+	Err[iC].CopyOut(i, local.errors_nc().Array());
+	Par[iC].CopyOut(i, local.parameters_nc().Array());
+	std::cout << tkidx << "-U: " << hi << std::endl;
+	print(local.state());
+      }
+    }
+
   }
 }
 

@@ -87,6 +87,7 @@ public:
   void InputSeedsTracksAndHits(const std::vector<Track>& seeds, const std::vector<Track>& tracks, const std::vector<HitVec>& layerHits, int beg, int end);
   void ConformalFitTracks(bool fitting, int beg, int end);
   void FitTracks(const int N_proc, const Event * ev);
+  void FitOneTrack(const Event * ev);
   void FitSortedTracks(const int N_proc, const Event * ev);
   void FitTracksTestEndcap(const int N_proc, const Event* ev);
 

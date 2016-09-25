@@ -24,6 +24,7 @@
 
 #include <iostream>
 #include <memory>
+#include <limits>
 
 #if defined(USE_VTUNE_PAUSE)
 #include "ittnotify.h"
@@ -231,6 +232,49 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
   prepSeedTracks(seedtracks,nHitsToTks);
   fittracks.resize(seedtracks.size());
 
+  std::map<int,int> lbl2idx;
+  int lbl = 18029;
+  for (int iseed = 0; iseed < seedtracks.size(); iseed++)
+  {
+    const auto& seedtrack = seedtracks[iseed];
+    const int tklbl = seedtrack.label();
+    lbl2idx[tklbl] = iseed;
+    //    if (tkidx == 64 || tkidx == 86 || tkidx == 52 || tkidx == 88)
+    if (tklbl == lbl)
+    {
+      std::cout << tklbl << " (" << iseed << "): ";
+      for (int il = 0; il < Config::nLayers; il++)
+      {
+      	std::cout << seedtrack.getHitIdx(il) << " ";
+      }
+      std::cout << std::endl;
+    }
+  }
+
+  std::vector<Track> onetrack; 
+  onetrack.push_back(seedtracks[lbl2idx[lbl]]);
+  MkFitter * mkf1 = new MkFitter();
+  mkf1->SetNhits(Config::nLayers);
+
+  // const float    big = std::numeric_limits<float>::infinity();
+  // const SVector3 tmppos(-5.44678,24.9934,-18.3289);
+  // SMatrixSym33   tmperr = ROOT::Math::SMatrixIdentity();
+  // tmperr(0,0) = big; tmperr(0,1) = big; tmperr(0,2) = big;
+  // tmperr(1,0) = big; tmperr(1,1) = big; tmperr(1,2) = big;
+  // tmperr(2,0) = big; tmperr(2,1) = big; tmperr(2,2) = big;
+  // Hit tmphit(tmppos,tmperr,-1);
+  // ev.layerHits_[4].push_back(tmphit);
+  // onetrack[0].setHitIdx(4,ev.layerHits_[4].size()-1);
+
+  //  mkf1->InputTrackGoodLayers(seedtracks, lbl2idx[lbl], lbl2idx[lbl]+1);
+  mkf1->InputTracksAndHits(onetrack, ev.layerHits_, 0, 1);
+  mkf1->FitOneTrack(&ev);
+  mkf1->OutputFittedTracks(onetrack, 0, 1);
+
+  delete mkf1;
+
+  exit(0);
+
   int previdx = 0;
   for (auto&& indexinfo : nHitsToTks)
   {
@@ -269,6 +313,8 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
     });
     previdx += theLocalEnd;
   }
+
+  exit(0);
 
   time = dtime() - time;
 
