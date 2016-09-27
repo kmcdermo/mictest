@@ -726,11 +726,11 @@ void TTreeValidation::collectBranchingInfo(int seedID, int ilayer,
   seedToBranchValVecLayMapMap_[seedID][ilayer].push_back(tmpBranchVal);
 }
 
-void TTreeValidation::collectFitInfo(float ppz, float ppezz, float hz, float hezz, float ppphi, float ppephiphi, float hphi, float hephiphi, int layer, int seed)
+void TTreeValidation::collectFitInfo(float ppz, float ppezz, float ppphi, float ppephiphi, int layer, int seed)
 {
   std::lock_guard<std::mutex> locker(glock_);
 
-  FitVal tmpfitval(ppz,ppezz,hz,hezz,ppphi,ppephiphi,hphi,hephiphi);
+  FitVal tmpfitval(ppz,ppezz,ppphi,ppephiphi);
   fitValTkMapMap_[seed][layer] = tmpfitval;
 }
 
@@ -938,38 +938,58 @@ void TTreeValidation::fillFitTree(const Event& ev)
   std::lock_guard<std::mutex> locker(glock_); 
 
   evtid_fit_ = ev.evtID();
-  const auto& simtracks = ev.simTracks_;
-  const auto& layHits   = ev.layerHits_;
+  const auto& simtracks  = ev.simTracks_;
+  const auto& seedtracks = ev.seedTracks_;
+  const auto& layerhits  = ev.layerHits_;
+
+  std::map<int,int> sim2seed; // sim label and idx (which is seed label) to seed idx
+  for (int idx = 0; idx < seedtracks.size(); idx++)
+  {
+    sim2seed[seedtracks[idx].label()] = idx;
+  }
 
   for(auto&& fitvalmapmap : fitValTkMapMap_)
   {
     tkid_fit_ = fitvalmapmap.first; // seed id (label) is the same as the mcID
 
-    const auto& simtrack = simtracks[tkid_fit_];
+    const auto& simtrack  = simtracks[tkid_fit_];
+    const auto& seedtrack = seedtracks[sim2seed[tkid_fit_]];
+    
     auto& fitvalmap = fitvalmapmap.second;
     resetFitBranches();
-    for(int ilayer = 0; ilayer < Config::nLayers; ++ilayer)
+    for(int ilayer = 0; ilayer < Config::nlayers_per_seed; ++ilayer)
+    {
+      const auto& hit = layerhits[ilayer][seedtrack.getHitIdx(ilayer)];
+
+      z_hit_fit_[ilayer]   = hit.z();
+      ezz_hit_fit_[ilayer] = hit.ezz();
+      
+      phi_hit_fit_[ilayer]     = hit.phi();
+      ephiphi_hit_fit_[ilayer] = hit.ephi();
+    }
+    for(int ilayer = Config::nlayers_per_seed; ilayer < Config::nLayers; ++ilayer)
     {
       if (fitvalmap.count(ilayer))
       {
+	const auto& hit    = layerhits[ilayer][seedtrack.getHitIdx(ilayer)];
 	const auto& fitval = fitvalmap[ilayer];
 
+	z_hit_fit_[ilayer]    = hit.z();
+	ezz_hit_fit_[ilayer]  = hit.ezz();
 	z_prop_fit_[ilayer]   = fitval.ppz;
 	ezz_prop_fit_[ilayer] = fitval.ppezz;
-	z_hit_fit_[ilayer]    = fitval.hz;
-	ezz_hit_fit_[ilayer]  = fitval.hezz;
 
+	phi_hit_fit_[ilayer]      = hit.phi();
+	ephiphi_hit_fit_[ilayer]  = hit.ephi();
 	phi_prop_fit_[ilayer]     = fitval.ppphi;
 	ephiphi_prop_fit_[ilayer] = fitval.ppephiphi;
-	phi_hit_fit_[ilayer]      = fitval.hphi;
-	ephiphi_hit_fit_[ilayer]  = fitval.hephiphi;
       }
     }
 
     mc_firstlay_fit_     = simtrack.getFirstLayerAfterSeed();
-    mc_firstlay_eta_fit_ = (mc_firstlay_fit_>=0)?layHits[mc_firstlay_fit_][simtrack.getHitIdx(mc_firstlay_fit_)].eta():-1000.f;
+    mc_firstlay_eta_fit_ = (mc_firstlay_fit_>=0)?layerhits[mc_firstlay_fit_][simtrack.getHitIdx(mc_firstlay_fit_)].eta():-1000.f;
     mc_lastlay_fit_      = simtrack.getLastLayer();
-    mc_lastlay_eta_fit_  = layHits[mc_lastlay_fit_][simtrack.getHitIdx(mc_lastlay_fit_)].eta();
+    mc_lastlay_eta_fit_  = layerhits[mc_lastlay_fit_][simtrack.getHitIdx(mc_lastlay_fit_)].eta();
 
     mc_eta_fit_   = simtrack.momEta();
     mc_phi_fit_   = simtrack.momPhi();

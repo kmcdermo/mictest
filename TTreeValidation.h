@@ -37,19 +37,16 @@ struct FitVal
 {
 public:
   FitVal() {
-    ppz=-1000.f;   ppezz=-1000.f;     hz=-1000.f;   hezz=-1000.f;
-    ppphi=-1000.f; ppephiphi=-1000.f; hphi=-1000.f; hephiphi=1000.f;
+    ppz=-1000.f; ppezz=-1000.f; ppphi=-1000.f; ppephiphi=-1000.f;
   }
-  FitVal(float ppz, float ppezz, float hz, float hezz, float ppphi, float ppephiphi, float hphi, float hephiphi) : 
-  ppz(ppz), ppezz(ppezz), hz(hz), ppphi(ppphi), ppephiphi(ppephiphi), hphi(hphi), hephiphi(hephiphi) {}
+  FitVal(float ppz, float ppezz, float ppphi, float ppephiphi) : 
+  ppz(ppz), ppezz(ppezz), ppphi(ppphi), ppephiphi(ppephiphi) {}
+
+  // pp = propagatated position, +e = error (squared)
   float ppz;
   float ppezz;
-  float hz;
-  float hezz;
   float ppphi;
   float ppephiphi;
-  float hphi;
-  float hephiphi;
 };
 
 typedef std::map<int, FitVal> FitValLayMap;
@@ -92,7 +89,7 @@ public:
   void collectFitTkCFMapInfo(int seedID, const TrackState& cfitStateHit0) override;
   void collectFitTkTSLayerPairVecMapInfo(int seedID, const TSLayerPairVec& updatedStates) override;
 
-  void collectFitInfo(float ppz, float ppezz, float hz, float hezz, float pphphi, float ppephiphi, float hphi, float hephiphi, int layer, int seed) override;
+  void collectFitInfo(float ppz, float ppezz, float pphphi, float ppephiphi, int layer, int seed) override;
   void collectPropTSLayerVecInfo(int layer, const TrackState& propTS) override;
   void collectChi2LayerVecInfo(int layer, float chi2) override;
   void collectUpTSLayerVecInfo(int layer, const TrackState& upTS) override;

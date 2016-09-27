@@ -245,10 +245,17 @@ public:
     return state_.errors().At(2,2);
   }
   float phi() const {
-    return getPhi(state_.parameters().At(0), state_.parameters().At(1));
+    return getPhi(x(), y());
   }
   float eta() const {
-    return getEta(state_.parameters().At(0), state_.parameters().At(1), state_.parameters().At(2));
+    return getEta(x(), y(), z());
+  }
+  float ephi() const {
+    return getPhiErr2(x(), y(), exx(), eyy(), state_.errors().At(0,1));
+  }
+  float eeta() const {
+    return getEtaErr2(x(), y(), z(), exx(), eyy(), ezz(), 
+		      state_.errors().At(0,1), state_.errors().At(0,2), state_.errors().At(1,2));
   }
 
   const MeasurementState& measurementState() const {
