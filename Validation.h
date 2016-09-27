@@ -20,7 +20,7 @@ public:
   virtual void collectFitTkCFMapInfo(int, const TrackState&) {}
   virtual void collectFitTkTSLayerPairVecMapInfo(int, const TSLayerPairVec&) {}
 
-  virtual void collectFitInfo(float, float, float, float, float, float, int, int) {}
+  virtual void collectFitInfo(float, float, float, float, float, float, float, float, int, int) {}
 
   virtual void collectPropTSLayerVecInfo(int, const TrackState&) {} // exclusively for debugtree
   virtual void collectChi2LayerVecInfo(int, float) {} // exclusively for debugtree

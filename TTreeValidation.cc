@@ -660,10 +660,12 @@ void TTreeValidation::initializeFitTree(){
   fittree_->Branch("z_prop",&z_prop_fit_,"z_prop[nlayers_fit_]/F");
   fittree_->Branch("ezz_prop",&ezz_prop_fit_,"ezz_prop[nlayers_fit_]/F");
   fittree_->Branch("z_hit",&z_hit_fit_,"z_hit[nlayers_fit_]/F");
+  fittree_->Branch("ezz_hit",&ezz_hit_fit_,"ezz_hit[nlayers_fit_]/F");
 
   fittree_->Branch("phi_prop",&phi_prop_fit_,"phi_prop[nlayers_fit_]/F");
-  fittree_->Branch("ephi_prop",&ephi_prop_fit_,"ephi_prop[nlayers_fit_]/F");
+  fittree_->Branch("ephiphi_prop",&ephiphi_prop_fit_,"ephiphi_prop[nlayers_fit_]/F");
   fittree_->Branch("phi_hit",&phi_hit_fit_,"phi_hit[nlayers_fit_]/F");
+  fittree_->Branch("ephiphi_hit",&ephiphi_hit_fit_,"ephiphi_hit[nlayers_fit_]/F");
 
   fittree_->Branch("mc_firstlay",&mc_firstlay_fit_);
   fittree_->Branch("mc_firstlay_eta",&mc_firstlay_eta_fit_);
@@ -724,11 +726,11 @@ void TTreeValidation::collectBranchingInfo(int seedID, int ilayer,
   seedToBranchValVecLayMapMap_[seedID][ilayer].push_back(tmpBranchVal);
 }
 
-void TTreeValidation::collectFitInfo(float pz, float pezz, float mz, float pphi, float pephi, float mphi, int layer, int seed)
+void TTreeValidation::collectFitInfo(float ppz, float ppezz, float hz, float hezz, float ppphi, float ppephiphi, float hphi, float hephiphi, int layer, int seed)
 {
   std::lock_guard<std::mutex> locker(glock_);
 
-  FitVal tmpfitval(pz,pezz,mz,pphi,pephi,mphi);
+  FitVal tmpfitval(ppz,ppezz,hz,hezz,ppphi,ppephiphi,hphi,hephiphi);
   fitValTkMapMap_[seed][layer] = tmpfitval;
 }
 
@@ -919,12 +921,15 @@ void TTreeValidation::resetFitBranches()
 {
   for(int ilayer = 0; ilayer < Config::nLayers; ++ilayer)
   {
-    z_prop_fit_[ilayer]    = -1000.f;
-    ezz_prop_fit_[ilayer]  = -1000.f;
-    z_hit_fit_[ilayer]     = -1000.f;
-    phi_prop_fit_[ilayer]  = -1000.f;
-    ephi_prop_fit_[ilayer] = -1000.f;
-    phi_hit_fit_[ilayer]   = -1000.f;
+    z_prop_fit_[ilayer]   = -1000.f;
+    ezz_prop_fit_[ilayer] = -1000.f;
+    z_hit_fit_[ilayer]    = -1000.f;
+    ezz_hit_fit_[ilayer]  = -1000.f;
+
+    phi_prop_fit_[ilayer]     = -1000.f;
+    ephiphi_prop_fit_[ilayer] = -1000.f;
+    phi_hit_fit_[ilayer]      = -1000.f;
+    ephiphi_hit_fit_[ilayer]  = -1000.f;
   }  
 }
 
@@ -947,13 +952,17 @@ void TTreeValidation::fillFitTree(const Event& ev)
     {
       if (fitvalmap.count(ilayer))
       {
-	const auto& fitval     = fitvalmap[ilayer];
-	z_prop_fit_[ilayer]    = fitval.pz;
-	ezz_prop_fit_[ilayer]  = fitval.pezz;
-	z_hit_fit_[ilayer]     = fitval.mz;
-	phi_prop_fit_[ilayer]  = fitval.pphi;
-	ephi_prop_fit_[ilayer] = fitval.pephi;
-	phi_hit_fit_[ilayer]   = fitval.mphi;
+	const auto& fitval = fitvalmap[ilayer];
+
+	z_prop_fit_[ilayer]   = fitval.ppz;
+	ezz_prop_fit_[ilayer] = fitval.ppezz;
+	z_hit_fit_[ilayer]    = fitval.hz;
+	ezz_hit_fit_[ilayer]  = fitval.hezz;
+
+	phi_prop_fit_[ilayer]     = fitval.ppphi;
+	ephiphi_prop_fit_[ilayer] = fitval.ppephiphi;
+	phi_hit_fit_[ilayer]      = fitval.hphi;
+	ephiphi_hit_fit_[ilayer]  = fitval.hephiphi;
       }
     }
 

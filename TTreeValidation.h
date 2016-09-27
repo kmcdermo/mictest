@@ -37,17 +37,19 @@ struct FitVal
 {
 public:
   FitVal() {
-    pz=-1000.f;   pezz=-1000.f;  mz=-1000.f;
-    pphi=-1000.f; pephi=-1000.f; mphi=-1000.f;
+    ppz=-1000.f;   ppezz=-1000.f;     hz=-1000.f;   hezz=-1000.f;
+    ppphi=-1000.f; ppephiphi=-1000.f; hphi=-1000.f; hephiphi=1000.f;
   }
-  FitVal(float pz, float pezz, float mz, float pphi, float pephi, float mphi) : 
-  pz(pz), pezz(pezz), mz(mz), pphi(pphi), pephi(pephi), mphi(mphi) {}
-  float pz;
-  float pezz;
-  float mz;
-  float pphi;
-  float pephi;
-  float mphi;
+  FitVal(float ppz, float ppezz, float hz, float hezz, float ppphi, float ppephiphi, float hphi, float hephiphi) : 
+  ppz(ppz), ppezz(ppezz), hz(hz), ppphi(ppphi), ppephiphi(ppephiphi), hphi(hphi), hephiphi(hephiphi) {}
+  float ppz;
+  float ppezz;
+  float hz;
+  float hezz;
+  float ppphi;
+  float ppephiphi;
+  float hphi;
+  float hephiphi;
 };
 
 typedef std::map<int, FitVal> FitValLayMap;
@@ -90,7 +92,7 @@ public:
   void collectFitTkCFMapInfo(int seedID, const TrackState& cfitStateHit0) override;
   void collectFitTkTSLayerPairVecMapInfo(int seedID, const TSLayerPairVec& updatedStates) override;
 
-  void collectFitInfo(float pz, float pezz, float mz, float pphi, float pephi, float mphi, int layer, int seed) override;
+  void collectFitInfo(float ppz, float ppezz, float hz, float hezz, float pphphi, float ppephiphi, float hphi, float hephiphi, int layer, int seed) override;
   void collectPropTSLayerVecInfo(int layer, const TrackState& propTS) override;
   void collectChi2LayerVecInfo(int layer, float chi2) override;
   void collectUpTSLayerVecInfo(int layer, const TrackState& upTS) override;
@@ -348,8 +350,8 @@ public:
   // Fit tree (for fine tuning z-phi windows in Matriplex only)
   TTree* fittree_;
   int   nlayers_fit_=0,tkid_fit_=0,evtid_fit_=0;
-  float z_prop_fit_[Config::nLayers],ezz_prop_fit_[Config::nLayers],z_hit_fit_[Config::nLayers];
-  float phi_prop_fit_[Config::nLayers],ephi_prop_fit_[Config::nLayers],phi_hit_fit_[Config::nLayers];
+  float z_prop_fit_[Config::nLayers],ezz_prop_fit_[Config::nLayers],z_hit_fit_[Config::nLayers],ezz_hit_fit_[Config::nLayers];
+  float phi_prop_fit_[Config::nLayers],ephiphi_prop_fit_[Config::nLayers],phi_hit_fit_[Config::nLayers],ephiphi_hit_fit_[Config::nLayers];
   float mc_eta_fit_=0.,mc_phi_fit_=0.,mc_pt_fit_=0.;
   int   mc_nhits_fit_=0;
   int   mc_firstlay_fit_=0,mc_lastlay_fit_=0;
