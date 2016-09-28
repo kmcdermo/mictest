@@ -5,7 +5,7 @@
 #include "Propagation.h"
 #include "Simulation.h"
 #include "Geometry.h"
-//#define DEBUG
+#define DEBUG
 #include <Debug.h>
 
 #include "MkFitter.h"
@@ -256,15 +256,24 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
   MkFitter * mkf1 = new MkFitter();
   mkf1->SetNhits(Config::nLayers);
 
-  // const float    big = std::numeric_limits<float>::infinity();
-  // const SVector3 tmppos(-5.44678,24.9934,-18.3289);
-  // SMatrixSym33   tmperr = ROOT::Math::SMatrixIdentity();
-  // tmperr(0,0) = big; tmperr(0,1) = big; tmperr(0,2) = big;
-  // tmperr(1,0) = big; tmperr(1,1) = big; tmperr(1,2) = big;
-  // tmperr(2,0) = big; tmperr(2,1) = big; tmperr(2,2) = big;
-  // Hit tmphit(tmppos,tmperr,-1);
-  // ev.layerHits_[4].push_back(tmphit);
-  // onetrack[0].setHitIdx(4,ev.layerHits_[4].size()-1);
+  const float    big = std::numeric_limits<float>::infinity();
+  const SVector3 tmppos(big,big,big);
+  SMatrixSym33   tmperr = ROOT::Math::SMatrixIdentity();
+  tmperr(0,0) = big; 
+  tmperr(0,1) = big; 
+  tmperr(0,2) = big;
+  tmperr(1,0) = big; 
+  tmperr(1,1) = big; 
+  tmperr(1,2) = big;
+  tmperr(2,0) = big; 
+  tmperr(2,1) = big; 
+  tmperr(2,2) = big;
+  Hit tmphit(tmppos,tmperr,-1);
+  ev.layerHits_[4].push_back(tmphit);
+  onetrack[0].setHitIdx(4,ev.layerHits_[4].size()-1);
+  
+  print("Fake Hit Lay4:",ev.layerHits_[4][onetrack[0].getHitIdx(4)].measurementState());
+  std::cout << "===================================================" << std::endl;
 
   //  mkf1->InputTrackGoodLayers(seedtracks, lbl2idx[lbl], lbl2idx[lbl]+1);
   mkf1->InputTracksAndHits(onetrack, ev.layerHits_, 0, 1);
