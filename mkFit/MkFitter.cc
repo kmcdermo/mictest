@@ -596,10 +596,8 @@ void MkFitter::CollectFitValidation(const int hi, const int N_proc, const Event 
   {
     const float ppphi     = getPhi(Par[iP](n,0,0),Par[iP](n,1,0));
     const float ppephiphi = getPhiErr2(Par[iP](n,0,0),Par[iP](n,1,0),Err[iP](n,0,0),Err[iP](n,1,1),Err[iP](n,0,1));
-    const float hphi      = getPhi(msPar[hi](n,0,0),msPar[hi](n,1,0));
-    const float hephiphi  = getPhiErr2(msPar[hi](n,0,0),msPar[hi](n,1,0),msErr[hi](n,0,0),msErr[hi](n,1,1),msErr[hi](n,0,1));
 
-    ev->validation_.collectFitInfo(Par[iP](n,2,0),Err[iP](n,2,2),msPar[hi](n,2,0),msErr[hi](n,2,2),ppphi,ppephiphi,hphi,hephiphi,hi,Label(n,0,0));
+    ev->validation_.collectFitInfo(Par[iP](n,2,0),Err[iP](n,2,2),ppphi,ppephiphi,hi,Label(n,0,0));
   }
 }
 
@@ -625,10 +623,8 @@ void MkFitter::CollectSortedFitValidation(const int hi, const int N_proc, const 
   {
     const float ppphi     = getPhi(Par[iP](n,0,0),Par[iP](n,1,0));
     const float ppephiphi = getPhiErr2(Par[iP](n,0,0),Par[iP](n,1,0),Err[iP](n,0,0),Err[iP](n,1,1),Err[iP](n,0,1));
-    const float hphi      = getPhi(msPar[hi](n,0,0),msPar[hi](n,1,0));
-    const float hephiphi  = getPhiErr2(msPar[hi](n,0,0),msPar[hi](n,1,0),msErr[hi](n,0,0),msErr[hi](n,1,1),msErr[hi](n,0,1));
 
-    ev->validation_.collectFitInfo(Par[iP](n,2,0),Err[iP](n,2,2),msPar[hi](n,2,0),msErr[hi](n,2,2),ppphi,ppephiphi,hphi,hephiphi,GoodLayer[hi](n,0,0),Label(n,0,0));
+    ev->validation_.collectFitInfo(Par[iP](n,2,0),Err[iP](n,2,2),ppphi,ppephiphi,GoodLayer[hi](n,0,0),Label(n,0,0));
   }
 }
 
