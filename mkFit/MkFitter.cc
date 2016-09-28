@@ -618,7 +618,7 @@ void MkFitter::FitOneTrack(const Event * ev)
       print(tmptk.state());
 
     } else {
-
+      continue;
       MPlexLS tmp_err;
       MPlexLV tmp_par;
 
