@@ -609,8 +609,20 @@ void MkFitter::FitOneTrack(const Event * ev)
       std::cout << tkidx << "-P: " << hi << std::endl;
       print(tmptk.state());
       
-      updateParametersMPlex(Err[iP], Par[iP], Chg, msErr[hi], msPar[hi],
-			    Err[iC], Par[iC], N_proc);
+      // if (hi != 4)
+      // {
+	updateParametersMPlex(Err[iP], Par[iP], Chg, msErr[hi], msPar[hi],
+			      Err[iC], Par[iC], N_proc);
+      // } else { 
+      // 	for (int i = 0; i < 6; i++)
+      // 	{ 
+      // 	  Par[iC](0,i,0) = Par[iP](0,i,0);
+      // 	  for (int j = 0; j < 6; j++)
+      // 	  {
+      // 	    Err[iC](0,i,j) = Err[iP](0,i,j);
+      // 	  }
+      // 	}
+      // }
 
       Err[iC].CopyOut(0, tmptk.errors_nc().Array());
       Par[iC].CopyOut(0, tmptk.parameters_nc().Array());
