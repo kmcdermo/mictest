@@ -703,16 +703,6 @@ void updateParametersMPlex(const MPlexLS &psErr,  const MPlexLV& psPar, const MP
   // updateParametersContext ctx;
   //assert((long long)(&updateCtx.propErr.fArray[0]) % 64 == 0);
 
-  MPlexLS propErr;
-  MPlexLV propPar;
-  // do a full propagation step to correct for residual distance from the hit radius - need the charge for this
-  if (Config::useCMSGeom) {
-    propagateHelixToRMPlex(psErr,  psPar, inChg,  msPar, propErr, propPar, N_proc);
-  } else {
-    propErr = psErr;
-    propPar = psPar;
-  }
-
 #ifdef DEBUG
   {
     dmutex_guard;
