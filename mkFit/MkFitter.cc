@@ -818,15 +818,14 @@ void MkFitter::AddBestHit(const LayerOfHits &layer_of_hits, const int N_proc)
 #endif
 #endif //NO_GATHER
 
-    // do a full propagation step to correct for residual distance from the hit radius - need the charge for this
-    if (Config::useCMSGeom) {
-      propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[Nhits], Err[iP], Par[iP], N_proc);
-    }
-
     //now compute the chi2 of track state vs hit
     MPlexQF outChi2;
+    if (Config::useCMSGeom) 
+    {
+      propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[Nhits], Err[iP], Par[iP], N_proc);
+    }
     computeChi2MPlex(Err[iP], Par[iP], Chg, msErr[Nhits], msPar[Nhits], outChi2, N_proc);
-
+  
 #ifndef NO_PREFETCH
     // Prefetch to L1 the hits we'll process in the next loop iteration.
     for (int itrack = 0; itrack < N_proc; ++itrack)
@@ -895,8 +894,11 @@ void MkFitter::AddBestHit(const LayerOfHits &layer_of_hits, const int N_proc)
       // Don't update chi2
     }
   }
-
-  //now update the track parameters with this hit (note that some calculations are already done when computing chi2... not sure it's worth caching them?)
+  
+  // do a full propagation step from previous layer -- this way we can include material effects!
+  if (Config::useCMSGeom) {
+    propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[Nhits], Err[iP], Par[iP], N_proc);
+  }
   dprint("update parameters");
   updateParametersMPlex(Err[iP], Par[iP], Chg, msErr[Nhits], msPar[Nhits],
 			Err[iC], Par[iC], N_proc);
@@ -1011,6 +1013,11 @@ void MkFitter::FindCandidates(const LayerOfHits &layer_of_hits,
 
     if (oneCandPassCut)
     {
+      // do a full propagation step to correct for residual distance from the hit radius - need the charge for this
+      if (Config::useCMSGeom) {
+	propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[Nhits], Err[iP], Par[iP], N_proc);
+      }
+
       updateParametersMPlex(Err[iP], Par[iP], Chg, msErr[Nhits], msPar[Nhits], Err[iC], Par[iC], N_proc);
       dprint("update parameters" << std::endl
              << "propagated track parameters x=" << Par[iP].ConstAt(0, 0, 0) << " y=" << Par[iP].ConstAt(0, 1, 0) << std::endl
@@ -1274,6 +1281,11 @@ void MkFitter::UpdateWithLastHit(const LayerOfHits &layer_of_hits, int N_proc)
     msPar[Nhits - 1].CopyIn(i, hit.posArray());
   }
 
+  // do full prop from previous updated layer to exact radius with material effects
+  if (Config::useCMSGeom) {
+    propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[Nhits-1], Err[iP], Par[iP], N_proc);
+  }
+  
   updateParametersMPlex(Err[iP], Par[iP], Chg, msErr[Nhits-1], msPar[Nhits-1], Err[iC], Par[iC], N_proc);
 
   //now that we have moved propagation at the end of the sequence we lost the handle of
