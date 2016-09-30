@@ -349,10 +349,10 @@ public:
   int   nlayers_fit_=0,tkid_fit_=0,evtid_fit_=0;
   float z_prop_fit_[Config::nLayers],ezz_prop_fit_[Config::nLayers],z_hit_fit_[Config::nLayers],ezz_hit_fit_[Config::nLayers];
   float phi_prop_fit_[Config::nLayers],ephiphi_prop_fit_[Config::nLayers],phi_hit_fit_[Config::nLayers],ephiphi_hit_fit_[Config::nLayers];
+  int   track_firstlay_fit_=0,track_lastlay_fit_=0;
+  float track_firstlay_eta_fit_=0.,track_lastlay_eta_fit_=0.;
+  int   track_nhits_fit_=0;
   float mc_eta_fit_=0.,mc_phi_fit_=0.,mc_pt_fit_=0.;
-  int   mc_nhits_fit_=0;
-  int   mc_firstlay_fit_=0,mc_lastlay_fit_=0;
-  float mc_firstlay_eta_fit_=0.,mc_lastlay_eta_fit_=0.;
 
   std::mutex glock_;
 };

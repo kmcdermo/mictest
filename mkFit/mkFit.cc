@@ -277,6 +277,19 @@ void test_standard()
   tbb::task_scheduler_init tbb_init(Config::numThreadsFinder);
   omp_set_num_threads(Config::numThreadsFinder);
 
+  
+  
+  int nsimtks = 0;
+  int nallseeds = 0;
+  int ngoodseeds = 0;
+  std::vector<int> allhits(Config::nLayers);
+  std::vector<int> ngoodhits(Config::nLayers);
+  for (int il = 0; il < Config::nLayers; il++)
+  {
+    allhits[il] = 0;
+    ngoodhits[il] = 0;
+  } 
+
   for (int evt = 1; evt <= Config::nEvents; ++evt)
   {
     printf("\n");
@@ -298,6 +311,16 @@ void test_standard()
       ev.Simulate();
       ev.resetLayerHitMap(true);
     }
+
+    nsimtks += ev.simTracks_.size();
+    nallseeds += ev.seedTracks_.size();
+    for (auto&& seed : ev.seedTracks_){if (seed.label()>=0) {ngoodseeds++;}}
+    
+    for (int il = 0; il < Config::nLayers; il++)
+    {
+      allhits[il] += ev.layerHits_[il].size();
+      for (auto&& hit : ev.layerHits_[il]){if (ev.simHitsInfo_[hit.mcHitID()].mcTrackID() >= 0) {ngoodhits[il]++;}}
+    } 
 
     // if (evt!=2985) continue;
 
@@ -348,6 +371,15 @@ void test_standard()
   {
     close_simtrack_file();
   }
+
+  std::cout << "-------------------" << std::endl;
+  std::cout << "Averages" << std::endl;
+
+  std::cout << "nSimTks: " << nsimtks/float(Config::nEvents) << " nallseeds: " << nallseeds/float(Config::nEvents)  << " ngoodseeds: " << ngoodseeds/float(Config::nEvents)  << std::endl;
+  for (int il = 0; il < Config::nLayers; il++)
+  {
+    std::cout << "layer: " << il << " allhit: " << allhits[il]/float(Config::nEvents)  << " ngoodhits: " << ngoodhits[il]/float(Config::nEvents)  << std::endl;
+  } 
 
   val.saveTTrees();
 }

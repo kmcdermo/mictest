@@ -667,15 +667,15 @@ void TTreeValidation::initializeFitTree(){
   fittree_->Branch("phi_hit",&phi_hit_fit_,"phi_hit[nlayers_fit_]/F");
   fittree_->Branch("ephiphi_hit",&ephiphi_hit_fit_,"ephiphi_hit[nlayers_fit_]/F");
 
-  fittree_->Branch("mc_firstlay",&mc_firstlay_fit_);
-  fittree_->Branch("mc_firstlay_eta",&mc_firstlay_eta_fit_);
-  fittree_->Branch("mc_lastlay",&mc_lastlay_fit_);
-  fittree_->Branch("mc_lastlay_eta",&mc_lastlay_eta_fit_);
+  fittree_->Branch("track_firstlay",&track_firstlay_fit_);
+  fittree_->Branch("track_firstlay_eta",&track_firstlay_eta_fit_);
+  fittree_->Branch("track_lastlay",&track_lastlay_fit_);
+  fittree_->Branch("track_lastlay_eta",&track_lastlay_eta_fit_);
+  fittree_->Branch("track_nhits",&track_nhits_fit_);
 
   fittree_->Branch("mc_eta",&mc_eta_fit_);
   fittree_->Branch("mc_phi",&mc_phi_fit_);
   fittree_->Branch("mc_pt",&mc_pt_fit_);
-  fittree_->Branch("mc_nhits",&mc_nhits_fit_);
 }
 
 void TTreeValidation::alignTrackExtra(TrackVec& evt_tracks, TrackExtraVec& evt_extras){
@@ -942,21 +942,63 @@ void TTreeValidation::fillFitTree(const Event& ev)
   const auto& seedtracks = ev.seedTracks_;
   const auto& layerhits  = ev.layerHits_;
 
+  std::vector<int> shortseeds;   // seeds with only three hits never propagate, so never enter the validation
+  for (int idx = 0; idx < seedtracks.size(); idx++)
+  {
+    if (seedtracks[idx].label() >= 0 && seedtracks[idx].nFoundHits() == 3) shortseeds.push_back(idx);
+  }
+
   std::map<int,int> sim2seed; // sim label and idx (which is seed label) to seed idx
   for (int idx = 0; idx < seedtracks.size(); idx++)
   {
     sim2seed[seedtracks[idx].label()] = idx;
   }
 
+  // validate puny seeds first
+  for (auto idx : shortseeds)
+  {
+    resetFitBranches();
+
+    const auto& seedtrack = seedtracks[idx];
+    const auto& simtrack  = simtracks[seedtrack.label()];
+    
+    tkid_fit_ = simtrack.label();
+
+    for(int ilayer = 0; ilayer < Config::nlayers_per_seed; ++ilayer)
+    {
+      const auto& hit = layerhits[ilayer][seedtrack.getHitIdx(ilayer)];
+
+      z_hit_fit_[ilayer]   = hit.z();
+      ezz_hit_fit_[ilayer] = hit.ezz();
+      
+      phi_hit_fit_[ilayer]     = hit.phi();
+      ephiphi_hit_fit_[ilayer] = hit.ephi();
+    }
+
+    track_firstlay_fit_     = seedtrack.getFirstLayerAfterSeed();
+    track_firstlay_eta_fit_ = (track_firstlay_fit_>=0)?layerhits[track_firstlay_fit_][seedtrack.getHitIdx(track_firstlay_fit_)].eta():-1000.f;
+    track_lastlay_fit_      = seedtrack.getLastLayer();
+    track_lastlay_eta_fit_  = (track_lastlay_fit_ >=0)?layerhits[track_lastlay_fit_ ][seedtrack.getHitIdx(track_lastlay_fit_ )].eta():-1000.f;
+    track_nhits_fit_        = seedtrack.nFoundHits(); 
+
+    mc_eta_fit_   = simtrack.momEta();
+    mc_phi_fit_   = simtrack.momPhi();
+    mc_pt_fit_    = simtrack.pT();
+
+    fittree_->Fill();
+  }
+
+  // validation for tracks that are more than just seeds
   for(auto&& fitvalmapmap : fitValTkMapMap_)
   {
+    resetFitBranches();
+
     tkid_fit_ = fitvalmapmap.first; // seed id (label) is the same as the mcID
 
     const auto& simtrack  = simtracks[tkid_fit_];
     const auto& seedtrack = seedtracks[sim2seed[tkid_fit_]];
     
     auto& fitvalmap = fitvalmapmap.second;
-    resetFitBranches();
     for(int ilayer = 0; ilayer < Config::nlayers_per_seed; ++ilayer)
     {
       const auto& hit = layerhits[ilayer][seedtrack.getHitIdx(ilayer)];
@@ -986,15 +1028,15 @@ void TTreeValidation::fillFitTree(const Event& ev)
       }
     }
 
-    mc_firstlay_fit_     = simtrack.getFirstLayerAfterSeed();
-    mc_firstlay_eta_fit_ = (mc_firstlay_fit_>=0)?layerhits[mc_firstlay_fit_][simtrack.getHitIdx(mc_firstlay_fit_)].eta():-1000.f;
-    mc_lastlay_fit_      = simtrack.getLastLayer();
-    mc_lastlay_eta_fit_  = layerhits[mc_lastlay_fit_][simtrack.getHitIdx(mc_lastlay_fit_)].eta();
+    track_firstlay_fit_     = seedtrack.getFirstLayerAfterSeed();
+    track_firstlay_eta_fit_ = (track_firstlay_fit_>=0)?layerhits[track_firstlay_fit_][seedtrack.getHitIdx(track_firstlay_fit_)].eta():-1000.f;
+    track_lastlay_fit_      = seedtrack.getLastLayer();
+    track_lastlay_eta_fit_  = (track_lastlay_fit_ >=0)?layerhits[track_lastlay_fit_ ][seedtrack.getHitIdx(track_lastlay_fit_ )].eta():-1000.f;
+    track_nhits_fit_        = seedtrack.nFoundHits(); 
 
     mc_eta_fit_   = simtrack.momEta();
     mc_phi_fit_   = simtrack.momPhi();
     mc_pt_fit_    = simtrack.pT();
-    mc_nhits_fit_ = simtrack.nFoundHits(); // at the moment, sim track hits == reco track hits
 
     fittree_->Fill();
   } 
