@@ -79,9 +79,10 @@ void generate_and_save_tracks()
 {
   FILE *fp = fopen(g_file_name.c_str(), "w");
 
-  int Ntracks = Config::nTracks;
-
+  Config::nEvents = 100;
   int Nevents = Config::nEvents;
+
+  int ntracks_evt[100] = {255,336,527,327,368,360,221,278,418,290,211,280,440,183,271,294,320,339,366,192,398,310,243,355,357,288,461,321,308,256,377,347,389,322,276,466,438,328,282,468,240,468,269,305,241,560,378,319,312,215,428,344,193,332,292,306,219,296,476,261,288,286,299,368,293,406,402,328,300,382,259,220,306,509,421,394,271,311,424,385,257,490,223,256,178,245,223,251,231,431,254,378,222,321,329,326,420,183,357,339};
 
   Geometry geom;
   initGeom(geom);
@@ -93,6 +94,9 @@ void generate_and_save_tracks()
 
   for (int evt = 0; evt < Nevents; ++evt)
   {
+    Config::nTracks = ntracks_evt[evt];
+    int Ntracks = Config::nTracks;
+
     Event ev(geom, val, evt);
 
     omp_set_num_threads(Config::numThreadsSimulation);
