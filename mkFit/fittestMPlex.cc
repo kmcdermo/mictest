@@ -52,6 +52,41 @@ void mergeSimTksIntoSeedTks(std::vector<Track>& simtracks, std::vector<Track>& s
   if (Config::prune_tracks) seedtracks.erase(std::remove_if(seedtracks.begin(),seedtracks.end(),isNotEnoughHits),seedtracks.end()); 
 }
 
+void addFakeHits(std::vector<Track>& seedtracks, std::vector<HitVec>& layerHits)
+{
+  // add fake hits to the end of the layerhits vector
+  // since we propagate to the "exact" radius with R as the parameter
+  // simply just make the components of the hit to be (r, 0, 0)
+  // and to zero the KF gain --> make the uncertainity infinite on diagonal, zero on the off diagonal (i.e. 1e15)
+
+  const float big = 1e15;
+  for (int hi = 0; hi < Config::nLayers; hi++)
+  {
+    const SVector3 tmppos(Config::cmsAvgRads[hi],0,0);
+    SMatrixSym33   tmperr = ROOT::Math::SMatrixIdentity();
+    tmperr(0,0) = big; 
+    tmperr(1,1) = big; 
+    tmperr(2,2) = big;
+    Hit tmphit(tmppos,tmperr,-1);
+    layerHits[hi].push_back(tmphit);
+  }
+
+  // now make a small map of the layer sizes
+  std::map<int,int> laysizes;
+  for (int hi = 0; hi < Config::nLayers; hi++)
+  {
+    laysizes[hi] = layerHits[hi].size()-1;
+  }
+
+  for (auto&& seedtrack : seedtracks)
+  {
+    for (int hi = 0; hi < Config::nLayers; hi++)
+    {
+      if (seedtrack.getHitIdx(hi) < 0) seedtrack.setHitIdx(hi,laysizes[hi]);
+    }
+  }
+}
+
 void prepSeedTracks(std::vector<Track>& seedtracks, std::map<int,int>& nHitsToTks)
 {
   std::sort(seedtracks.begin(),seedtracks.end(),sortByLessNhits);
@@ -212,6 +247,63 @@ double runFittingTestPlex(Event& ev, std::vector<Track>& fittracks)
 
    return time;
 }
+
+double runFittingTestPlexFakeHits(Event& ev, std::vector<Track>& fittracks)
+{
+  g_exe_ctx.populate(Config::numThreadsFinder);
+
+  // get the tracks ready for processing
+  std::vector<Track>& simtracks  = ev.simTracks_;
+  std::vector<Track>& seedtracks = ev.seedTracks_;
+  mergeSimTksIntoSeedTks(simtracks,seedtracks);  
+
+  // assume that fake hits already added in building
+  addFakeHits(seedtracks,ev.layerHits_);
+
+  const int Nhits = Config::nLayers;
+  
+  int theEnd = seedtracks.size();
+  int count  = (theEnd + NN - 1)/NN;
+  
+#ifdef USE_VTUNE_PAUSE
+  __itt_resume();
+#endif
+
+  double time = dtime();
+
+  tbb::parallel_for(tbb::blocked_range<int>(0, count, std::max(1, Config::numSeedsPerTask/NN)),
+     [&](const tbb::blocked_range<int>& i)
+  {
+    std::unique_ptr<MkFitter, decltype(retfitr)> mkfp(g_exe_ctx.m_fitters.GetFromPool(), retfitr);
+    mkfp->SetNhits(Nhits);
+    for (int it = i.begin(); it < i.end(); ++it)
+    {
+      int itrack = it*NN;
+      int end = itrack + NN;
+      
+      if (theEnd < end) 
+      {
+	end = theEnd;
+	mkfp->InputTracksAndHits(seedtracks, ev.layerHits_, itrack, end);
+      } else {
+	mkfp->SlurpInTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
+      }
+      mkfp->FitTracks(end - itrack, &ev);
+      mkfp->OutputFittedTracks(fittracks, itrack, end);
+    }
+  });
+
+  time = dtime() - time;
+  
+#ifdef USE_VTUNE_PAUSE
+  __itt_pause();
+#endif
+  
+  ev.Validate();
+  
+  return time;
+}
+
 
 double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
 {

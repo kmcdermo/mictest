@@ -64,6 +64,7 @@ namespace
 
   bool  g_run_fit_std   = false;
   bool  g_run_fit_sort  = false;
+  bool  g_run_fit_fake  = false;
 
   bool  g_run_build_all = true;
   bool  g_run_build_bh  = false;
@@ -307,7 +308,13 @@ void test_standard()
 
     for (int b = 0; b < Config::finderReportBestOutOfN; ++b)
     {
-      t_cur[0] = (g_run_fit_std   || g_run_fit_sort)  ? ((g_run_fit_std) ? runFittingTestPlex(ev, ev.fitTracks_) : runFittingTestPlexSortedTracks(ev, ev.fitTracks_)) : 0;
+      if (g_run_fit_std || g_run_fit_sort || g_run_fit_fake)
+      {
+	if      (g_run_fit_std)  t_cur[0] = runFittingTestPlex(ev, ev.fitTracks_);
+	else if (g_run_fit_sort) t_cur[0] = runFittingTestPlexSortedTracks(ev, ev.fitTracks_);
+	else if (g_run_fit_fake) t_cur[0] = runFittingTestPlexFakeHits(ev, ev.fitTracks_);
+      }
+      else t_cur[0] = 0;
       t_cur[1] = (g_run_build_all || g_run_build_bh)  ? runBuildingTestPlexBestHit(ev) : 0;
       t_cur[2] = (g_run_build_all || g_run_build_std) ? runBuildingTestPlex(ev, ev_tmp) : 0;
       t_cur[3] = (g_run_build_all || g_run_build_ce)  ? runBuildingTestPlexCloneEngine(ev, ev_tmp) : 0;
@@ -407,6 +414,7 @@ int main(int argc, const char *argv[])
         "  --fit-std                run standard fitting test (def: false)\n"
         "  --fit-std-only           run only standard fitting test (def: false)\n"
         "  --fit-sort-only          run only sorted fitting test (def: false)\n"
+        "  --fit-fake-only          run only fake hit fitting test (def: false)\n"
         "  --build-bh               run best-hit building test (def: run all building tests)\n"
         "  --build-std              run standard building test\n"
         "  --build-ce               run clone-engine building test\n"
@@ -482,7 +490,12 @@ int main(int argc, const char *argv[])
     }
     else if(*i == "--fit-sort-only")
     {
-      g_run_fit_sort = true; g_run_fit_std = false;
+      g_run_fit_sort = true; g_run_fit_std = false; g_run_fit_fake = false;
+      g_run_build_all = false; g_run_build_bh = false; g_run_build_std = false; g_run_build_ce = false;
+    }
+    else if(*i == "--fit-fake-only")
+    {
+      g_run_fit_sort = false; g_run_fit_std = false; g_run_fit_fake = true;
       g_run_build_all = false; g_run_build_bh = false; g_run_build_std = false; g_run_build_ce = false;
     }
     else if(*i == "--build-bh")
