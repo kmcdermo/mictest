@@ -701,32 +701,22 @@ void updateParametersMPlex(const MPlexLS &psErr,  const MPlexLV& psPar, const MP
   // Can be passed in in a struct, see above.
 
   // updateParametersContext ctx;
-  //assert((long long)(&updateCtx.propErr.fArray[0]) % 64 == 0);
-
-  MPlexLS propErr;
-  MPlexLV propPar;
-  // do a full propagation step to correct for residual distance from the hit radius - need the charge for this
-  if (Config::useCMSGeom) {
-    propagateHelixToRMPlex(psErr,  psPar, inChg,  msPar, propErr, propPar, N_proc);
-  } else {
-    propErr = psErr;
-    propPar = psPar;
-  }
+  //assert((long long)(&updateCtx.psErr.fArray[0]) % 64 == 0);
 
 #ifdef DEBUG
   {
     dmutex_guard;
-    printf("propPar:\n");
+    printf("psPar:\n");
     for (int i = 0; i < 6; ++i) { 
-      printf("%8f ", propPar.ConstAt(0,0,i)); printf("\n");
+      printf("%8f ", psPar.ConstAt(0,0,i)); printf("\n");
     } printf("\n");
     printf("msPar:\n");
     for (int i = 0; i < 3; ++i) { 
       printf("%8f ", msPar.ConstAt(0,0,i)); printf("\n");
     } printf("\n");
-    printf("propErr:\n");
+    printf("psErr:\n");
     for (int i = 0; i < 6; ++i) { for (int j = 0; j < 6; ++j)
-        printf("%8f ", propErr.At(0,i,j)); printf("\n");
+        printf("%8f ", psErr.At(0,i,j)); printf("\n");
     } printf("\n");
     printf("msErr:\n");
     for (int i = 0; i < 6; ++i) { for (int j = 0; j < 6; ++j)
@@ -749,15 +739,15 @@ void updateParametersMPlex(const MPlexLS &psErr,  const MPlexLV& psPar, const MP
 #pragma simd
   for (int n = 0; n < NN; ++n) {
     float r = hipo(msPar.ConstAt(n, 0, 0), msPar.ConstAt(n, 1, 0));
-    rotT00.At(n, 0, 0) = -(msPar.ConstAt(n, 1, 0)+propPar.ConstAt(n, 1, 0))/(2*r);
-    rotT01.At(n, 0, 0) =  (msPar.ConstAt(n, 0, 0)+propPar.ConstAt(n, 0, 0))/(2*r);
+    rotT00.At(n, 0, 0) = -(msPar.ConstAt(n, 1, 0)+psPar.ConstAt(n, 1, 0))/(2*r);
+    rotT01.At(n, 0, 0) =  (msPar.ConstAt(n, 0, 0)+psPar.ConstAt(n, 0, 0))/(2*r);
   }
 
   MPlexHV res_glo;   //position residual in global coordinates
-  SubtractFirst3(msPar, propPar, res_glo);
+  SubtractFirst3(msPar, psPar, res_glo);
   
   MPlexHS resErr_glo;//covariance sum in global position coordinates
-  AddIntoUpperLeft3x3(propErr, msErr, resErr_glo);
+  AddIntoUpperLeft3x3(psErr, msErr, resErr_glo);
 
   MPlex2V res_loc;   //position residual in local coordinates
   RotateResidulsOnTangentPlane(rotT00,rotT01,res_glo,res_loc);
@@ -782,38 +772,38 @@ void updateParametersMPlex(const MPlexLS &psErr,  const MPlexLV& psPar, const MP
 #ifndef CCSCOORD
   // Move to CCS coordinates: (x,y,z,1/pT,phi,theta)
 
-  MPlexLV propPar_ccs;// propagated parameters in CCS coordinates
+  MPlexLV psPar_ccs;// propagated parameters in CCS coordinates
   MPlexLL jac_ccs;    // jacobian from cartesian to CCS
-  ConvertToCCS(propPar,propPar_ccs,jac_ccs);
+  ConvertToCCS(psPar,psPar_ccs,jac_ccs);
 
   MPlexLL tempLL;
-  CCSErr      (jac_ccs, propErr, tempLL);
-  CCSErrTransp(jac_ccs, tempLL, propErr);// propErr is now propagated errors in CCS coordinates
+  CCSErr      (jac_ccs, psErr, tempLL);
+  CCSErrTransp(jac_ccs, tempLL, psErr);// psErr is now propagated errors in CCS coordinates
 #endif
 
   // Kalman update in CCS coordinates
 
   MPlexLH K;           // kalman gain, fixme should be L2
   KalmanHTG(rotT00, rotT01, resErr_loc, tempHH); // intermediate term to get kalman gain (H^T*G)
-  KalmanGain(propErr, tempHH, K);
+  KalmanGain(psErr, tempHH, K);
 
 #ifdef CCSCOORD
-  MultResidualsAdd(K, propPar, res_loc, outPar);// propPar_ccs is now the updated parameters in CCS coordinates
+  MultResidualsAdd(K, psPar, res_loc, outPar);// psPar_ccs is now the updated parameters in CCS coordinates
   MPlexLL tempLL;
 #else
-  MultResidualsAdd(K, propPar_ccs, res_loc, propPar_ccs);// propPar_ccs is now the updated parameters in CCS coordinates
+  MultResidualsAdd(K, psPar_ccs, res_loc, psPar_ccs);// psPar_ccs is now the updated parameters in CCS coordinates
 #endif
 
 
   KHMult(K, rotT00, rotT01, tempLL);
-  KHC(tempLL, propErr, outErr);
-  outErr.Subtract(propErr, outErr);// outErr is in CCS coordinates now
+  KHC(tempLL, psErr, outErr);
+  outErr.Subtract(psErr, outErr);// outErr is in CCS coordinates now
 
 #ifndef CCSCOORD
   // Go back to cartesian coordinates
 
   // jac_ccs is now the jacobian from CCS to cartesian
-  ConvertToCartesian(propPar_ccs, outPar, jac_ccs);
+  ConvertToCartesian(psPar_ccs, outPar, jac_ccs);
   CartesianErr      (jac_ccs, outErr, tempLL);
   CartesianErrTransp(jac_ccs, tempLL, outErr);// outErr is in cartesian coordinates now
 #endif
