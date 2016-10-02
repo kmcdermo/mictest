@@ -322,6 +322,25 @@ void test_standard()
       for (auto&& hit : ev.layerHits_[il]){if (ev.simHitsInfo_[hit.mcHitID()].mcTrackID() >= 0) {ngoodhits[il]++;}}
     } 
 
+    // if (evt==86)
+    // {
+    //   std::cout << "nsim: " << ev.simTracks_.size() << std::endl;
+    //   auto& simtrack = ev.simTracks_[14233];
+    //   std::cout << "mometa: " << simtrack.momEta() << " momtheta: " << simtrack.theta() 
+    // 		<< " pz: " << simtrack.pz() << " pT: " << simtrack.pT() 
+    // 		<< " z:  " << simtrack.z()  << " r: " << simtrack.posR() 
+    // 		<< " 17z: " << ev.layerHits_[16][simtrack.getHitIdx(16)].z() 
+    // 		<< " 17r: " << ev.layerHits_[16][simtrack.getHitIdx(16)].r() 
+    // 		<< " 17eta: " << ev.layerHits_[16][simtrack.getHitIdx(16)].eta() << std::endl;
+    //   std::cout << "simtrack label: " << simtrack.label() << std::endl;
+    //   for (int i =0; i < Config::nLayers; i++)
+    //   {
+    // 	std::cout << "lay: " << i << " mcTrackID of hit: " << ev.simHitsInfo_[ev.layerHits_[i][simtrack.getHitIdx(i)].mcHitID()].mcTrackID() 
+    // 		  << " r(hit): " << ev.layerHits_[i][simtrack.getHitIdx(i)].r() << " z(hit):" 
+    // 		  << ev.layerHits_[i][simtrack.getHitIdx(i)].z() << std::endl;
+    //   }
+    // }
+
     // if (evt!=2985) continue;
 
     ev.fitTracks_.resize(ev.simTracks_.size());

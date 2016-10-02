@@ -676,6 +676,14 @@ void TTreeValidation::initializeFitTree(){
   fittree_->Branch("mc_eta",&mc_eta_fit_);
   fittree_->Branch("mc_phi",&mc_phi_fit_);
   fittree_->Branch("mc_pt",&mc_pt_fit_);
+
+  fittree_->Branch("seed_eta",&seed_eta_fit_);
+  fittree_->Branch("seed_phi",&seed_phi_fit_);
+  fittree_->Branch("seed_pt",&seed_pt_fit_);
+
+  fittree_->Branch("seed_eetaeta",&seed_eetaeta_fit_);
+  fittree_->Branch("seed_ephiphi",&seed_ephiphi_fit_);
+  fittree_->Branch("seed_eptpt",&seed_eptpt_fit_);
 }
 
 void TTreeValidation::alignTrackExtra(TrackVec& evt_tracks, TrackExtraVec& evt_extras){
@@ -985,6 +993,14 @@ void TTreeValidation::fillFitTree(const Event& ev)
     mc_phi_fit_   = simtrack.momPhi();
     mc_pt_fit_    = simtrack.pT();
 
+    seed_eta_fit_ = seedtrack.momEta();
+    seed_phi_fit_ = seedtrack.momPhi();
+    seed_pt_fit_  = seedtrack.pT();
+
+    seed_eetaeta_fit_ = seedtrack.emomEta();
+    seed_ephiphi_fit_ = seedtrack.emomPhi();
+    seed_eptpt_fit_   = seedtrack.epT();
+
     fittree_->Fill();
   }
 
@@ -1037,6 +1053,14 @@ void TTreeValidation::fillFitTree(const Event& ev)
     mc_eta_fit_   = simtrack.momEta();
     mc_phi_fit_   = simtrack.momPhi();
     mc_pt_fit_    = simtrack.pT();
+
+    seed_eta_fit_ = seedtrack.momEta();
+    seed_phi_fit_ = seedtrack.momPhi();
+    seed_pt_fit_  = seedtrack.pT();
+
+    seed_eetaeta_fit_ = seedtrack.emomEta();
+    seed_ephiphi_fit_ = seedtrack.emomPhi();
+    seed_eptpt_fit_   = seedtrack.epT();
 
     fittree_->Fill();
   } 

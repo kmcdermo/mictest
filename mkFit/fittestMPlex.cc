@@ -33,28 +33,78 @@ inline bool isBadLabel     (const Track& track){return track.label()<0;}
 inline bool isNotEnoughHits(const Track& track){return track.nFoundHits()<Config::nLayers/2;}
 inline bool sortByLessNhits(const Track& track1, const Track& track2){return track1.nFoundHits()<track2.nFoundHits();}
 
-void mergeSimTksIntoSeedTks(std::vector<Track>& simtracks, std::vector<Track>& seedtracks)
+void mergeSimTksIntoSeedTks(std::vector<Track>& simtracks, std::vector<Track>& seedtracks, Event & ev)
 {
   seedtracks.erase(std::remove_if(seedtracks.begin(),seedtracks.end(),isBadLabel),seedtracks.end());
+
+  std::vector<std::map<int,int> > simhits(Config::nLayers);
+  for (int il = 0; il < Config::nLayers; il++)
+  {
+    for (int ihit = 0; ihit < ev.layerHits_[il].size(); ihit++)
+    {
+      simhits[il][ev.simHitsInfo_[ev.layerHits_[il][ihit].mcHitID()].mcTrackID()] = ihit;
+    }
+  }
 
   for (auto&& seedtrack : seedtracks)
   {
     Track& simtrack = simtracks[seedtrack.label()];
+    // for (int hi = 0; hi < Config::nlayers_per_seed; ++hi)
+    // {
+    //   seedtrack.setHitIdx(hi,simhits[hi][simtrack.label()]);
+    // }
     for (int hi = Config::nlayers_per_seed; hi < Config::nLayers; ++hi)
     {
       seedtrack.setHitIdx(hi,simtrack.getHitIdx(hi));
     }
     simtrack.setNGoodHitIdx(); // for validation
     seedtrack.setNGoodHitIdx();
-  }
+    
+    if (seedtrack.nFoundHits()+3 == 17 //&& 
+	// std::abs(simtrack.momEta()-ev.layerHits_[16][simtrack.getHitIdx(16)].eta()) > 0.5 &&
+	// simtrack.z() < 0 &&
+	// simtrack.pz() > 0
+	)
+    {
+      std::cout << "mometa: " << simtrack.momEta() << " momtheta: " << simtrack.theta() 
+		<< " pz: " << simtrack.pz() << " pT: " << simtrack.pT() 
+		<< " z:  " << simtrack.z()  << " r: " << simtrack.posR() 
+		<< " 17z: " << ev.layerHits_[16][simtrack.getHitIdx(16)].z() 
+		<< " 17r: " << ev.layerHits_[16][simtrack.getHitIdx(16)].r() 
+		<< " 17eta: " << ev.layerHits_[16][simtrack.getHitIdx(16)].eta() << std::endl;
+      std::cout << "simtrack label: " << simtrack.label() << std::endl;
+      for (int i =0; i < Config::nLayers; i++)
+	{
+	  std::cout << "lay: " << i << " mcTrackID of hit: " << ev.simHitsInfo_[ev.layerHits_[i][simtrack.getHitIdx(i)].mcHitID()].mcTrackID() 
+		    << " r(hit): " << ev.layerHits_[i][simtrack.getHitIdx(i)].r() << " z(hit):" 
+		    << ev.layerHits_[i][simtrack.getHitIdx(i)].z() << std::endl;
 
+	}
+    }
+    
+  }
+  //  exit(0);
   if (Config::prune_tracks) seedtracks.erase(std::remove_if(seedtracks.begin(),seedtracks.end(),isNotEnoughHits),seedtracks.end()); 
 }
 
-void prepSeedTracks(std::vector<Track>& seedtracks, std::map<int,int>& nHitsToTks)
+void prepSeedTracks(std::vector<Track>& seedtracks, std::vector<Track>& simtracks, std::map<int,int>& nHitsToTks)
 {
   std::sort(seedtracks.begin(),seedtracks.end(),sortByLessNhits);
   for (auto&& seedtrack : seedtracks){nHitsToTks[seedtrack.nFoundHits()]++;}
+
+  // for (int idx = 0; idx < seedtracks.size(); idx++)
+  // {
+  //   const auto& seedtrack = seedtracks[idx];
+  //   const auto& simtrack = simtracks[seedtrack.label()];
+  //   std::cout << idx  << " [" << seedtrack.pT() << "-" << simtrack.pT() << "]: ";
+  //   for (int hi = 0; hi < Config::nLayers; ++hi)
+  //   {
+  //     std::cout << seedtrack.getHitIdx(hi) << " ";
+  //   }
+  //   std::cout << std::endl;
+  // }
+
+  // exit(0);
 }
 
 //==============================================================================
@@ -219,7 +269,7 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
   // prepare track collections
   std::vector<Track>& simtracks  = ev.simTracks_;
   std::vector<Track>& seedtracks = ev.seedTracks_;
-  mergeSimTksIntoSeedTks(simtracks,seedtracks);
+  mergeSimTksIntoSeedTks(simtracks,seedtracks,ev);
 
 #ifdef USE_VTUNE_PAUSE
   __itt_resume();
@@ -228,7 +278,7 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
   double time = dtime();
 
   std::map<int,int> nHitsToTks;
-  prepSeedTracks(seedtracks,nHitsToTks);
+  prepSeedTracks(seedtracks,simtracks,nHitsToTks);
   fittracks.resize(seedtracks.size());
 
   int previdx = 0;
@@ -253,13 +303,14 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
 	// distribution of hits on layers different between tracks!
 
 	// copy/slurp In equivalents
-       	if (theGlobalEnd < end) {
+	if (theGlobalEnd < end) {
 	  end = theGlobalEnd;
 	  mkfp->InputTrackGoodLayers(seedtracks, itrack, end); 
 	  mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end);
 	} else {
 	  mkfp->InputTrackGoodLayers(seedtracks, itrack, end); 
-	  mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
+	  mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end);
+	  //	  mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex (crashing for some dumb reason)
 	}
 	
 	// do the fit over the block and then output the compactified mplexes

@@ -164,9 +164,10 @@ public:
   float py()     const { return state_.py();}
   float pz()     const { return state_.pz();}
   float pT()     const { return state_.pT(); }
-  float p()     const { return state_.p(); }
+  float p()      const { return state_.p(); }
   float momPhi() const { return state_.momPhi(); }
   float momEta() const { return state_.momEta(); }
+  float theta()  const { return state_.theta(); }
 
   // track state momentum errors
   float epT()     const { return state_.epT();}

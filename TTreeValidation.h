@@ -353,6 +353,8 @@ public:
   float track_firstlay_eta_fit_=0.,track_lastlay_eta_fit_=0.;
   int   track_nhits_fit_=0;
   float mc_eta_fit_=0.,mc_phi_fit_=0.,mc_pt_fit_=0.;
+  float seed_eta_fit_=0.,seed_phi_fit_=0.,seed_pt_fit_=0.;
+  float seed_eetaeta_fit_=0.,seed_ephiphi_fit_=0.,seed_eptpt_fit_=0.;
 
   std::mutex glock_;
 };
