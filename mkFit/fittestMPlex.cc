@@ -209,7 +209,7 @@ double runFittingTestPlex(Event& ev, std::vector<Track>& fittracks)
 	    mkfp->SlurpInTracksAndHits(simtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
 	  }
 	  if (Config::cf_fitting) mkfp->ConformalFitTracks(true, itrack, end);
-	  mkfp->FitTracks(end - itrack, &ev);
+	  mkfp->FitTracksDetIds(end - itrack, &ev);
 	}
 	mkfp->OutputFittedTracks(fittracks, itrack, end);
      }

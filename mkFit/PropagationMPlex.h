@@ -14,6 +14,12 @@ void propagateHelixToRMPlex(const MPlexLS &inErr,  const MPlexLV& inPar,
 			          MPlexLS &outErr,       MPlexLV& outPar,
                             const int      N_proc);
 
+void propagateHelixToRMPlex(const MPlexLS &inErr,  const MPlexLV& inPar,
+                            const MPlexQI &inChg,  const MPlexHV& msPar,
+			          MPlexLS &outErr,       MPlexLV& outPar,
+			    const MPlexQI &detIDs,
+                            const int      N_proc);
+
 void propagateHelixToRMPlex(const MPlexLS& inErr,  const MPlexLV& inPar,
                             const MPlexQI& inChg,  const float    r,
 			          MPlexLS& outErr,       MPlexLV& outPar,
@@ -296,6 +302,11 @@ inline float getRlVal(const float r, const float zin) {
   return 0.0f;
 }
 
+
+
+
+
+
 inline float getXiVal(const float r, const float zin) {
   float z = std::abs(zin);
   //pixel barrel
@@ -369,9 +380,11 @@ inline float getXiVal(const float r, const float zin) {
     else if (z<70) return 0.07e-03f;
     else           return 0.07e-03f;
   }
+
   //TEC
   if (z>120) {
     if (z<128) {
+      if (r<55)      return 0.27e-03f;
       if (r<80)      return 0.27e-03f;
       else           return 0.48e-03f;
     }
@@ -381,6 +394,7 @@ inline float getXiVal(const float r, const float zin) {
       else           return 0.55e-03f;
     }
     if (z<136) {
+      if (r<55)      return 0.27e-03f;
       if (r<80)      return 0.27e-03f;
       else           return 0.48e-03f;
     }

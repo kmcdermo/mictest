@@ -34,6 +34,7 @@ struct MkFitter
   MPlexQI CandIdx;//this is the candidate index for the given seed (for bookkeeping of clone engine)
   MPlexQI HitsIdx[Config::nLayers];
   MPlexQI GoodLayer[Config::nLayers];
+  MPlexQI detID[Config::nLayers];
 
   // Hold hit indices to explore at current layer.
   MPlexQI     XHitSize;
@@ -89,6 +90,7 @@ public:
   void InputSeedsTracksAndHits(const std::vector<Track>& seeds, const std::vector<Track>& tracks, const std::vector<HitVec>& layerHits, int beg, int end);
   void ConformalFitTracks(bool fitting, int beg, int end);
   void FitTracks(const int N_proc, const Event * ev);
+  void FitTracksDetIds(const int N_proc, const Event * ev);
   void FitSortedTracks(const int N_proc, const Event * ev);
   void FitTracksTestEndcap(const int N_proc, const Event* ev);
 

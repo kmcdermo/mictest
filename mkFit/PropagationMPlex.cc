@@ -944,12 +944,96 @@ void propagateHelixToRMPlex(const MPlexLS &inErr,  const MPlexLV& inPar,
 #endif
 
    //   if (Config::useCMSGeom) {
+//    MPlexQF hitsRl;
+//    MPlexQF hitsXi;
+// #pragma simd
+//    for (int n = 0; n < NN; ++n) {
+//      hitsRl.At(n, 0, 0) = Config::Rl[detID[hi](n, 0, 0)]; 
+//      hitsXi.At(n, 0, 0) = Config::Xi[detID[hi](n, 0, 0)]; 
+//    }
+//    applyMaterialEffects(hitsRl, hitsXi, outErr, outPar, N_proc);
+     //   }
+
+#ifdef DEBUG
+   {
+     for (int kk = 0; kk < N_proc; ++kk)
+     {
+       dprintf("outErr before prop %d\n", kk);
+       for (int i = 0; i < 6; ++i) { for (int j = 0; j < 6; ++j)
+           dprintf("%8f ", outErr.At(kk,i,j)); printf("\n");
+       } dprintf("\n");
+
+       dprintf("errorProp %d\n", kk);
+       for (int i = 0; i < 6; ++i) { for (int j = 0; j < 6; ++j)
+           dprintf("%8f ", errorProp.At(kk,i,j)); printf("\n");
+       } dprintf("\n");
+
+     }
+   }
+#endif
+
+   // Matriplex version of:
+   // result.errors = ROOT::Math::Similarity(errorProp, outErr);
+   MPlexLL temp;
+   MultHelixProp      (errorProp, outErr, temp);
+   MultHelixPropTransp(errorProp, temp,   outErr);
+
+   // This dump is now out of its place as similarity is done with matriplex ops.
+#ifdef DEBUG
+   {
+     for (int kk = 0; kk < N_proc; ++kk)
+     {
+       dprintf("outErr %d\n", kk);
+       for (int i = 0; i < 6; ++i) { for (int j = 0; j < 6; ++j)
+           dprintf("%8f ", outErr.At(kk,i,j)); printf("\n");
+       } dprintf("\n");
+
+       dprintf("outPar %d\n", kk);
+       for (int i = 0; i < 6; ++i) {
+           dprintf("%8f ", outPar.At(kk,i,0)); printf("\n");
+       } dprintf("\n");
+       if (std::abs(hipo(outPar.At(kk,0,0), outPar.At(kk,1,0))-hipo(msPar.ConstAt(kk, 0, 0), msPar.ConstAt(kk, 1, 0)))>0.0001) {
+	 dprint_np(kk, "DID NOT GET TO R, dR=" << std::abs(hipo(outPar.At(kk,0,0), outPar.At(kk,1,0))-hipo(msPar.ConstAt(kk, 0, 0), msPar.ConstAt(kk, 1, 0)))
+		   << " r=" << hipo(msPar.ConstAt(kk, 0, 0), msPar.ConstAt(kk, 1, 0)) << " r0in=" << hipo(inPar.ConstAt(kk,0,0), inPar.ConstAt(kk,1,0)) << " rout=" << hipo(outPar.At(kk,0,0), outPar.At(kk,1,0)) << std::endl
+		   << "pt=" << hipo(inPar.ConstAt(kk,3,0), inPar.ConstAt(kk,4,0)) << " pz=" << inPar.ConstAt(kk,5,0));
+       }
+     }
+   }
+#endif
+}
+
+void propagateHelixToRMPlex(const MPlexLS &inErr,  const MPlexLV& inPar,
+                            const MPlexQI &inChg,  const MPlexHV& msPar, 
+			          MPlexLS &outErr,       MPlexLV& outPar,
+			    const MPlexQI &detIDs,
+                            const int      N_proc)
+{
+   const idx_t N  = NN;
+
+   outErr = inErr;
+   outPar = inPar;
+
+   MPlexLL errorProp;
+
+   MPlexQF msRad;
+#pragma simd
+   for (int n = 0; n < NN; ++n) {
+     msRad.At(n, 0, 0) = hipo(msPar.ConstAt(n, 0, 0), msPar.ConstAt(n, 1, 0));
+   }
+
+#ifdef CCSCOORD
+   helixAtRFromIterativeCCS(inPar, inChg, outPar, msRad, errorProp, N_proc);
+#else
+   helixAtRFromIterative(inPar, inChg, outPar, msRad, errorProp, N_proc);
+#endif
+
+   //   if (Config::useCMSGeom) {
    MPlexQF hitsRl;
    MPlexQF hitsXi;
 #pragma simd
    for (int n = 0; n < NN; ++n) {
-     hitsRl.At(n, 0, 0) = getRlVal(msRad.ConstAt(n, 0, 0), outPar.ConstAt(n, 2, 0));
-     hitsXi.At(n, 0, 0) = getXiVal(msRad.ConstAt(n, 0, 0), outPar.ConstAt(n, 2, 0));
+     hitsRl.At(n, 0, 0) = Config::Rl[detIDs(n, 0, 0)]; 
+     hitsXi.At(n, 0, 0) = Config::Xi[detIDs(n, 0, 0)]; 
    }
    applyMaterialEffects(hitsRl, hitsXi, outErr, outPar, N_proc);
      //   }

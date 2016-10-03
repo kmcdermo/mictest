@@ -97,6 +97,7 @@ void MkFitter::InputTracksAndHits(const std::vector<Track>&  tracks,
       HitsIdx[hi](itrack, 0, 0) = hidx;
       if (hidx<0) continue;
 
+      detID[hi](itrack, 0, 0) = hit.detID();
       msErr[hi].CopyIn(itrack, hit.errArray());
       msPar[hi].CopyIn(itrack, hit.posArray());
     }
@@ -267,6 +268,7 @@ void MkFitter::SlurpInTracksAndHits(const std::vector<Track>&  tracks,
       itrack = i - beg;
       idx[itrack] = (char*) &hit - varr;
       HitsIdx[hi](itrack, 0, 0) = hidx;
+      detID[hi](itrack, 0, 0) = hit.detID();
     }
 
 #ifdef MIC_INTRINSICS
@@ -585,6 +587,30 @@ void MkFitter::FitTracks(const int N_proc, const Event * ev)
 
     propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[hi],
                            Err[iP], Par[iP], N_proc);
+
+    // iP is output
+    if (Config::fit_val) MkFitter::CollectFitValidation(hi,N_proc,ev);
+
+    updateParametersMPlex(Err[iP], Par[iP], Chg, msErr[hi], msPar[hi],
+                          Err[iC], Par[iC], N_proc);
+  }
+  // XXXXX What's with chi2?
+}
+
+void MkFitter::FitTracksDetIds(const int N_proc, const Event * ev)
+{
+  // Fitting loop.
+
+  for (int hi = 0; hi < Nhits; ++hi)
+  {
+    if (hi < Config::nlayers_per_seed) continue;
+
+    // Note, charge is not passed (line propagation).
+    // propagateLineToRMPlex(Err[iC], Par[iC], msErr[hi], msPar[hi],
+    //                       Err[iP], Par[iP]);
+
+    propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[hi],
+                           Err[iP], Par[iP], detID[hi], N_proc);
 
     // iP is output
     if (Config::fit_val) MkFitter::CollectFitValidation(hi,N_proc,ev);
