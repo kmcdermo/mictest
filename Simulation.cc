@@ -299,7 +299,10 @@ void setupTrackByToyMC(SVector3& pos, SVector3& mom, SMatrixSym66& covtrk,
 
     MCHitInfo hitinfo(itrack, simLayer, layer_counts[simLayer]);
     initialhitinfo[hitinfo.mcHitID_] = hitinfo;
-    hits.emplace_back(x1,covXYZ,hitinfo.mcHitID_);
+
+    int detid = getDetId(getRad2(hitX,hitY),hitZ);
+
+    hits.emplace_back(x1,covXYZ,detid,hitinfo.mcHitID_);
     tmpState = propState;
 
     dprint("hit1Id: " << hitinfo.mcHitID_ <<std::endl
@@ -408,7 +411,10 @@ void setupTrackByToyMCEndcap(SVector3& pos, SVector3& mom, SMatrixSym66& covtrk,
 
       MCHitInfo hitinfo(itrack, simLayer, layer_counts[simLayer]);
       initialhitinfo[hitinfo.mcHitID_] = hitinfo;
-      hits.emplace_back(hitpos,covXYZ,hitinfo.mcHitID_);
+
+      int detid = getDetId(getRad2(hitX,hitY),hitZ);
+
+      hits.emplace_back(hitpos,covXYZ,detid,hitinfo.mcHitID_);
 
       dprint("hit1Id: " << hitinfo.mcHitID_ <<std::endl
 	     << "ihit: " << id << " layer: " << simLayer << " counts: " << layer_counts[simLayer]);
@@ -537,7 +543,10 @@ void setupTrackFromTextFile(SVector3& pos, SVector3& mom, SMatrixSym66& covtrk,
     
       MCHitInfo hitinfo(itrack, simLayer, layer_counts[simLayer]);
       initialhitinfo[hitinfo.mcHitID_] = hitinfo;
-      hits.emplace_back(x1,covXYZ,hitinfo.mcHitID_);
+
+      int detid = getDetId(getRad2(hitX,hitY),hitZ);
+
+      hits.emplace_back(x1,covXYZ,detid,hitinfo.mcHitID_);
 
       ++layer_counts[simLayer];
 
@@ -569,7 +578,10 @@ void setupTrackFromTextFile(SVector3& pos, SVector3& mom, SMatrixSym66& covtrk,
     
       MCHitInfo hitinfo(itrack, simLayer, layer_counts[simLayer]);
       initialhitinfo[hitinfo.mcHitID_] = hitinfo;
-      hits.emplace_back(x1,covXYZ,hitinfo.mcHitID_);
+
+      int detid = getDetId(getRad2(hitX,hitY),hitZ);
+
+      hits.emplace_back(x1,covXYZ,detid,hitinfo.mcHitID_);
 
       ++layer_counts[simLayer];
 
