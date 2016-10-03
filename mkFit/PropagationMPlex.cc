@@ -943,16 +943,16 @@ void propagateHelixToRMPlex(const MPlexLS &inErr,  const MPlexLV& inPar,
    helixAtRFromIterative(inPar, inChg, outPar, msRad, errorProp, N_proc);
 #endif
 
-   if (Config::useCMSGeom) {
-     MPlexQF hitsRl;
-     MPlexQF hitsXi;
+   //   if (Config::useCMSGeom) {
+   MPlexQF hitsRl;
+   MPlexQF hitsXi;
 #pragma simd
-     for (int n = 0; n < NN; ++n) {
-       hitsRl.At(n, 0, 0) = getRlVal(msRad.ConstAt(n, 0, 0), outPar.ConstAt(n, 2, 0));
-       hitsXi.At(n, 0, 0) = getXiVal(msRad.ConstAt(n, 0, 0), outPar.ConstAt(n, 2, 0));
-     }
-     applyMaterialEffects(hitsRl, hitsXi, outErr, outPar, N_proc);
+   for (int n = 0; n < NN; ++n) {
+     hitsRl.At(n, 0, 0) = getRlVal(msRad.ConstAt(n, 0, 0), outPar.ConstAt(n, 2, 0));
+     hitsXi.At(n, 0, 0) = getXiVal(msRad.ConstAt(n, 0, 0), outPar.ConstAt(n, 2, 0));
    }
+   applyMaterialEffects(hitsRl, hitsXi, outErr, outPar, N_proc);
+     //   }
 
 #ifdef DEBUG
    {

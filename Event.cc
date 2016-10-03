@@ -7,7 +7,7 @@
 #include "BinInfoUtils.h"
 #include "ConformalUtils.h"
 
-//#define DEBUG
+#define DEBUG
 #include "Debug.h"
 
 #ifdef TBB
@@ -124,6 +124,18 @@ void Event::Simulate()
         sim_track.addHitIdx(hits[ilay].mcHitID(),0.0f); // set to the correct hit index after sorting
         layerHits_[ilay][itrack] = hits[ilay];  // thread safety
       }
+
+      bool debug = true;
+
+      // do fit to "seed" of sim track
+      TrackState updatedState = sim_track.state();
+      for (int ilay = 0; ilay < Config::nlayers_per_seed; ++ilay){
+	const Hit& hit = hits[ilay];
+	MeasurementState measState = hit.measurementState();
+	TrackState propState = propagateHelixToR(updatedState, hit.r());
+	updatedState = updateParameters(propState, measState);
+      }
+      sim_track.setState(updatedState);
     }
 #ifdef TBB
   });

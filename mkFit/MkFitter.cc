@@ -577,6 +577,8 @@ void MkFitter::FitTracks(const int N_proc, const Event * ev)
 
   for (int hi = 0; hi < Nhits; ++hi)
   {
+    if (hi < Config::nlayers_per_seed) continue;
+
     // Note, charge is not passed (line propagation).
     // propagateLineToRMPlex(Err[iC], Par[iC], msErr[hi], msPar[hi],
     //                       Err[iP], Par[iP]);

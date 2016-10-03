@@ -33,12 +33,12 @@ namespace Config
   extern int nEvents;
 
   // config on main -- for geometry
-  constexpr int   nLayers   = 8; // default: 10; cmssw tests: 13, 17, 26 (for endcap)
+  constexpr int   nLayers   = 17; // default: 10; cmssw tests: 13, 17, 26 (for endcap)
   constexpr float fRadialSpacing   = 4.;
   constexpr float fRadialExtent    = 0.01;
   constexpr float fInnerSensorSize = 5.0; // approximate sensor size in cm
   constexpr float fOuterSensorSize = Config::fInnerSensorSize * 2.;
-  constexpr float fEtaDet          = 1; // default: 1; cmssw tests: 2, 2.5
+  constexpr float fEtaDet          = 2; // default: 1; cmssw tests: 2, 2.5
 
   //constexpr float cmsAvgRads[13] = {4.42,7.31,10.17,25.58,33.98,41.79,49.78,60.78,69.2,77.96,86.80,96.53,108.00}; // cms average radii, noSplit version
   constexpr float cmsAvgRads[17] = {4.42,7.31,10.17,25.58,25.58,33.98,33.98,41.79,49.78,60.57,61.00,69.41,68.98,77.96,86.80,96.53,108.00}; // cms average radii, split version
@@ -77,7 +77,7 @@ namespace Config
   constexpr float beamspotY = 0.1;
   constexpr float beamspotZ = 1.0;
   
-  constexpr float minSimPt = 0.5;
+  constexpr float minSimPt = 1.0;
   constexpr float maxSimPt = 10.;
 
   constexpr float maxEta   = 1.0;
