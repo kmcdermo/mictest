@@ -75,13 +75,10 @@ void prepSimTracks(const std::vector<Track>& simtracks, VecOfIIPairs& tkidxsTonH
 
 void readInHits(std::vector<Track>& simtracks, int evt)
 {
-  std::cout << "+++++++++++++++++++++++++++++++" << std::endl;
-
   std::ifstream hitpattern;
 
   std::string intStr = std::to_string(evt-1);
   std::string filename = "hitpatterns/ev"+intStr+".txt";
-  std::cout << filename.c_str() << std::endl;
   hitpattern.open(filename.c_str(),std::ios::in);
 
   int hitids[Config::nLayers];
@@ -90,17 +87,13 @@ void readInHits(std::vector<Track>& simtracks, int evt)
 	 >> hitids[9] >> hitids[10] >> hitids[11] >> hitids[12] >> hitids[13] >> hitids[14] >> hitids[15] >> hitids[16]) 
   {
     auto & simtrack = simtracks[itk];
-    std::cout << itk << ": ";
     for (int ilay = 0; ilay < Config::nLayers; ilay++)
     {
-      std::cout << hitids[ilay] << " ";
       if (hitids[ilay] == 0) simtrack.setHitIdx(ilay,-1);
     }
-    std::cout << std::endl;
     itk++;
   }
   hitpattern.close();
-  std::cout << "+++++++++++++++++++++++++++++++" << std::endl;
 }
 
 void addFakeHits(std::vector<Track>& simtracks, std::vector<HitVec>& layerHits)
@@ -370,53 +363,11 @@ double runFittingTestPlexFakeHits(Event& ev, std::vector<Track>& fittracks)
 
   // get the tracks ready for processing
   std::vector<Track>& simtracks  = ev.simTracks_;
-
-  // for (auto&& simtrack : simtracks)
-  // {
-  //   std::cout << simtrack.label() << ": ";
-  //   for (int ilay = 0; ilay < Config::nLayers; ilay++)
-  //   {
-  //     std::cout << simtrack.getHitIdx(ilay) << " ";
-  //   }
-  //   std::cout << std::endl;
-  // }
-
   readInHits(simtracks,ev.evtID());
-
-  // for (auto&& simtrack : simtracks)
-  // {
-  //   std::cout << simtrack.label() << ": ";
-  //   for (int ilay = 0; ilay < Config::nLayers; ilay++)
-  //   {
-  //     std::cout << simtrack.getHitIdx(ilay) << " ";
-  //   }
-  //   std::cout << std::endl;
-  // }
-
   fittracks.resize(simtracks.size());
   
   // assume that fake hits already added in building
   addFakeHits(simtracks,ev.layerHits_);
-
-  // for (auto&& simtrack : simtracks)
-  // {
-  //   std::cout << simtrack.label() << ": ";
-  //   for (int ilay = 0; ilay < Config::nLayers; ilay++)
-  //   {
-  //     std::cout << simtrack.getHitIdx(ilay) << " ";
-  //   }
-  //   std::cout << std::endl;
-  // }
-
-  // std::cout << "-------------------------------------------------------" << std::endl;
-
-  exit(0);
-
-  if (ev.evtID() < 2) 
-    return 0.0;
-  else
-    exit(0);
-
 
   const int Nhits = Config::nLayers;
   
