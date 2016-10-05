@@ -64,6 +64,7 @@ namespace
 
   bool  g_run_fit_std   = false;
   bool  g_run_fit_sort  = false;
+  bool  g_run_fit_fake  = false;
 
   bool  g_run_build_all = true;
   bool  g_run_build_bh  = false;
@@ -82,8 +83,6 @@ void generate_and_save_tracks()
   Config::nEvents = 100;
   int Nevents = Config::nEvents;
 
-  int ntracks_evt[100] = {255,336,527,327,368,360,221,278,418,290,211,280,440,183,271,294,320,339,366,192,398,310,243,355,357,288,461,321,308,256,377,347,389,322,276,466,438,328,282,468,240,468,269,305,241,560,378,319,312,215,428,344,193,332,292,306,219,296,476,261,288,286,299,368,293,406,402,328,300,382,259,220,306,509,421,394,271,311,424,385,257,490,223,256,178,245,223,251,231,431,254,378,222,321,329,326,420,183,357,339};
-
   Geometry geom;
   initGeom(geom);
   Validation val;
@@ -94,12 +93,11 @@ void generate_and_save_tracks()
 
   for (int evt = 0; evt < Nevents; ++evt)
   {
-    Config::nTracks = ntracks_evt[evt];
-    int Ntracks = Config::nTracks;
+    Config::nTracks = Config::ntracks_evt[evt];
 
     Event ev(geom, val, evt);
 
-    omp_set_num_threads(Config::numThreadsSimulation);
+    omp_set_num_threads(1);
 
     ev.Simulate();
     ev.resetLayerHitMap(true);
@@ -311,7 +309,12 @@ void test_standard()
 
     for (int b = 0; b < Config::finderReportBestOutOfN; ++b)
     {
-      t_cur[0] = (g_run_fit_std   || g_run_fit_sort)  ? ((g_run_fit_std) ? runFittingTestPlex(ev, ev.fitTracks_) : runFittingTestPlexSortedTracks(ev, ev.fitTracks_)) : 0;
+      if (g_run_fit_std || g_run_fit_sort || g_run_fit_fake)
+      {
+	if      (g_run_fit_std)  t_cur[0] = runFittingTestPlex(ev, ev.fitTracks_);
+	else if (g_run_fit_sort) t_cur[0] = runFittingTestPlexSortedTracks(ev, ev.fitTracks_);
+	else if (g_run_fit_fake) t_cur[0] = runFittingTestPlexFakeHits(ev, ev.fitTracks_);
+      }
       t_cur[1] = (g_run_build_all || g_run_build_bh)  ? runBuildingTestPlexBestHit(ev) : 0;
       t_cur[2] = (g_run_build_all || g_run_build_std) ? runBuildingTestPlex(ev, ev_tmp) : 0;
       t_cur[3] = (g_run_build_all || g_run_build_ce)  ? runBuildingTestPlexCloneEngine(ev, ev_tmp) : 0;
@@ -411,6 +414,7 @@ int main(int argc, const char *argv[])
         "  --fit-std                run standard fitting test (def: false)\n"
         "  --fit-std-only           run only standard fitting test (def: false)\n"
         "  --fit-sort-only          run only sorted fitting test (def: false)\n"
+	"  --fit-fake-only          run only fake hit fitting test (def: false)\n"
         "  --build-bh               run best-hit building test (def: run all building tests)\n"
         "  --build-std              run standard building test\n"
         "  --build-ce               run clone-engine building test\n"
@@ -481,14 +485,19 @@ int main(int argc, const char *argv[])
     }
     else if(*i == "--fit-std-only")
     {
-      g_run_fit_std = true;
+      g_run_fit_std = true; g_run_fit_sort = false; g_run_fit_fake = false;
       g_run_build_all = false; g_run_build_bh = false; g_run_build_std = false; g_run_build_ce = false;
     }
     else if(*i == "--fit-sort-only")
     {
-      g_run_fit_sort = true; g_run_fit_std = false;
+      g_run_fit_std = false; g_run_fit_sort = true; g_run_fit_fake = false;
       g_run_build_all = false; g_run_build_bh = false; g_run_build_std = false; g_run_build_ce = false;
     }
+    else if(*i == "--fit-fake-only")
+    {
+      g_run_fit_sort = false; g_run_fit_std = false; g_run_fit_fake = true;
+      g_run_build_all = false; g_run_build_bh = false; g_run_build_std = false; g_run_build_ce = false;
+    }	
     else if(*i == "--build-bh")
     {
       g_run_build_all = false; g_run_build_bh = true;

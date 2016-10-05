@@ -32,6 +32,15 @@ namespace Config
   extern int nTracks; //defined in Config.cc by default or when reading events from file
   extern int nEvents;
 
+  // simulation config to emulate cmssw
+  constexpr int ntracks_evt[100] = {255,336,527,327,368,360,221,278,418,290,211,280,440,183,271,294,
+				    320,339,366,192,398,310,243,355,357,288,461,321,308,256,377,347,
+				    389,322,276,466,438,328,282,468,240,468,269,305,241,560,378,319,
+				    312,215,428,344,193,332,292,306,219,296,476,261,288,286,299,368,
+				    293,406,402,328,300,382,259,220,306,509,421,394,271,311,424,385,
+				    257,490,223,256,178,245,223,251,231,431,254,378,222,321,329,326,
+				    420,183,357,339};
+
   // config on main -- for geometry
   constexpr int   nLayers   = 17; // default: 10; cmssw tests: 13, 17, 26 (for endcap)
   constexpr float fRadialSpacing   = 4.;

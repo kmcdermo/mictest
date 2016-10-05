@@ -23,6 +23,8 @@
 
 #include <iostream>
 #include <memory>
+#include <fstream>
+#include <string>
 
 #if defined(USE_VTUNE_PAUSE)
 #include "ittnotify.h"
@@ -56,10 +58,10 @@ void mergeSimTksIntoSeedTks(std::vector<Track>& simtracks, std::vector<Track>& s
   if (Config::prune_tracks) seedtracks.erase(std::remove_if(seedtracks.begin(),seedtracks.end(),isNotEnoughHits),seedtracks.end()); 
 }
 
-void prepSeedTracks(const std::vector<Track>& seedtracks, VecOfIIPairs& tkidxsTonHits, std::map<int,int>& nHitsToTks)
+void prepSimTracks(const std::vector<Track>& simtracks, VecOfIIPairs& tkidxsTonHits, std::map<int,int>& nHitsToTks)
 {
   // make map of track indices + nhits, sort it by nhits
-  for (int iseed = 0; iseed < seedtracks.size(); iseed++){tkidxsTonHits[iseed] = std::make_pair(iseed,seedtracks[iseed].nFoundHits());}
+  for (int isim = 0; isim < simtracks.size(); isim++){tkidxsTonHits[isim] = std::make_pair(isim,simtracks[isim].nFoundHits());}
   std::sort(tkidxsTonHits.begin(),tkidxsTonHits.end(),sortByLessNhits);
 
   // make temp map of raw nhit counts
@@ -69,6 +71,72 @@ void prepSeedTracks(const std::vector<Track>& seedtracks, VecOfIIPairs& tkidxsTo
   // make map of start/end of sorted tracks by nHits (from 3 hits --only seeds, to 17 hits --all layers)
   nHitsToTks[Config::nlayers_per_seed-1] = 0;
   for (int ilay = Config::nlayers_per_seed; ilay < Config::nLayers+1; ilay++){nHitsToTks[ilay] = rawCounts[ilay] + nHitsToTks[ilay-1];}
+}
+
+void readInHits(std::vector<Track>& simtracks, int evt)
+{
+  std::cout << "+++++++++++++++++++++++++++++++" << std::endl;
+
+  std::ifstream hitpattern;
+
+  std::string intStr = std::to_string(evt-1);
+  std::string filename = "hitpatterns/ev"+intStr+".txt";
+  std::cout << filename.c_str() << std::endl;
+  hitpattern.open(filename.c_str(),std::ios::in);
+
+  int hitids[Config::nLayers];
+  int itk = 0;
+  while (hitpattern >> hitids[0] >> hitids[1] >> hitids[2] >> hitids[3] >> hitids[4] >> hitids[5] >> hitids[6] >> hitids[7] >> hitids[8]
+	 >> hitids[9] >> hitids[10] >> hitids[11] >> hitids[12] >> hitids[13] >> hitids[14] >> hitids[15] >> hitids[16]) 
+  {
+    auto & simtrack = simtracks[itk];
+    std::cout << itk << ": ";
+    for (int ilay = 0; ilay < Config::nLayers; ilay++)
+    {
+      std::cout << hitids[ilay] << " ";
+      if (hitids[ilay] == 0) simtrack.setHitIdx(ilay,-1);
+    }
+    std::cout << std::endl;
+    itk++;
+  }
+  hitpattern.close();
+  std::cout << "+++++++++++++++++++++++++++++++" << std::endl;
+}
+
+void addFakeHits(std::vector<Track>& simtracks, std::vector<HitVec>& layerHits)
+{
+  // add fake hits to the end of the layerhits vector
+  // since we propagate to the "exact" radius with R as the parameter
+  // simply just make the components of the hit to be (r, 0, 0)
+  // and to zero the KF gain --> make the uncertainity infinite on diagonal, zero on the off diagonal (i.e. 1e15)
+
+  const float big = 1e15;
+  for (int hi = 0; hi < Config::nLayers; hi++)
+  {
+    const SVector3 tmppos(Config::fRadialSpacing*(hi+1),0,0);
+    SMatrixSym33   tmperr = ROOT::Math::SMatrixIdentity();
+    tmperr(0,0) = big; 
+    tmperr(1,1) = big; 
+    tmperr(2,2) = big;
+    int detid = getDetId(tmppos[0],tmppos[2]);
+    Hit tmphit(tmppos,tmperr,detid,-1);
+    layerHits[hi].push_back(tmphit);
+  }
+  
+  // now make a small map of the layer sizes
+  std::map<int,int> laysizes;
+  for (int hi = 0; hi < Config::nLayers; hi++)
+  {
+    laysizes[hi] = layerHits[hi].size()-1;
+  }
+  
+  for (auto&& simtrack : simtracks)
+  {
+    for (int hi = 0; hi < Config::nLayers; hi++)
+    {
+      if (simtrack.getHitIdx(hi) < 0) simtrack.setHitIdx(hi,laysizes[hi]);
+    }
+  }
 }
 
 //==============================================================================
@@ -232,9 +300,11 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
 
   // prepare track collections
   std::vector<Track>& simtracks  = ev.simTracks_;
-  std::vector<Track>& seedtracks = ev.seedTracks_;
-  mergeSimTksIntoSeedTks(simtracks,seedtracks);
-  fittracks.resize(seedtracks.size());
+  readInHits(simtracks,ev.evtID());
+
+  // std::vector<Track>& seedtracks = ev.seedTracks_;
+  // mergeSimTksIntoSeedTks(simtracks,seedtracks);
+  fittracks.resize(simtracks.size());
 
 #ifdef USE_VTUNE_PAUSE
   __itt_resume();
@@ -242,9 +312,9 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
 
   double time = dtime();
 
-  VecOfIIPairs tkidxsTonHits(seedtracks.size());
+  VecOfIIPairs tkidxsTonHits(simtracks.size());
   std::map<int,int> nHitsToTks;
-  prepSeedTracks(seedtracks,tkidxsTonHits,nHitsToTks);
+  prepSimTracks(simtracks,tkidxsTonHits,nHitsToTks);
 
   tbb::parallel_for(tbb::blocked_range<int>(Config::nlayers_per_seed, Config::nLayers+1),
 		    [&](const tbb::blocked_range<int>& nhits)
@@ -269,11 +339,11 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
 	  if (theEnd < end) 
           {
 	    end = theEnd;
-	    mkfp->InputTrackGoodLayers(seedtracks, itrack, end, tkidxsTonHits);
-	    mkfp->InputSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end, tkidxsTonHits);
+	    mkfp->InputTrackGoodLayers(simtracks, itrack, end, tkidxsTonHits);
+	    mkfp->InputSortedTracksAndHits(simtracks, ev.layerHits_, itrack, end, tkidxsTonHits);
 	  } else {
-	    mkfp->InputTrackGoodLayers(seedtracks, itrack, end, tkidxsTonHits);
-	    mkfp->SlurpInSortedTracksAndHits(seedtracks, ev.layerHits_, itrack, end, tkidxsTonHits); // only safe for a full matriplex
+	    mkfp->InputTrackGoodLayers(simtracks, itrack, end, tkidxsTonHits);
+	    mkfp->SlurpInSortedTracksAndHits(simtracks, ev.layerHits_, itrack, end, tkidxsTonHits); // only safe for a full matriplex
 	  }
 	  mkfp->FitSortedTracks(end - itrack, &ev);
 	  mkfp->OutputSortedFittedTracks(fittracks, itrack, end, tkidxsTonHits);
@@ -290,6 +360,105 @@ double runFittingTestPlexSortedTracks(Event& ev, std::vector<Track>& fittracks)
   
   ev.Validate();
 				     
+  return time;
+}
+
+
+double runFittingTestPlexFakeHits(Event& ev, std::vector<Track>& fittracks)
+{
+  g_exe_ctx.populate(Config::numThreadsFinder);
+
+  // get the tracks ready for processing
+  std::vector<Track>& simtracks  = ev.simTracks_;
+
+  // for (auto&& simtrack : simtracks)
+  // {
+  //   std::cout << simtrack.label() << ": ";
+  //   for (int ilay = 0; ilay < Config::nLayers; ilay++)
+  //   {
+  //     std::cout << simtrack.getHitIdx(ilay) << " ";
+  //   }
+  //   std::cout << std::endl;
+  // }
+
+  readInHits(simtracks,ev.evtID());
+
+  // for (auto&& simtrack : simtracks)
+  // {
+  //   std::cout << simtrack.label() << ": ";
+  //   for (int ilay = 0; ilay < Config::nLayers; ilay++)
+  //   {
+  //     std::cout << simtrack.getHitIdx(ilay) << " ";
+  //   }
+  //   std::cout << std::endl;
+  // }
+
+  fittracks.resize(simtracks.size());
+  
+  // assume that fake hits already added in building
+  addFakeHits(simtracks,ev.layerHits_);
+
+  // for (auto&& simtrack : simtracks)
+  // {
+  //   std::cout << simtrack.label() << ": ";
+  //   for (int ilay = 0; ilay < Config::nLayers; ilay++)
+  //   {
+  //     std::cout << simtrack.getHitIdx(ilay) << " ";
+  //   }
+  //   std::cout << std::endl;
+  // }
+
+  // std::cout << "-------------------------------------------------------" << std::endl;
+
+  exit(0);
+
+  if (ev.evtID() < 2) 
+    return 0.0;
+  else
+    exit(0);
+
+
+  const int Nhits = Config::nLayers;
+  
+  int theEnd = simtracks.size();
+  int count  = (theEnd + NN - 1)/NN;
+  
+#ifdef USE_VTUNE_PAUSE
+  __itt_resume();
+#endif
+
+  double time = dtime();
+
+  tbb::parallel_for(tbb::blocked_range<int>(0, count, std::max(1, Config::numSeedsPerTask/NN)),
+    [&](const tbb::blocked_range<int>& i)
+    {
+      std::unique_ptr<MkFitter, decltype(retfitr)> mkfp(g_exe_ctx.m_fitters.GetFromPool(), retfitr);
+      mkfp->SetNhits(Nhits);
+      for (int it = i.begin(); it < i.end(); ++it)
+      {
+	int itrack = it*NN;
+	int end = itrack + NN;
+	
+	if (theEnd < end) 
+	{
+	  end = theEnd;
+	  mkfp->InputTracksAndHits(simtracks, ev.layerHits_, itrack, end);
+	} else {
+	  mkfp->SlurpInTracksAndHits(simtracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
+	}
+	mkfp->FitTracksDetIds(end - itrack, &ev);
+	mkfp->OutputFittedTracks(fittracks, itrack, end);
+      }
+    });
+  
+  time = dtime() - time;
+  
+#ifdef USE_VTUNE_PAUSE
+  __itt_pause();
+#endif
+  
+  ev.Validate();
+  
   return time;
 }
 
