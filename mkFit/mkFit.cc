@@ -11,6 +11,7 @@
 
 #include <limits>
 #include <list>
+#include <fstream>
 
 #include "Event.h"
 
@@ -301,6 +302,49 @@ void test_standard()
       ev.Simulate();
       ev.resetLayerHitMap(true);
     }
+
+    std::ofstream hitpattern;
+    std::string intStr = std::to_string(evt-1);
+    std::string filename = "hitpatterns/ev"+intStr+".txt";
+    hitpattern.open(filename.c_str(),std::ios_base::app);
+
+    for (int itk = 0; itk < ev.seedTracks_.size(); itk++)
+    {
+      auto & seedtk = ev.seedTracks_[itk];
+      const int label = seedtk.label();
+      if (label >= 0) {
+	const auto & simtk = ev.simTracks_[label];
+	for (int ilay = Config::nlayers_per_seed; ilay < Config::nLayers; ilay++)
+        {
+	  seedtk.setHitIdx(ilay,simtk.getHitIdx(ilay));
+	}
+	for (int ilay = 0; ilay < Config::nLayers; ilay++)
+	{
+	  if   (seedtk.getHitIdx(ilay) >= 0) {hitpattern << "1 ";}
+	  else                               {hitpattern << "0 ";}
+	}
+	hitpattern << std::endl;
+      }
+    }
+	
+    hitpattern.close();
+    continue;
+
+    // Track & tk = ev.simTracks_[ev.seedTracks_[id].label()];
+
+    // std::cout << "simtrack label: " << tk.label() << std::endl;
+    // int good = 0;
+    // for (int i = 0; i < Config::nLayers; i++)
+    //   {
+    // 	int idx = tk.getHitIdx(i);
+    // 	if (idx >= 0) good++;
+    // 	Hit & hit = ev.layerHits_[i][tk.getHitIdx(i)];
+    // 	int mctkid = ev.simHitsInfo_[hit.mcHitID()].mcTrackID();
+    // 	std::cout << "lay: " << i << " mcTrackID of hit: " << mctkid << " r(hit): " << hit.r() << " z(hit): " << hit.z() << std::endl;
+    //   }
+
+    // std::cout << "nGoodHits: " << good << std::endl;
+    // exit(0);
 
     // if (evt!=2985) continue;
 

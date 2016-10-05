@@ -33,7 +33,7 @@ namespace Config
   extern int nEvents;
 
   // config on main -- for geometry
-  constexpr int   nLayers   = 10; // default: 10; cmssw tests: 13, 17, 26 (for endcap)
+  constexpr int   nLayers   = 17; // default: 10; cmssw tests: 13, 17, 26 (for endcap)
   constexpr float fRadialSpacing   = 4.;
   constexpr float fRadialExtent    = 0.01;
   constexpr float fInnerSensorSize = 5.0; // approximate sensor size in cm
