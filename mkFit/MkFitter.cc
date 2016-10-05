@@ -130,6 +130,7 @@ void MkFitter::InputSortedTracksAndHits(const std::vector<Track>&  tracks,
       HitsIdx[hi](itrack, 0, 0) = hidx;
 
       const Hit &hit = layerHits[glay][hidx];
+      detID[hi](itrack, 0, 0) = hit.detID();
 
       msErr[hi].CopyIn(itrack, hit.errArray());
       msPar[hi].CopyIn(itrack, hit.posArray());
@@ -268,7 +269,7 @@ void MkFitter::SlurpInTracksAndHits(const std::vector<Track>&  tracks,
       itrack = i - beg;
       idx[itrack] = (char*) &hit - varr;
       HitsIdx[hi](itrack, 0, 0) = hidx;
-      detID[hi](itrack, 0, 0) = hit.detID();
+      detID  [hi](itrack, 0, 0) = hit.detID();
     }
 
 #ifdef MIC_INTRINSICS
@@ -336,6 +337,7 @@ void MkFitter::SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks,
       const Hit  &hit  = layerHits[glay][hidx];
       idx[itrack] = (char*) &hit - varr;
       HitsIdx[hi](itrack, 0, 0) = hidx;
+      detID  [hi](itrack, 0, 0) = hit.detID();
     }
 
 #ifdef MIC_INTRINSICS
@@ -640,7 +642,7 @@ void MkFitter::FitSortedTracks(const int N_proc, const Event * ev)
     if (Config::readCmsswSeeds && hi < Config::nlayers_per_seed) continue;
 
     propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[hi],
-                           Err[iP], Par[iP], N_proc);
+                           Err[iP], Par[iP], detID[hi], N_proc);
 
     if (Config::fit_val) MkFitter::CollectSortedFitValidation(hi,N_proc,ev); // iP is output
 
