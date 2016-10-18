@@ -17,7 +17,7 @@ void propagateHelixToRMPlex(const MPlexLS &inErr,  const MPlexLV& inPar,
 void propagateHelixToRMPlex(const MPlexLS &inErr,  const MPlexLV& inPar,
                             const MPlexQI &inChg,  const MPlexHV& msPar,
 			          MPlexLS &outErr,       MPlexLV& outPar,
-			    const MPlexQI &detIDs,
+			    const MPlexQF &hitsRl, const MPlexQF &hitsXi, 
                             const int      N_proc);
 
 void propagateHelixToRMPlex(const MPlexLS& inErr,  const MPlexLV& inPar,

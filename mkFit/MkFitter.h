@@ -34,7 +34,9 @@ struct MkFitter
   MPlexQI CandIdx;//this is the candidate index for the given seed (for bookkeeping of clone engine)
   MPlexQI HitsIdx[Config::nLayers];
   MPlexQI GoodLayer[Config::nLayers];
-  MPlexQI detID[Config::nLayers];
+  //  MPlexQI detID[Config::nLayers];
+  MPlexQF rl[Config::nLayers];
+  MPlexQF xi[Config::nLayers];
 
   // Hold hit indices to explore at current layer.
   MPlexQI     XHitSize;

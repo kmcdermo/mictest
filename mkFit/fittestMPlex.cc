@@ -112,7 +112,9 @@ void addFakeHits(std::vector<Track>& simtracks, std::vector<HitVec>& layerHits)
     tmperr(1,1) = big; 
     tmperr(2,2) = big;
     int detid = getDetId(tmppos[0],tmppos[2]);
-    Hit tmphit(tmppos,tmperr,detid,-1);
+    float rl = Config::Rl[detid];
+    float xi = Config::Xi[detid];
+    Hit tmphit(tmppos,tmperr,rl,xi,-1);
     layerHits[hi].push_back(tmphit);
   }
   

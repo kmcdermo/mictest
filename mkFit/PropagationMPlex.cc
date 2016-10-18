@@ -1005,7 +1005,7 @@ void propagateHelixToRMPlex(const MPlexLS &inErr,  const MPlexLV& inPar,
 void propagateHelixToRMPlex(const MPlexLS &inErr,  const MPlexLV& inPar,
                             const MPlexQI &inChg,  const MPlexHV& msPar, 
 			          MPlexLS &outErr,       MPlexLV& outPar,
-			    const MPlexQI &detIDs,
+			    const MPlexQF &hitsRl, const MPlexQF& hitsXi,
                             const int      N_proc)
 {
    const idx_t N  = NN;
@@ -1028,13 +1028,7 @@ void propagateHelixToRMPlex(const MPlexLS &inErr,  const MPlexLV& inPar,
 #endif
 
    //   if (Config::useCMSGeom) {
-   MPlexQF hitsRl;
-   MPlexQF hitsXi;
-#pragma simd
-   for (int n = 0; n < NN; ++n) {
-     hitsRl.At(n, 0, 0) = Config::Rl[detIDs(n, 0, 0)]; 
-     hitsXi.At(n, 0, 0) = Config::Xi[detIDs(n, 0, 0)]; 
-   }
+   
    applyMaterialEffects(hitsRl, hitsXi, outErr, outPar, N_proc);
      //   }
 
