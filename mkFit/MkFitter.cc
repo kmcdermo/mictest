@@ -471,6 +471,8 @@ void MkFitter::FitTracks(const int N_proc, const bool useParamBfield)
 {
   // Fitting loop.
 
+  MPlexQF tempchi2;
+
   for (int hi = 0; hi < Nhits; ++hi)
   {
     // Note, charge is not passed (line propagation).
@@ -479,6 +481,15 @@ void MkFitter::FitTracks(const int N_proc, const bool useParamBfield)
 
     propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[hi],
                            Err[iP], Par[iP], N_proc, useParamBfield);
+
+    computeChi2MPlex(Err[iP], Par[iP], Chg, msErr[hi], msPar[hi],                                                                                                          
+		     tempchi2,N_proc);                                                                                                                                         
+
+    #pragma simd
+    for (int n = 0; n < N_proc; n++)
+    {
+      Chi2(n, 0, 0) += tempchi2.ConstAt(n, 0, 0);
+    }
 
     updateParametersMPlex(Err[iP], Par[iP], Chg, msErr[hi], msPar[hi],
                           Err[iC], Par[iC], N_proc);
