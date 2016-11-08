@@ -38,6 +38,7 @@ struct MkFitter
   MPlexQI SeedIdx;//this is the seed index in local thread (for bookkeeping at thread level)
   MPlexQI CandIdx;//this is the candidate index for the given seed (for bookkeeping of clone engine)
   MPlexQI HitsIdx[Config::nLayers];
+  MPlexQI detID[Config::nLayers]; // used for getting material effects
 
   // Hold hit indices to explore at current layer.
   MPlexQI     XHitSize;

@@ -11,6 +11,7 @@ void propagateLineToRMPlex(const MPlexLS &psErr,  const MPlexLV& psPar,
 
 void propagateHelixToRMPlex(const MPlexLS &inErr,  const MPlexLV& inPar,
                             const MPlexQI &inChg,  const MPlexHV& msPar,
+			    const MPlexQI &detIDs,
 			          MPlexLS &outErr,       MPlexLV& outPar,
                             const int      N_proc, const bool useParamBfield = false);
 
@@ -36,6 +37,7 @@ void helixAtRFromIterative(const MPlexLV& inPar, const MPlexQI& inChg,
 
 void propagateHelixToZMPlex(const MPlexLS &inErr,  const MPlexLV& inPar,
                             const MPlexQI &inChg,  const MPlexHV& msPar,
+			    const MPlexQI &detIDs,
 			          MPlexLS &outErr,       MPlexLV& outPar,
                             const int      N_proc, const bool useParamBfield = false);
 

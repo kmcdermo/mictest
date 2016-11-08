@@ -215,9 +215,9 @@ public:
 class Hit
 {
 public:
-  Hit() : mcHitID_(-1) {}
-  Hit(const SVector3& position, const SMatrixSym33& error, int mcHitID = -1)
-    : state_(position, error), mcHitID_(mcHitID) {}
+ Hit() : detID_(-1), mcHitID_(-1) {}
+ Hit(const SVector3& position, const SMatrixSym33& error, int detID = -1, int mcHitID = -1)
+   : state_(position, error), detID_(detID), mcHitID_(mcHitID) {}
 
   ~Hit(){}
 
@@ -276,12 +276,14 @@ public:
     return state_;
   }
 
+  int detID() const { return detID_; }
   int mcHitID() const { return mcHitID_; }
   int layer(const MCHitInfoVec& globalMCHitInfo) const { return globalMCHitInfo[mcHitID_].layer(); }
   int mcTrackID(const MCHitInfoVec& globalMCHitInfo) const { return globalMCHitInfo[mcHitID_].mcTrackID(); }
   
 private:
   MeasurementState state_;
+  int detID_;
   int mcHitID_;
 };
 

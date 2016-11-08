@@ -102,6 +102,8 @@ void MkFitter::InputTracksAndHits(const std::vector<Track>&  tracks,
       HitsIdx[hi](itrack, 0, 0) = hidx;
       if (hidx<0) continue;
 
+      detID[hi](itrack, 0, 0) = hit.detID();
+
       msErr[hi].CopyIn(itrack, hit.errArray());
       msPar[hi].CopyIn(itrack, hit.posArray());
     }
@@ -225,6 +227,7 @@ void MkFitter::SlurpInTracksAndHits(const std::vector<Track>&  tracks,
       itrack = i - beg;
       idx[itrack] = (char*) &hit - varr;
       HitsIdx[hi](itrack, 0, 0) = hidx;
+      detID[hi](itrack, 0, 0) = hit.detID();
     }
 
 #ifdef MIC_INTRINSICS
@@ -398,6 +401,7 @@ void MkFitter::InputSeedsTracksAndHits(const std::vector<Track>&  seeds,
       HitsIdx[hi](itrack, 0, 0) = hidx;
       if (hidx<0) continue;//fixme, check if this is harmless
       const Hit &hit = layerHits[hi][hidx];
+      detID[hi](itrack, 0, 0) = hit.detID();
 
       msErr[hi].CopyIn(itrack, hit.errArray());
       msPar[hi].CopyIn(itrack, hit.posArray());
@@ -477,10 +481,10 @@ void MkFitter::FitTracks(const int N_proc, const Event * ev, const bool useParam
     // propagateLineToRMPlex(Err[iC], Par[iC], msErr[hi], msPar[hi],
     //                       Err[iP], Par[iP]);
 
-    propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[hi],
+    propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[hi], detIDs[hi],
                            Err[iP], Par[iP], N_proc, useParamBfield);
 
-    updateParametersMPlex(Err[iP], Par[iP], Chg, msErr[hi], msPar[hi],
+    updateParametersMPlex(Err[iP], Par[iP], Chg, msErr[hi], msPar[hi], detIDs[hi],
                           Err[iC], Par[iC], N_proc);
 
     if (Config::fit_val) MkFitter::CollectFitValidation(hi,N_proc,ev);
@@ -530,7 +534,7 @@ void MkFitter::FitTracksTestEndcap(const int N_proc, const Event* ev, const bool
 
       dprint("hit #" << hi << " hit  pos=" << msPar[hi].ConstAt(0, 0, 0) << ", " <<  msPar[hi].ConstAt(0, 0, 1) << ", " <<  msPar[hi].ConstAt(0, 0, 2));
 
-      propagateHelixToZMPlex(Err[iC], Par[iC], Chg, msPar[hi],
+      propagateHelixToZMPlex(Err[iC], Par[iC], Chg, msPar[hi], detIDs[hi],
 			     Err[iP], Par[iP], N_proc, useParamBfield);
 
       dprint("hit #" << hi << " prop par=" << Par[iP].ConstAt(0, 0, 0) << ", " <<  Par[iP].ConstAt(0, 0, 1) << ", " <<  Par[iP].ConstAt(0, 0, 2)  << ", "
@@ -538,14 +542,14 @@ void MkFitter::FitTracksTestEndcap(const int N_proc, const Event* ev, const bool
 	     << " p=(" << cos(Par[iP].ConstAt(0, 0, 4))/Par[iP].ConstAt(0, 0, 3) << ", " << sin(Par[iP].ConstAt(0, 0, 4))/Par[iP].ConstAt(0, 0, 3)
 	     << ", " << 1./(tan(Par[iP].ConstAt(0, 0, 5))*Par[iP].ConstAt(0, 0, 3)) << ")" );
 
-      computeChi2EndcapMPlex(Err[iP], Par[iP], Chg, msErr[hi], msPar[hi],
+      computeChi2EndcapMPlex(Err[iP], Par[iP], Chg, msErr[hi], msPar[hi], detIDs[hi],
 			     Chi2,N_proc);
 
       dprint("hit chi2: " << Chi2.At(0, 0, 0));
       //if (Chi2.At(0, 0, 0)>30.) continue;
       chi2+=Chi2.At(0, 0, 0);
 
-      updateParametersEndcapMPlex(Err[iP], Par[iP], Chg, msErr[hi], msPar[hi],
+      updateParametersEndcapMPlex(Err[iP], Par[iP], Chg, msErr[hi], msPar[hi], detIDs[hi],
 				  Err[iC], Par[iC], N_proc);
 
       dprint("hit #" << hi << " upda par=" << Par[iC].ConstAt(0, 0, 0) << ", " <<  Par[iC].ConstAt(0, 0, 1) << ", " <<  Par[iC].ConstAt(0, 0, 2)  << ", "

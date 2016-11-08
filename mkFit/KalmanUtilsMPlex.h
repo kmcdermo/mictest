@@ -9,7 +9,7 @@
 #endif
 
 void updateParametersMPlex(const MPlexLS &psErr,  const MPlexLV& psPar, const MPlexQI &inChg,
-                           const MPlexHS &msErr,  const MPlexHV& msPar,
+                           const MPlexHS &msErr,  const MPlexHV& msPar,	const MPlexQI &detIDs,
                                  MPlexLS &outErr,       MPlexLV& outPar,
                            const int      N_proc);
 
@@ -20,17 +20,17 @@ void computeChi2MPlex_tmp(const MPlexLS &psErr,  const MPlexLV& psPar, const MPl
                             FitterCU<float>& cuFitter);
 #endif
 void computeChi2MPlex(const MPlexLS &psErr,  const MPlexLV& psPar, const MPlexQI &inChg,
-		      const MPlexHS &msErr,  const MPlexHV& msPar,
+		      const MPlexHS &msErr,  const MPlexHV& msPar, const MPlexQI &detIDs, 
                             MPlexQF& outChi2,
                       const int      N_proc);
 
 void updateParametersEndcapMPlex(const MPlexLS &psErr,  const MPlexLV& psPar, const MPlexQI &inChg,
-				 const MPlexHS &msErr,  const MPlexHV& msPar,
+				 const MPlexHS &msErr,  const MPlexHV& msPar, const MPlexQI &detIDs,
                                        MPlexLS &outErr,       MPlexLV& outPar,
 				 const int      N_proc);
 
 void computeChi2EndcapMPlex(const MPlexLS &psErr,  const MPlexLV& psPar, const MPlexQI &inChg,
-			    const MPlexHS &msErr,  const MPlexHV& msPar,
+			    const MPlexHS &msErr,  const MPlexHV& msPar, const MPlexQI &detIDs,
                                   MPlexQF& outChi2,
 			    const int      N_proc);
 

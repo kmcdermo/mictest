@@ -690,9 +690,9 @@ void ConvertToCartesian(const MPlexLV& A, MPlexLV& B, MPlexLL& C)
 //==============================================================================
 
 void updateParametersMPlex(const MPlexLS &psErr,  const MPlexLV& psPar, const MPlexQI &inChg,
-                           const MPlexHS &msErr,  const MPlexHV& msPar,
-                                 MPlexLS &outErr,       MPlexLV& outPar,
-                           const int      N_proc)
+                           const MPlexHS &msErr,  const MPlexHV& msPar, const MPlexQI &detIDs,
+			         MPlexLS &outErr,       MPlexLV& outPar,
+			   const int      N_proc)
 {
   // const idx_t N = psErr.N;
   // Assert N-s of all parameters are the same.
@@ -707,7 +707,7 @@ void updateParametersMPlex(const MPlexLS &psErr,  const MPlexLV& psPar, const MP
   MPlexLV propPar;
   // do a full propagation step to correct for residual distance from the hit radius - need the charge for this
   if (Config::useCMSGeom) {
-    propagateHelixToRMPlex(psErr,  psPar, inChg,  msPar, propErr, propPar, N_proc);
+    propagateHelixToRMPlex(psErr,  psPar, inChg,  msPar, detIDs, propErr, propPar, N_proc);
   } else {
     propErr = psErr;
     propPar = psPar;
@@ -856,7 +856,7 @@ void updateParametersMPlex(const MPlexLS &psErr,  const MPlexLV& psPar, const MP
 }
 
 void computeChi2MPlex(const MPlexLS &psErr,  const MPlexLV& psPar, const MPlexQI &inChg,
-                      const MPlexHS &msErr,  const MPlexHV& msPar,
+                      const MPlexHS &msErr,  const MPlexHV& msPar, const MPlexQI &detIDs,
                             MPlexQF& outChi2,
                       const int      N_proc)
 {
@@ -874,7 +874,7 @@ void computeChi2MPlex(const MPlexLS &psErr,  const MPlexLV& psPar, const MPlexQI
   MPlexLV propPar;
   // do a full propagation step to correct for residual distance from the hit radius - need the charge for this
   if (Config::useCMSGeom) {
-    propagateHelixToRMPlex(psErr,  psPar, inChg,  msPar, propErr, propPar, N_proc);
+    propagateHelixToRMPlex(psErr,  psPar, inChg,  msPar, detIDs, propErr, propPar, N_proc);
   } else {
     propErr = psErr;
     propPar = psPar;
@@ -967,7 +967,7 @@ void computeChi2MPlex(const MPlexLS &psErr,  const MPlexLV& psPar, const MPlexQI
 
 
 void updateParametersEndcapMPlex(const MPlexLS &psErr,  const MPlexLV& psPar, const MPlexQI &inChg,
-				 const MPlexHS &msErr,  const MPlexHV& msPar,
+				 const MPlexHS &msErr,  const MPlexHV& msPar, const MPlexQI &detIDs,
                                        MPlexLS &outErr,       MPlexLV& outPar,
 				 const int      N_proc)
 {
@@ -984,7 +984,7 @@ void updateParametersEndcapMPlex(const MPlexLS &psErr,  const MPlexLV& psPar, co
   MPlexLV propPar;
   // do a full propagation step to correct for residual distance from the hit radius - need the charge for this
   if (Config::useCMSGeom) {
-    propagateHelixToZMPlex(psErr,  psPar, inChg,  msPar, propErr, propPar, N_proc);
+    propagateHelixToZMPlex(psErr,  psPar, inChg,  msPar, detIDs, propErr, propPar, N_proc);
   } else {
     propErr = psErr;
     propPar = psPar;
@@ -1078,7 +1078,7 @@ void updateParametersEndcapMPlex(const MPlexLS &psErr,  const MPlexLV& psPar, co
 }
 
 void computeChi2EndcapMPlex(const MPlexLS &psErr,  const MPlexLV& psPar, const MPlexQI &inChg,
-			    const MPlexHS &msErr,  const MPlexHV& msPar,
+			    const MPlexHS &msErr,  const MPlexHV& msPar, const MPlexQI &detIDs,
                                   MPlexQF& outChi2,
 			    const int      N_proc)
 {
@@ -1095,7 +1095,7 @@ void computeChi2EndcapMPlex(const MPlexLS &psErr,  const MPlexLV& psPar, const M
   MPlexLV propPar;
   // do a full propagation step to correct for residual distance from the hit radius - need the charge for this
   if (Config::useCMSGeom) {
-    propagateHelixToZMPlex(psErr,  psPar, inChg,  msPar, propErr, propPar, N_proc);
+    propagateHelixToZMPlex(psErr,  psPar, inChg,  msPar, detIDs, propErr, propPar, N_proc);
   } else {
     propErr = psErr;
     propPar = psPar;

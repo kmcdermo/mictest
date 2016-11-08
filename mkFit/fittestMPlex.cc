@@ -1,4 +1,4 @@
-#include "fittest.h"
+#include "fittestMPlex.h"
 
 #include "Matrix.h"
 #include "KalmanUtils.h"
@@ -10,7 +10,6 @@
 
 #include "MkFitter.h"
 #if USE_CUDA
-#include "fittestMPlex.h"
 #include "FitterCU.h"
 #endif
 
