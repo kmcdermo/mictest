@@ -355,13 +355,9 @@ inline void MkBuilder::fit_one_seed_set(TrackVec& seedtracks, int itrack, int en
   if (Config::cf_seeding) mkfp->ConformalFitTracks(false, itrack, end);
   if (Config::readCmsswSeeds==false) mkfp->FitTracks(end - itrack, m_event);
 
-  const int ilay = 3; // layer 4
-
   dcall(pre_prop_print(ilay, mkfp));
-  mkfp->PropagateTracksToR(m_event->geom_.Radius(ilay), end - itrack);
-  dcall(post_prop_print(ilay, mkfp));
 
-  mkfp->OutputFittedTracksAndHitIdx(m_event->seedTracks_, itrack, end, true);
+  mkfp->OutputFittedTracksAndHitIdx(m_event->seedTracks_, itrack, end, false);
 }
 
 void MkBuilder::fit_seeds()
@@ -605,8 +601,9 @@ void MkBuilder::FindTracksBestHit(EventOfCandidates& event_of_cands)
 
           dprint(std::endl << "processing track=" << itrack << " etabin=" << ebin << " findex=" << etabin_of_candidates.m_fill_index);
 
-          mkfp->SetNhits(3);//just to be sure (is this needed?)
-          mkfp->InputTracksAndHitIdx(etabin_of_candidates.m_candidates, itrack, end, true);
+	  mkfp->SetNhits(Config::nlayers_per_seed); 
+	  mkfp->InputTracksAndHitIdx(etabin_of_candidates.m_candidates, itrack, end, false);
+	  mkfp->PropagateTracksToR(m_event->geom_.Radius(Config::nlayers_per_seed), end - itrack);
 
           //ok now we start looping over layers
           //loop over layers, starting from after the seed
