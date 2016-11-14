@@ -24,8 +24,8 @@ void makePlotsFromDump(TString test, bool isCMSSW = false, bool isEndcap = false
   h1->DrawNormalized();
 
   cout << "Entries: " << h1->GetEntries() << endl;
-  cout << "Nhits>=6: " << h1->Integral(7,11)/h1->Integral() << endl;
-  cout << "Nhits>=9: " << h1->Integral(10,11)/h1->Integral() << endl;
+  cout << "Nhits>=6: " << h1->Integral(7,21)/h1->Integral() << endl;
+  cout << "Nhits>=9: " << h1->Integral(10,21)/h1->Integral() << endl;
 
   TFile* f2 = TFile::Open("test_host_"+events+"_"+test+"_NVU8int_NTH21.root");
   TH1F* h2 = (TH1F*) f2->Get("h_MXNH");
