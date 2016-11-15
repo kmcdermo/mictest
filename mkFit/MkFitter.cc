@@ -858,7 +858,7 @@ void MkFitter::AddBestHit(const LayerOfHits &layer_of_hits, const int N_proc)
 
     //do a full propagation step to correct for residual distance from the hit radius - need the charge for this
     if (Config::useCMSGeom) {
-      propagateHelixToRMPlex(Err[iC],  Par[iC], Chg,  msPar[Nhits], Err[iP], Par[iP], N_proc);
+      propagateHelixToRMPlex(Err[iC],  Par[iC], Chg,  msPar[Nhits], Err[iP], Par[iP], N_proc, true);
     }
 
     //now compute the chi2 of track state vs hit
@@ -936,7 +936,7 @@ void MkFitter::AddBestHit(const LayerOfHits &layer_of_hits, const int N_proc)
 
   //do a full propagation step to correct for residual distance from the hit radius - need the charge for this
   if (Config::useCMSGeom) {
-    propagateHelixToRMPlex(Err[iC],  Par[iC], Chg,  msPar[Nhits], Err[iP], Par[iP], N_proc);
+    propagateHelixToRMPlex(Err[iC],  Par[iC], Chg,  msPar[Nhits], Err[iP], Par[iP], N_proc, true);
   }
 
   //now update the track parameters with this hit (note that some calculations are already done when computing chi2... not sure it's worth caching them?)

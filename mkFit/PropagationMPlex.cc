@@ -1036,18 +1036,6 @@ void propagateHelixToRMPlex(const MPlexLS& inErr,  const MPlexLV& inPar,
    helixAtRFromIterative(inPar, inChg, outPar, msRad, errorProp, N_proc);
 #endif
 
-   //add multiple scattering uncertainty and energy loss (FIXME: in this way it is not applied in track fit)
-   if (Config::useCMSGeom) {
-     MPlexQF hitsRl;
-     MPlexQF hitsXi;
-#pragma simd
-     for (int n = 0; n < NN; ++n) {
-       hitsRl.At(n, 0, 0) = getRlVal(r, outPar.ConstAt(n, 2, 0));
-       hitsXi.At(n, 0, 0) = getXiVal(r, outPar.ConstAt(n, 2, 0));
-     }
-     applyMaterialEffects(hitsRl, hitsXi, outErr, outPar, N_proc);
-   }
-
    // Matriplex version of:
    // result.errors = ROOT::Math::Similarity(errorProp, outErr);
 
