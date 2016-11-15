@@ -1183,6 +1183,11 @@ void MkFitter::FindCandidatesMinimizeCopy(const LayerOfHits &layer_of_hits, Cand
     msPar[Nhits].SlurpIn(varr + off_param, idx);
 #endif
 
+    //do a full propagation step to correct for residual distance from the hit radius - need the charge for this
+    if (Config::useCMSGeom) {
+      propagateHelixToRMPlex(Err[iC],  Par[iC], Chg,  msPar[Nhits], Err[iP], Par[iP], N_proc, true);
+    }
+
     //now compute the chi2 of track state vs hit
     MPlexQF outChi2;
     computeChi2MPlex(Err[iP], Par[iP], Chg, msErr[Nhits], msPar[Nhits], outChi2, N_proc);
@@ -1305,6 +1310,11 @@ void MkFitter::UpdateWithLastHit(const LayerOfHits &layer_of_hits, int N_proc)
 
     msErr[Nhits - 1].CopyIn(i, hit.errArray());
     msPar[Nhits - 1].CopyIn(i, hit.posArray());
+  }
+
+  //do a full propagation step to correct for residual distance from the hit radius - need the charge for this
+  if (Config::useCMSGeom) {
+    propagateHelixToRMPlex(Err[iC],  Par[iC], Chg,  msPar[Nhits-1], Err[iP], Par[iP], N_proc, true);
   }
 
   updateParametersMPlex(Err[iP], Par[iP], Chg, msErr[Nhits-1], msPar[Nhits-1], Err[iC], Par[iC], N_proc);

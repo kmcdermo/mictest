@@ -884,7 +884,7 @@ void MkBuilder::find_tracks_in_layers(EtaBinOfCombCandidates &etabin_of_comb_can
     {
       cloner.begin_layer(ilay);
     }
-
+  
     //vectorized loop
     for (int itrack = 0; itrack < theEndCand; itrack += NN)
     {
@@ -904,18 +904,17 @@ void MkBuilder::find_tracks_in_layers(EtaBinOfCombCandidates &etabin_of_comb_can
       // mkfp->SetNhits(ilay == Config::nlayers_per_seed ? ilay : ilay + 1);
       mkfp->SetNhits(ilay);
 
-      mkfp->InputTracksAndHitIdx(etabin_of_comb_candidates.m_candidates,
-                                 seed_cand_idx, itrack, end,
-                                 true);
-
-#ifdef DEBUG
-      for (int i=itrack; i < end; ++i)
-        dprintf("  track %d, idx %d is from seed %d\n", i, i - itrack, mkfp->Label(i - itrack,0,0));
-      dprintf("\n");
-#endif
-
       if (ilay > Config::nlayers_per_seed)
       {
+	mkfp->InputTracksAndHitIdx(etabin_of_comb_candidates.m_candidates,
+				   seed_cand_idx, itrack, end, true);
+
+#ifdef DEBUG
+	for (int i=itrack; i < end; ++i)
+	  dprintf("  track %d, idx %d is from seed %d\n", i, i - itrack, mkfp->Label(i - itrack,0,0));
+	dprintf("\n");
+#endif
+
         LayerOfHits &layer_of_hits = m_event_of_hits.m_layers_of_hits[ilay - 1];
 
         mkfp->UpdateWithLastHit(layer_of_hits, end - itrack);
@@ -923,7 +922,6 @@ void MkBuilder::find_tracks_in_layers(EtaBinOfCombCandidates &etabin_of_comb_can
         if (ilay < Config::nLayers)
         {
           // Propagate to this layer
-
           mkfp->PropagateTracksToR(m_event->geom_.Radius(ilay), end - itrack);
 
 	  // copy_out the propagated track params, errors only (hit-idcs and chi2 already updated)
@@ -937,7 +935,13 @@ void MkBuilder::find_tracks_in_layers(EtaBinOfCombCandidates &etabin_of_comb_can
 	  continue;
 	}
       }
-
+      else
+      {
+	mkfp->InputTracksAndHitIdx(etabin_of_comb_candidates.m_candidates,
+				   seed_cand_idx, itrack, end, false);
+	mkfp->PropagateTracksToR(m_event->geom_.Radius(Config::nlayers_per_seed), end - itrack);
+      }
+      
       // if (ilay == Config::nLayers)
       // {
       //   break;
