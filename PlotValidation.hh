@@ -36,9 +36,11 @@ typedef std::vector<TString> TStrVec;
 class PlotValidation
 {
 public:
-  PlotValidation(TString inName, TString outName, TString outType);
+  PlotValidation(TString inName, TString outName, 
+		 Bool_t mvInput, Bool_t fullVal,
+		 Bool_t saveAs, TString outType);
   ~PlotValidation();
-  void Validation(Bool_t fullVal = false, Bool_t mvInput = false);
+  void Validation();
 
   void PlotEfficiency();
   void PlotFakeRate();
@@ -77,6 +79,9 @@ public:
 private:
   TString fInName;
   TFile * fInRoot;
+  Bool_t  fMvInput;
+  Bool_t  fFullVal;
+  Bool_t  fSaveAs;
   TString fOutType;
   TString fOutName;
   TFile * fOutRoot;
