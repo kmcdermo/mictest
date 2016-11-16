@@ -4,7 +4,7 @@ make -j 12
 
 dir=/data/nfsmic/${USER}/tmp
 
-for nth in 1 2 4 6 8 12 20 24
+for nth in 1 2 4 6 8 12 16 20 24
 do
     echo "snb toymc" nth=${nth} "FIT (barrel)"
     ./mkFit/mkFit --read --file-name ${dir}/simtracks_barrel_1kx10k.bin --fit-std-only --num-thr ${nth} >& log_snb_1kx10k_FIT_NVU8int_NTH${nth}.txt
