@@ -23,7 +23,7 @@ void makeBenchmarkPlotsFit(bool isMic = false, bool isEndcap = false)
   g_FIT_VU->GetYaxis()->SetTitle("Time for "+ntrk+" tracks [s]");
   g_FIT_VU->GetYaxis()->SetTitleOffset(1.25);
   g_FIT_VU->GetXaxis()->SetRangeUser(1,maxvu);
-  g_FIT_VU->GetYaxis()->SetRangeUser(0,(isMic ? 25/1000.: 6/1000.));
+  g_FIT_VU->GetYaxis()->SetRangeUser(0,(isMic ? 10/1000.: 6/1000.));
   if (isEndcap) g_FIT_VU->GetYaxis()->SetRangeUser(0,(isMic ? 15/1000. : 8/1000.));
   g_FIT_VU->SetLineWidth(2);
   g_FIT_VU->SetLineColor(kBlue);
