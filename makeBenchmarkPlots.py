@@ -20,9 +20,9 @@ for test in ['BH','COMB','FIT']:
     if 'endcap' in hORm and not isCMSSW and 'FIT' not in test: continue
     print test
 
-    if 'BH'   in test: pos = 9  #8 for individual
-    if 'COMB' in test: pos = 12 #11 for individual
-    if 'FIT'  in test: pos = 4  #3 for individual
+    if 'BH'   in test: pos = 8  #8 for individual
+    if 'COMB' in test: pos = 11 #11 for individual
+    if 'FIT'  in test: pos = 3  #3 for individual
 
     if isCMSSW:
         ntks = '100xTTbarPU35'
@@ -55,14 +55,26 @@ for test in ['BH','COMB','FIT']:
         elif  vu == '8int' : xval = 8.0
         else               : xval = float(vu)
         yval = 0.
-
+        firstFound = False
+        
         os.system('grep Matriplex log_'+hORm+'_'+ntks+'_'+test+'_NVU'+vu+'_NTH'+nth+'.txt >& log_'+hORm+'_'+ntks+'_'+test+'_VU.txt')
         with open('log_'+hORm+'_'+ntks+'_'+test+'_VU.txt') as f:
             for line in f:
-                if 'Total Matriplex' in line: 
-                    lsplit = line.split()
-                    yval = float(lsplit[pos])
-                    print xval, yval
+                if 'Matriplex' not in line: continue
+                if 'Total' in line: continue
+                lsplit = line.split()
+                if 'FIT' in test: 
+                    tmp = float(lsplit[pos])
+                    if firstFound is False or tmp<yval: yval=tmp
+                    if not firstFound:
+                        firstFound = True
+                else:
+                    if not firstFound:
+                        firstFound = True
+                        continue
+                    yval = yval+float(lsplit[pos])
+        if 'FIT' not in test: yval = nevt*yval/(nevt-1.)
+        print xval, yval
         g_VU.SetPoint(point,xval,yval)
         point = point+1
     g_VU.Write("g_"+test+"_VU")
@@ -98,13 +110,25 @@ for test in ['BH','COMB','FIT']:
     for th in thvals:
         xval = float(th)
         yval = 0.
+        firstFound = False
 
         os.system('grep Matriplex log_'+hORm+'_'+ntks+'_'+test+'_NVU'+nvu+'_NTH'+str(th)+'.txt >& log_'+hORm+'_'+ntks+'_'+test+'_TH.txt')
         with open('log_'+hORm+'_'+ntks+'_'+test+'_TH.txt') as f:
             for line in f:
-                if 'Total Matriplex' in line: 
-                    lsplit = line.split()
-                    yval = float(lsplit[pos])
+                if 'Matriplex' not in line: continue
+                if 'Total' in line: continue
+                lsplit = line.split()
+                if 'FIT' in test: 
+                    tmp = float(lsplit[pos])
+                    if firstFound is False or tmp<yval: yval=tmp
+                    if not firstFound:
+                        firstFound = True
+                else:
+                    if not firstFound:
+                        firstFound = True
+                        continue
+                    yval = yval+float(lsplit[pos])
+        if 'FIT' not in test: yval = nevt*yval/(nevt-1.)
         print xval, yval
         g_TH.SetPoint(point,xval,yval)
         point = point+1
