@@ -17,7 +17,8 @@ void makePlotsFromDump(TString test, bool isCMSSW = false, bool isEndcap = false
   h1->SetLineColor(kBlack);
   h1->SetLineWidth(2);
   if (test== "BH") h1->SetTitle("Best Hit: "+setup+" "+section);
-  if (test== "COMB") h1->SetTitle("Combinatorial: "+setup+" "+section);
+  if (test== "STD") h1->SetTitle("Standard: "+setup+" "+section);
+  if (test== "CE") h1->SetTitle("Clone Engine: "+setup+" "+section);
   h1->GetXaxis()->SetTitle("Number of Hits Found");
   h1->GetYaxis()->SetTitle("Fraction of Tracks");
   h1->DrawNormalized();
@@ -32,33 +33,25 @@ void makePlotsFromDump(TString test, bool isCMSSW = false, bool isEndcap = false
   h2->SetMarkerColor(kBlue);
   h2->DrawNormalized("Psame");
 
-  TH1F* h3;
-  TH1F* h4;
-  if (!(isCMSSW && isEndcap))
-  {
-    TFile* f3 = TFile::Open("test_knc_"+events+"_"+test+"_NVU1_NTH1.root");
-    h3 = (TH1F*) f3->Get("h_MXNH");
-    h3->SetMarkerStyle(kOpenSquare);
-    h3->SetMarkerColor(kRed);
-    h3->DrawNormalized("Psame");
-    
-    TFile* f4 = TFile::Open("test_knc_"+events+"_"+test+"_NVU16int_NTH240.root");
-    h4 = (TH1F*) f4->Get("h_MXNH");
-    h4->SetMarkerStyle(kOpenTriangleUp);
-    h4->SetMarkerColor(kMagenta);
-    h4->DrawNormalized("Psame");
-  }
+  TFile* f3 = TFile::Open("test_knc_"+events+"_"+test+"_NVU1_NTH1.root");
+  TH1F* h3 = (TH1F*) f3->Get("h_MXNH");
+  h3->SetMarkerStyle(kOpenSquare);
+  h3->SetMarkerColor(kRed);
+  h3->DrawNormalized("Psame");
   
+  TFile* f4 = TFile::Open("test_knc_"+events+"_"+test+"_NVU16int_NTH240.root");
+  TH1F* h4 = (TH1F*) f4->Get("h_MXNH");
+  h4->SetMarkerStyle(kOpenTriangleUp);
+  h4->SetMarkerColor(kMagenta);
+  h4->DrawNormalized("Psame");
+    
   TLegend* leg = new TLegend(0.75,0.6,1.0,0.8);
   leg->SetBorderSize(0);
   leg->AddEntry(h1,"SNB NVU1 NTH1","L");
   leg->AddEntry(h2,"SNB NVU8 NTH24","LP");
-  if (!(isCMSSW && isEndcap))
-  {
-    leg->AddEntry(h3,"KNC NVU1 NTH1","LP");
-    leg->AddEntry(h4,"KNC NVU16int NTH240","LP");
-  }
-  leg->Draw();
+  leg->AddEntry(h3,"KNC NVU1 NTH1","LP");
+  leg->AddEntry(h4,"KNC NVU16int NTH240","LP");
+  leg->Draw("same");
 
   if (!isEndcap)
   {
