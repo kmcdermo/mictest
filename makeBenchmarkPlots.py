@@ -13,9 +13,9 @@ if len(sys.argv)>2:
 
 if hORm!='host' and hORm!='host_endcap' and hORm!='mic' and hORm!='mic_endcap': exit
 
-g = ROOT.TFile('benchmark_'+hORm+'.root',"recreate")
+g = ROOT.TFile('benchmark_'+hORm+'_omp.root',"recreate")
 
-for test in ['BH','CE','CEST','ST','TBBST','FIT']:
+for test in ['STD']:
     if isCMSSW and test=='FIT': continue
     if 'endcap' in hORm and not isCMSSW and 'FIT' not in test: continue
     print test
@@ -27,7 +27,7 @@ for test in ['BH','CE','CEST','ST','TBBST','FIT']:
         nevt = 100.
     if 'BH' in test: pos = 8
     if 'TBB' in test: pos = 17
-    if 'ST' == test: pos = 11
+    if 'STD' == test: pos = 11
     if 'FIT' in test: 
         pos = 3
         ntks = '10x1M'
