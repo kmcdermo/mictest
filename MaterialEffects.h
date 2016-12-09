@@ -4,7 +4,7 @@
 #include "Config.h"
 
 inline int getZbinME(const float z){return (std::abs(z) * Config::nBinsZME)/(Config::rangeZME);}
-inline int getRbinME(const float r){return (r * Config::nBinsRME)/(Config::rangeRME);}
+inline int getRbinME(const float r){return (         r  * Config::nBinsRME)/(Config::rangeRME);}
 inline float getRlVal(const int zb, const int rb){return Config::RlgridME[zb][rb];}
 inline float getXiVal(const int zb, const int rb){return Config::XigridME[zb][rb];}
 

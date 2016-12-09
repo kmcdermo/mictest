@@ -557,16 +557,18 @@ void propagateHelixToRMPlex(const MPlexLS &inErr,  const MPlexLV& inPar,
    }
 #endif
    
-   if (Config::useCMSGeom && useParamBfield) { // useParamBfield is proxy for fittest 
+   if (Config::useCMSGeom && useParamBfield) // useParamBfield is proxy for fittest 
+   {
      MPlexQF hitsRl;
      MPlexQF hitsXi;
 #pragma simd
-     for (int n = 0; n < NN; ++n) {
+     for (int n = 0; n < NN; ++n) 
+     {
        const int zbin = getZbinME(msPar(n, 2, 0));
        const int rbin = getRbinME(msRad(n, 0, 0));
        
-       hitsRl.At(n, 0, 0) = getRlVal(zbin,rbin);
-       hitsXi.At(n, 0, 0) = getXiVal(zbin,rbin);
+       hitsRl(n, 0, 0) = getRlVal(zbin,rbin);
+       hitsXi(n, 0, 0) = getXiVal(zbin,rbin);
      }
      applyMaterialEffects(hitsRl, hitsXi, outErr, outPar, N_proc);
    }
@@ -635,8 +637,8 @@ void propagateHelixToRMPlex(const MPlexLS& inErr,  const MPlexLV& inPar,
        const int zbin = getZbinME(outPar(n, 2, 0));
        const int rbin = getRbinME(r);
 
-       hitsRl.At(n, 0, 0) = (zbin>=0 && zbin<Config::nBinsZME)?getRlVal(zbin,rbin) : 0.f; // protect against crazy propagations
-       hitsXi.At(n, 0, 0) = (zbin>=0 && zbin<Config::nBinsZME)?getXiVal(zbin,rbin) : 0.f; // protect against crazy propagations
+       hitsRl(n, 0, 0) = (zbin>=0 && zbin<Config::nBinsZME) ? getRlVal(zbin,rbin) : 0.f; // protect against crazy propagations
+       hitsXi(n, 0, 0) = (zbin>=0 && zbin<Config::nBinsZME) ? getXiVal(zbin,rbin) : 0.f; // protect against crazy propagations
      }
      applyMaterialEffects(hitsRl, hitsXi, outErr, outPar, N_proc);
    }
@@ -714,16 +716,18 @@ void propagateHelixToZMPlex(const MPlexLS &inErr,  const MPlexLV& inPar,
    }
 #endif
 
-   if (Config::useCMSGeom && useParamBfield) { // param bfield only used in fitting
+   if (Config::useCMSGeom && useParamBfield) // param bfield only used in fitting
+   {
      MPlexQF hitsRl;
      MPlexQF hitsXi;
 #pragma simd
-     for (int n = 0; n < NN; ++n) {
+     for (int n = 0; n < NN; ++n) 
+     {
        const int zbin = getZbinME(msZ(n, 0, 0));
        const int rbin = getRbinME(hipo(msPar(n, 0, 0), msPar(n, 1, 0)));
        
-       hitsRl.At(n, 0, 0) = getRlVal(zbin,rbin);
-       hitsXi.At(n, 0, 0) = getXiVal(zbin,rbin);
+       hitsRl(n, 0, 0) = getRlVal(zbin,rbin);
+       hitsXi(n, 0, 0) = getXiVal(zbin,rbin);
      }
      applyMaterialEffects(hitsRl, hitsXi, outErr, outPar, N_proc);
    }
@@ -797,16 +801,18 @@ void propagateHelixToZMPlex(const MPlexLS &inErr,  const MPlexLV& inPar,
    }
 #endif
 
-   if (Config::useCMSGeom) {
+   if (Config::useCMSGeom) 
+   {
      MPlexQF hitsRl;
      MPlexQF hitsXi;
 #pragma simd
-     for (int n = 0; n < NN; ++n) {
+     for (int n = 0; n < NN; ++n) 
+     {
        const int zbin = getZbinME(z);
        const int rbin = getRbinME(hipo(outPar(n, 0, 0), outPar(n, 1, 0)));
 
-       hitsRl.At(n, 0, 0) = getRlVal(zbin,rbin);
-       hitsXi.At(n, 0, 0) = getXiVal(zbin,rbin);
+       hitsRl(n, 0, 0) = (rbin>=0 && rbin<Config::nBinsRME) ? getRlVal(zbin,rbin) : 0.f; // protect against crazy propagations
+       hitsXi(n, 0, 0) = (rbin>=0 && rbin<Config::nBinsRME) ? getXiVal(zbin,rbin) : 0.f; // protect against crazy propagations
      }
      applyMaterialEffects(hitsRl, hitsXi, outErr, outPar, N_proc);
    }
