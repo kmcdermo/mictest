@@ -60,8 +60,8 @@ namespace Config
   // config for material effects in cmssw
   constexpr float rangeZME = 300.;
   constexpr int   nBinsZME = 300;
-  constexpr float rangeRME = 150.;
-  constexpr int   nBinsRME = 150;
+  constexpr float rangeRME = 110.;
+  constexpr int   nBinsRME = 110;
 
   constexpr float Rl[126] =
   {
@@ -97,8 +97,8 @@ namespace Config
     0.050e-03,0.100e-03,0.100e-03,0.050e-03,0.100e-03,0.100e-03
   };
 
-  static float RlgridME[Config::nBinsZME][Config::nBinsRME];
-  static float XigridME[Config::nBinsZME][Config::nBinsRME];
+  extern float RlgridME[Config::nBinsZME][Config::nBinsRME];
+  extern float XigridME[Config::nBinsZME][Config::nBinsRME];
 
   // These could be parameters, layer dependent.
   static constexpr int   m_nphi = 1024;

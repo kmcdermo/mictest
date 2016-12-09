@@ -261,8 +261,8 @@ inline void fillZRgridME()
     {
       const float rbf = (rb * Config::rangeRME)/Config::nBinsRME;
       const int detid = getDetId(zbf,rbf);
-      Config::RlgridME[zb][rb] = (detid>0?Config::Rl[detid]:0.f);
-      Config::XigridME[zb][rb] = (detid>0?Config::Xi[detid]:0.f);
+      Config::RlgridME[zb][rb] = (detid>=0?Config::Rl[detid]:0.f);
+      Config::XigridME[zb][rb] = (detid>=0?Config::Xi[detid]:0.f);
     }
   }
 }

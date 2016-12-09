@@ -624,23 +624,19 @@ void propagateHelixToRMPlex(const MPlexLS& inErr,  const MPlexLV& inPar,
 #endif
 
    //add multiple scattering uncertainty and energy loss (FIXME: in this way it is not applied in track fit)
-   if (Config::useCMSGeom) {
+   if (Config::useCMSGeom) 
+   {
      MPlexQF hitsRl;
      MPlexQF hitsXi;
      
-     //     std::cout << "----" << std::endl;
 #pragma simd
-     for (int n = 0; n < N_proc; ++n) {    
-       //       const int zbin = (outPar(n, 2, 0) == outPar(n, 2, 0)) ? getZbinME(outPar(n, 2, 0)) : Config::nBinsZME; 
+     for (int n = 0; n < N_proc; ++n) 
+     {    
        const int zbin = getZbinME(outPar(n, 2, 0));
        const int rbin = getRbinME(r);
 
-       // std::cout << std::endl;
-       // std::cout << outPar(n,2,0) << " " << zbin << std::endl;
-       // std::cout << r << " " << rbin << std::endl;
-
-       hitsRl.At(n, 0, 0) = (zbin<Config::nBinsZME && zbin>=0)?getRlVal(zbin,rbin) : 0.f; // protect against crazy propagations
-       hitsXi.At(n, 0, 0) = (zbin<Config::nBinsZME && zbin>=0)?getXiVal(zbin,rbin) : 0.f; // protect against crazy propagations
+       hitsRl.At(n, 0, 0) = (zbin>=0 && zbin<Config::nBinsZME)?getRlVal(zbin,rbin) : 0.f; // protect against crazy propagations
+       hitsXi.At(n, 0, 0) = (zbin>=0 && zbin<Config::nBinsZME)?getXiVal(zbin,rbin) : 0.f; // protect against crazy propagations
      }
      applyMaterialEffects(hitsRl, hitsXi, outErr, outPar, N_proc);
    }
