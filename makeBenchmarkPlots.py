@@ -104,57 +104,57 @@ for test in ['BH','STD','CE','FIT']:
         thvals = [1,2,4,6,8,12,16,20,24]
     
     # Parallelization time
-    print "Parallelization"
-    g_TH = ROOT.TGraphErrors(len(thvals))
-    g_TH_speedup = ROOT.TGraphErrors(len(thvals))
-    point = 0
-    for th in thvals:
-        xval = float(th)
-        yvals = array.array('d');
-        firstFound = False
+    # print "Parallelization"
+    # g_TH = ROOT.TGraphErrors(len(thvals))
+    # g_TH_speedup = ROOT.TGraphErrors(len(thvals))
+    # point = 0
+    # for th in thvals:
+    #     xval = float(th)
+    #     yvals = array.array('d');
+    #     firstFound = False
 
-        os.system('grep Matriplex log_'+hORm+'_'+sample+'_'+region+'_'+test+'_NVU'+nvu+'_NTH'+str(th)+'.txt >& log_'+hORm+'_'+sample+'_'+region+'_'+test+'_TH.txt')
-        with open('log_'+hORm+'_'+sample+'_'+region+'_'+test+'_TH.txt') as f:
-            for line in f:
-                if 'Matriplex' not in line: continue
-                if 'Total' in line: continue
-                lsplit = line.split()
-                if not firstFound:
-                    firstFound = True
-                    continue
-                yvals.append(float(lsplit[pos]))
+    #     os.system('grep Matriplex log_'+hORm+'_'+sample+'_'+region+'_'+test+'_NVU'+nvu+'_NTH'+str(th)+'.txt >& log_'+hORm+'_'+sample+'_'+region+'_'+test+'_TH.txt')
+    #     with open('log_'+hORm+'_'+sample+'_'+region+'_'+test+'_TH.txt') as f:
+    #         for line in f:
+    #             if 'Matriplex' not in line: continue
+    #             if 'Total' in line: continue
+    #             lsplit = line.split()
+    #             if not firstFound:
+    #                 firstFound = True
+    #                 continue
+    #             yvals.append(float(lsplit[pos]))
         
-        # Compute mean and uncertainty on mean
-        sum = 0.;
-        for yval in range(0,len(yvals)):
-            sum = sum + yvals[yval]
-        mean = sum/len(yvals)
-        emean = 0.;
-        for yval in range(0,len(yvals)):
-            emean = emean + ((yvals[yval] - mean) * (yvals[yval] - mean))
-        emean = math.sqrt(emean / (len(yvals) - 1))
-        emean = emean/math.sqrt(len(yvals))
+    #     # Compute mean and uncertainty on mean
+    #     sum = 0.;
+    #     for yval in range(0,len(yvals)):
+    #         sum = sum + yvals[yval]
+    #     mean = sum/len(yvals)
+    #     emean = 0.;
+    #     for yval in range(0,len(yvals)):
+    #         emean = emean + ((yvals[yval] - mean) * (yvals[yval] - mean))
+    #     emean = math.sqrt(emean / (len(yvals) - 1))
+    #     emean = emean/math.sqrt(len(yvals))
 
-        print xval,mean,'+/-',emean
-        g_TH.SetPoint(point,xval,mean)
-        g_TH.SetPointError(point,0,emean)
-        point = point+1
-    g_TH.Write("g_"+test+"_TH")
+    #     print xval,mean,'+/-',emean
+    #     g_TH.SetPoint(point,xval,mean)
+    #     g_TH.SetPointError(point,0,emean)
+    #     point = point+1
+    # g_TH.Write("g_"+test+"_TH")
 
-    # Parallelization speedup
-    x0 = array.array('d',[0])
-    y0 = array.array('d',[0])
-    g_TH.GetPoint(0,x0,y0)
-    point = 0
-    for th in thvals:
-        xval = array.array('d',[0])
-        yval = array.array('d',[0])
-        g_TH.GetPoint(point,xval,yval)
-        speedup = 0.
-        if yval[0]>0.: speedup = y0[0]/yval[0]
-        g_TH_speedup.SetPoint(point,xval[0],speedup)
-        point = point+1
-    g_TH_speedup.Write("g_"+test+"_TH_speedup")
+    # # Parallelization speedup
+    # x0 = array.array('d',[0])
+    # y0 = array.array('d',[0])
+    # g_TH.GetPoint(0,x0,y0)
+    # point = 0
+    # for th in thvals:
+    #     xval = array.array('d',[0])
+    #     yval = array.array('d',[0])
+    #     g_TH.GetPoint(point,xval,yval)
+    #     speedup = 0.
+    #     if yval[0]>0.: speedup = y0[0]/yval[0]
+    #     g_TH_speedup.SetPoint(point,xval[0],speedup)
+    #     point = point+1
+    # g_TH_speedup.Write("g_"+test+"_TH_speedup")
 
 g.Write()
 g.Close()

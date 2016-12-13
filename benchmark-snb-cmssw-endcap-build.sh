@@ -3,19 +3,19 @@
 sed -i 's/\/\/\#define PRINTOUTS_FOR_PLOTS/\#define PRINTOUTS_FOR_PLOTS/g' Config.h
 patch < cmssw-endcap-config.patch
 
-make -j 12
+#make -j 12
 
 dir=/data/nfsmic/cerati/
 
-for nth in 1 2 4 6 8 12 16 20 24
-do
-    echo "SNB CMSSW" nth=${nth} "BH (Endcap)"
-    ./mkFit/mkFit --read --file-name ${dir}/cmssw_100xTTbarPU35_polar_split_endcapEta1p7.bin --endcap-test --cms-geom --cmssw-seeds --build-bh  --num-thr ${nth} >& log_SNB_CMSSW_Endcap_BH_NVU8int_NTH${nth}.txt
-    echo "SNB CMSSW" nth=${nth} "STD (Endcap)"
-    ./mkFit/mkFit --read --file-name ${dir}/cmssw_100xTTbarPU35_polar_split_endcapEta1p7.bin --endcap-test --cms-geom --cmssw-seeds --build-std --num-thr ${nth} >& log_SNB_CMSSW_Endcap_STD_NVU8int_NTH${nth}.txt
-    echo "SNB CMSSW" nth=${nth} "CE (Endcap)"
-    ./mkFit/mkFit --read --file-name ${dir}/cmssw_100xTTbarPU35_polar_split_endcapEta1p7.bin --endcap-test --cms-geom --cmssw-seeds --build-ce  --num-thr ${nth} --cloner-single-thread >& log_SNB_CMSSW_Endcap_CE_NVU8int_NTH${nth}.txt
-done
+# for nth in 1 2 4 6 8 12 16 20 24
+# do
+#     echo "SNB CMSSW" nth=${nth} "BH (Endcap)"
+#     ./mkFit/mkFit --read --file-name ${dir}/cmssw_100xTTbarPU35_polar_split_endcapEta1p7.bin --endcap-test --cms-geom --cmssw-seeds --build-bh  --num-thr ${nth} >& log_SNB_CMSSW_Endcap_BH_NVU8int_NTH${nth}.txt
+#     echo "SNB CMSSW" nth=${nth} "STD (Endcap)"
+#     ./mkFit/mkFit --read --file-name ${dir}/cmssw_100xTTbarPU35_polar_split_endcapEta1p7.bin --endcap-test --cms-geom --cmssw-seeds --build-std --num-thr ${nth} >& log_SNB_CMSSW_Endcap_STD_NVU8int_NTH${nth}.txt
+#     echo "SNB CMSSW" nth=${nth} "CE (Endcap)"
+#     ./mkFit/mkFit --read --file-name ${dir}/cmssw_100xTTbarPU35_polar_split_endcapEta1p7.bin --endcap-test --cms-geom --cmssw-seeds --build-ce  --num-thr ${nth} --cloner-single-thread >& log_SNB_CMSSW_Endcap_CE_NVU8int_NTH${nth}.txt
+# done
 
 sed -i 's/# USE_INTRINSICS := -DMPT_SIZE=1/USE_INTRINSICS := -DMPT_SIZE=XX/g' Makefile.config
 for nvu in 1 2 4 8
