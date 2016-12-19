@@ -634,14 +634,14 @@ void propagateHelixToRMPlex(const MPlexLS& inErr,  const MPlexLV& inPar,
 #pragma simd
      for (int n = 0; n < N_proc; ++n) 
      {    
-       // const int zbin = getZbinME(outPar(n, 2, 0));
-       // const int rbin = getRbinME(r);
+       const int zbin = getZbinME(outPar(n, 2, 0));
+       const int rbin = getRbinME(r);
 
-       // hitsRl(n, 0, 0) = (zbin>=0 && zbin<Config::nBinsZME) ? getRlVal(zbin,rbin) : 0.f; // protect against crazy propagations
-       // hitsXi(n, 0, 0) = (zbin>=0 && zbin<Config::nBinsZME) ? getXiVal(zbin,rbin) : 0.f; // protect against crazy propagations
+       hitsRl(n, 0, 0) = (zbin>=0 && zbin<Config::nBinsZME) ? getRlVal(zbin,rbin) : 0.f; // protect against crazy propagations
+       hitsXi(n, 0, 0) = (zbin>=0 && zbin<Config::nBinsZME) ? getXiVal(zbin,rbin) : 0.f; // protect against crazy propagations
 
-       hitsRl.At(n, 0, 0) = getRlValCond(r, outPar.ConstAt(n, 2, 0));
-       hitsXi.At(n, 0, 0) = getXiValCond(r, outPar.ConstAt(n, 2, 0));
+       //       hitsRl(n, 0, 0) = getRlValCond(r, outPar(n, 2, 0));
+       //       hitsXi(n, 0, 0) = getXiValCond(r, outPar(n, 2, 0));
      }
      applyMaterialEffects(hitsRl, hitsXi, outErr, outPar, N_proc);
    }
@@ -808,20 +808,20 @@ void propagateHelixToZMPlex(const MPlexLS &inErr,  const MPlexLV& inPar,
    {
      MPlexQF hitsRl;
      MPlexQF hitsXi;
-     MPlexQF msRad;
+     //     MPlexQF msRad;
 #pragma simd
-     for (int n = 0; n < NN; ++n) 
+     for (int n = 0; n < N_proc; ++n) 
      {
-       // const int zbin = getZbinME(z);
-       // const int rbin = getRbinME(hipo(outPar(n, 0, 0), outPar(n, 1, 0)));
+       const int zbin = getZbinME(z);
+       const int rbin = getRbinME(hipo(outPar(n, 0, 0), outPar(n, 1, 0)));
 
-       // hitsRl(n, 0, 0) = (rbin>=0 && rbin<Config::nBinsRME) ? getRlVal(zbin,rbin) : 0.f; // protect against crazy propagations
-       // hitsXi(n, 0, 0) = (rbin>=0 && rbin<Config::nBinsRME) ? getXiVal(zbin,rbin) : 0.f; // protect against crazy propagations
+       hitsRl(n, 0, 0) = (rbin>=0 && rbin<Config::nBinsRME) ? getRlVal(zbin,rbin) : 0.f; // protect against crazy propagations
+       hitsXi(n, 0, 0) = (rbin>=0 && rbin<Config::nBinsRME) ? getXiVal(zbin,rbin) : 0.f; // protect against crazy propagations
+       
+       //msRad(n, 0, 0) = hipo(outPar(n, 0, 0), outPar(n, 1, 0));
 
-       msRad.At(n, 0, 0) = hipo(outPar.ConstAt(n, 0, 0), outPar.ConstAt(n, 1, 0));
-
-       hitsRl.At(n, 0, 0) = getRlValCond(msRad.ConstAt(n, 0, 0), z);
-       hitsXi.At(n, 0, 0) = getXiValCond(msRad.ConstAt(n, 0, 0), z);
+       //hitsRl(n, 0, 0) = getRlValCond(msRad(n, 0, 0), z);
+       //hitsXi(n, 0, 0) = getXiValCond(msRad(n, 0, 0), z);
      }
      applyMaterialEffects(hitsRl, hitsXi, outErr, outPar, N_proc);
    }

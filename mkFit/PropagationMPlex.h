@@ -68,8 +68,8 @@ inline float getRlValCond(const float r, const float zin) {
   }
   //pixel endcap
   if (r<20 && z>30) {
-    if (z<40) return 0.109f;
-    else      return 0.068f;
+    if      (z<40)  return 0.109f;
+    else if (z<280) return 0.068f;
   }
   //TIB
   if (r<30 && z<70) {
@@ -128,7 +128,7 @@ inline float getRlValCond(const float r, const float zin) {
     else           return 0.040f;
   }
   //TEC
-  if (z>120) {
+  if (z>120 && r<102) {
     if (z<128) {
       if (r<55)      return 0.103f;
       else if (r<80) return 0.145f;
@@ -311,8 +311,8 @@ inline float getXiValCond(const float r, const float zin) {
   }
   //pixel endcap
   if (r<20 && z>30) {
-    if (z<40) return 0.20e-03f;
-    else      return 0.13e-03f;
+    if      (z<40)  return 0.20e-03f;
+    else if (z<280) return 0.13e-03f;
   }
   //TIB
   if (r<30 && z<70) {
@@ -371,7 +371,7 @@ inline float getXiValCond(const float r, const float zin) {
     else           return 0.07e-03f;
   }
   //TEC
-  if (z>120) {
+  if (z>120 && r<102) {
     if (z<128) {
       if (r<80)      return 0.27e-03f;
       else           return 0.48e-03f;
@@ -537,7 +537,5 @@ inline float getXiValCond(const float r, const float zin) {
   }
   return 0.0f;
 }
-
-
 
 #endif

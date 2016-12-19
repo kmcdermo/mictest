@@ -44,26 +44,26 @@ python makeBenchmarkPlots.py KNC CMSSW Barrel
 root -b -q -l makeBenchmarkPlots.C\(1,1\)
 
 ##### nHits plots #####
-# for test in BH STD CE; do 
-# #    echo "Making nHits plots for ToyMC Barrel:" ${test}
-# #    python makePlotsFromDump.py SNB ToyMC Barrel ${test} NVU1_NTH1
-# #    python makePlotsFromDump.py SNB ToyMC Barrel ${test} NVU8int_NTH24
-# #    python makePlotsFromDump.py KNC ToyMC Barrel ${test} NVU1_NTH1
-# #    python makePlotsFromDump.py KNC ToyMC Barrel ${test} NVU16int_NTH240
-# #    root -b -q -l makePlotsFromDump.C\(\"${test}\"\)
+for test in BH STD CE; do 
+#    echo "Making nHits plots for ToyMC Barrel:" ${test}
+#    python makePlotsFromDump.py SNB ToyMC Barrel ${test} NVU1_NTH1
+#    python makePlotsFromDump.py SNB ToyMC Barrel ${test} NVU8int_NTH24
+#    python makePlotsFromDump.py KNC ToyMC Barrel ${test} NVU1_NTH1
+#    python makePlotsFromDump.py KNC ToyMC Barrel ${test} NVU16int_NTH240
+#    root -b -q -l makePlotsFromDump.C\(\"${test}\"\)
     
-#     echo "Making nHits plots for CMSSW Barrel:" ${test}
-#     python makePlotsFromDump.py SNB CMSSW Barrel ${test} NVU1_NTH1
-#     python makePlotsFromDump.py SNB CMSSW Barrel ${test} NVU8int_NTH24
-#     python makePlotsFromDump.py KNC CMSSW Barrel ${test} NVU1_NTH1
-#     python makePlotsFromDump.py KNC CMSSW Barrel ${test} NVU16int_NTH240
-#     root -b -q -l makePlotsFromDump.C\(\"${test}\",1\)
+    echo "Making nHits plots for CMSSW Barrel:" ${test}
+    python makePlotsFromDump.py SNB CMSSW Barrel ${test} NVU1_NTH1
+    python makePlotsFromDump.py SNB CMSSW Barrel ${test} NVU8int_NTH24
+    python makePlotsFromDump.py KNC CMSSW Barrel ${test} NVU1_NTH1
+    python makePlotsFromDump.py KNC CMSSW Barrel ${test} NVU16int_NTH240
+    root -b -q -l makePlotsFromDump.C\(\"${test}\",1\)
      
-#     echo "Making nHits plots for CMSSW Endcap:" ${test}
-#     python makePlotsFromDump.py SNB CMSSW Endcap ${test} NVU1_NTH1
-#     python makePlotsFromDump.py SNB CMSSW Endcap ${test} NVU8int_NTH24
-#     root -b -q -l makePlotsFromDump.C\(\"${test}\",1,1\)
-# done
+    echo "Making nHits plots for CMSSW Endcap:" ${test}
+    python makePlotsFromDump.py SNB CMSSW Endcap ${test} NVU1_NTH1
+    python makePlotsFromDump.py SNB CMSSW Endcap ${test} NVU8int_NTH24
+    root -b -q -l makePlotsFromDump.C\(\"${test}\",1,1\)
+done
 
 ##### Validation tests #####
 #./validation-snb-toymc-barrel-build.sh

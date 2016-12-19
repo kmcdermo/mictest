@@ -1,0 +1,1743 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINING OPTION VALUES:
+  -inline-factor: 100
+  -inline-min-size: 30
+  -inline-max-size: 230
+  -inline-max-total-size: 2000
+  -inline-max-per-routine: 10000
+  -inline-max-per-compile: 500000
+
+
+Begin optimization report for: getZbinME(float)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (getZbinME(float)) ../MaterialEffects.h(6,36)
+
+===========================================================================
+
+Begin optimization report for: getRbinME(float)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (getRbinME(float)) ../MaterialEffects.h(7,36)
+
+===========================================================================
+
+Begin optimization report for: getRlVal(int, int)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (getRlVal(int, int)) ../MaterialEffects.h(8,50)
+
+===========================================================================
+
+Begin optimization report for: getXiVal(int, int)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (getXiVal(int, int)) ../MaterialEffects.h(9,50)
+
+===========================================================================
+
+Begin optimization report for: hipo(float, float)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (hipo(float, float)) ../Matrix.h(55,1)
+
+===========================================================================
+
+Begin optimization report for: sincos4(float, float &, float &)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (sincos4(float, float &, float &)) ../Matrix.h(61,1)
+
+===========================================================================
+
+Begin optimization report for: getRlValCond(float, float)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (getRlValCond(float, float)) PropagationMPlex.h(57,59)
+
+===========================================================================
+
+Begin optimization report for: getXiValCond(float, float)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (getXiValCond(float, float)) PropagationMPlex.h(300,59)
+
+===========================================================================
+
+Begin optimization report for: propagateLineToRMPlex(const MPlexLS &, const MPlexLV &, const MPlexHS &, const MPlexHV &, MPlexLS &, MPlexLV &, int)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (propagateLineToRMPlex(const MPlexLS &, const MPlexLV &, const MPlexHS &, const MPlexHV &, MPlexLS &, MPlexLV &, int)) [10] PropagationMPlex.cc(17,1)
+  -> INLINE: (26,31) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (26,50) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (26,69) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (26,88) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (26,105) std::sqrt(float)
+  -> INLINE: (26,123) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (26,142) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (26,161) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (26,180) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (26,203) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (26,222) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (26,241) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (26,260) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (27,25) hipo(float, float)
+    -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+  -> INLINE: (27,35) Matriplex::Matriplex<float, 3, 1, 16>::operator[](const Matriplex::Matriplex<float, 3, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (27,53) Matriplex::Matriplex<float, 3, 1, 16>::operator[](const Matriplex::Matriplex<float, 3, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (27,68) hipo(float, float)
+    -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+  -> INLINE: (27,78) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (27,96) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (31,25) hipo(float, float)
+    -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+  -> INLINE: (31,35) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (31,53) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (35,13) Matriplex::Matriplex<float, 6, 1, 16>::operator[](Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t)
+  -> INLINE: (35,32) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (35,55) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (36,13) Matriplex::Matriplex<float, 6, 1, 16>::operator[](Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t)
+  -> INLINE: (36,32) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (36,55) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (37,13) Matriplex::Matriplex<float, 6, 1, 16>::operator[](Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t)
+  -> INLINE: (37,32) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (37,55) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (38,13) Matriplex::Matriplex<float, 6, 1, 16>::operator[](Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t)
+  -> INLINE: (38,32) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (39,13) Matriplex::Matriplex<float, 6, 1, 16>::operator[](Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t)
+  -> INLINE: (39,32) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+  -> INLINE: (40,13) Matriplex::Matriplex<float, 6, 1, 16>::operator[](Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t)
+  -> INLINE: (40,32) Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at PropagationMPlex.cc(23,4)
+   remark #15301: SIMD LOOP WAS VECTORIZED
+LOOP END
+===========================================================================
+
+Begin optimization report for: helixAtRFromIterativeCCSFullJac(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (helixAtRFromIterativeCCSFullJac(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int)) [11] PropagationMPlex.cc(251,1)
+  -> INLINE: (252,13) Matriplex::Matriplex<float, 6, 6, 16>::SetVal(Matriplex::Matriplex<float, 6, 6, 16> *, float)
+  -> INLINE: (253,24) Matriplex::Matriplex<float, 6, 6, 16>::Matriplex(Matriplex::Matriplex<float, 6, 6, 16> *, float)
+    -> INLINE: ../Matriplex/Matriplex.h:(32,21) Matriplex::Matriplex<float, 6, 6, 16>::SetVal(Matriplex::Matriplex<float, 6, 6, 16> *, float)
+  -> INLINE: (254,25) Matriplex::Matriplex<float, 6, 6, 16>::Matriplex(Matriplex::Matriplex<float, 6, 6, 16> *, float)
+    -> INLINE: ../Matriplex/Matriplex.h:(32,21) Matriplex::Matriplex<float, 6, 6, 16>::SetVal(Matriplex::Matriplex<float, 6, 6, 16> *, float)
+  -> INLINE: (261,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (262,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (263,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (264,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (265,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (266,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (268,29) Matriplex::Matriplex<int, 1, 1, 16>::ConstAt(const Matriplex::Matriplex<int, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (269,29) Matriplex::Matriplex<float, 1, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (270,18) hipo(float, float)
+    -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+  -> INLINE: (270,29) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (270,53) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (272,11) std::abs(float)
+  -> INLINE: (277,33) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (278,33) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (279,33) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (280,33) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (281,33) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (282,33) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (285,19) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (286,19) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (287,19) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (288,19) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (292,26) std::cos(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (292,50) std::sin(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (293,26) std::cos(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (293,50) std::sin(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (303,7) hipo(float, float)
+    -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+  -> INLINE: (303,19) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (303,44) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (308,4) sincos4(float, float &, float &)
+  -> INLINE: (315,31) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (316,31) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (319,9) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (319,30) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (320,9) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (320,30) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (327,7) std::cos(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (327,23) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (328,7) std::sin(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (328,23) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (330,9) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (330,30) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (331,9) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (332,9) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (332,30) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (333,9) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (335,14) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (336,14) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (337,14) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (338,14) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (340,14) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (341,14) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (342,14) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (343,14) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (345,14) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (346,14) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (347,14) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (348,14) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (350,14) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (351,14) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (352,14) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (354,2) <unnamed>::MultHelixPropTemp(const MPlexLL &, const MPlexLL &, MPlexLL &, int)
+  -> INLINE: (355,12) Matriplex::Matriplex<float, 6, 6, 16>::operator=(Matriplex::Matriplex<float, 6, 6, 16> *, const Matriplex::Matriplex<float, 6, 6, 16> &)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at ../Matriplex/Matriplex.h(38,7) inlined into PropagationMPlex.cc(252,13)
+   remark #25408: memset generated
+   remark #15398: loop was not vectorized: loop was transformed to memset or memcpy
+LOOP END
+
+LOOP BEGIN at ../Matriplex/Matriplex.h(38,7) inlined into PropagationMPlex.cc(253,24)
+   remark #25408: memset generated
+   remark #15398: loop was not vectorized: loop was transformed to memset or memcpy
+LOOP END
+
+LOOP BEGIN at ../Matriplex/Matriplex.h(38,7) inlined into PropagationMPlex.cc(254,25)
+   remark #25408: memset generated
+   remark #15398: loop was not vectorized: loop was transformed to memset or memcpy
+LOOP END
+
+LOOP BEGIN at PropagationMPlex.cc(257,3)
+   remark #15301: SIMD LOOP WAS VECTORIZED
+
+   LOOP BEGIN at PropagationMPlex.cc(297,7)
+      remark #15548: loop was vectorized along with the outer loop
+   LOOP END
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+../Matriplex/Matriplex.h(40,10):remark #34026: call to memset implemented as a call to optimized library version
+../Matriplex/Matriplex.h(40,10):remark #34026: call to memset implemented as a call to optimized library version
+../Matriplex/Matriplex.h(40,10):remark #34026: call to memset implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+===========================================================================
+
+Begin optimization report for: helixAtRFromIterativeCCS(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, bool)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (helixAtRFromIterativeCCS(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, bool)) [12] PropagationMPlex.cc(385,1)
+  -> INLINE: (386,13) Matriplex::Matriplex<float, 6, 6, 16>::SetVal(Matriplex::Matriplex<float, 6, 6, 16> *, float)
+  -> INLINE: (388,3) helixAtRFromIterativeCCS_impl<MPlexLV, MPlexQI, MPlexLV, MPlexQF, MPlexLL>(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, int, int, bool)
+    -> INLINE: PropagationMPlex.icc:(249,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(250,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(251,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(252,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(253,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(254,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(256,18) hipo(float, float)
+      -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+    -> INLINE: PropagationMPlex.icc:(256,28) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(256,44) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(257,28) Matriplex::Matriplex<int, 1, 1, 16>::operator()(const Matriplex::Matriplex<int, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(257,78) Config::BfieldFromZR(float, float)
+    -> INLINE: PropagationMPlex.icc:(257,104) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(258,28) Matriplex::Matriplex<float, 1, 1, 16>::operator()(const Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(265,32) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(266,32) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(267,32) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(268,32) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(269,32) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(270,32) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(286,23) std::cos(float)
+       {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+    -> INLINE: PropagationMPlex.icc:(286,50) std::sin(float)
+       {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+    -> INLINE: PropagationMPlex.icc:(306,14) hipo(float, float)
+      -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+    -> INLINE: PropagationMPlex.icc:(306,25) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(306,42) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(310,11) sincos4(float, float &, float &)
+    -> INLINE: PropagationMPlex.icc:(322,33) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(323,33) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(324,41) std::abs(float)
+    -> INLINE: PropagationMPlex.icc:(348,15) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(348,33) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(349,15) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(349,33) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(365,9) sincos4(float, float &, float &)
+    -> INLINE: PropagationMPlex.icc:(371,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(372,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(373,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(374,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(375,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(376,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(378,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(379,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(380,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(381,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(382,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(383,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(386,15) std::cos(float)
+       {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+    -> INLINE: PropagationMPlex.icc:(387,15) std::sin(float)
+       {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+    -> INLINE: PropagationMPlex.icc:(391,13) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(391,30) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(393,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(394,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(395,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(396,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(397,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(398,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(400,13) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(402,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(403,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(404,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(405,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(406,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(407,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(409,13) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(409,30) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(411,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(412,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(413,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(414,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(415,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(416,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(418,13) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(420,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(421,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(422,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(423,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(424,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(425,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at ../Matriplex/Matriplex.h(38,7) inlined into PropagationMPlex.cc(386,13)
+   remark #25408: memset generated
+   remark #15398: loop was not vectorized: loop was transformed to memset or memcpy
+LOOP END
+
+LOOP BEGIN at PropagationMPlex.icc(246,3) inlined into PropagationMPlex.cc(388,3)
+   remark #25261: Invariant Condition eliminated(Proven True) at line 320
+   remark #25261: Invariant Condition eliminated(Proven True) at line 320
+   remark #25261: Invariant Condition eliminated(Proven True) at line 320
+   remark #25261: Invariant Condition eliminated(Proven True) at line 320
+   remark #25260: Invariant Condition eliminated(Proven False) at line 320
+   remark #15301: SIMD LOOP WAS VECTORIZED
+
+   LOOP BEGIN at PropagationMPlex.icc(300,7) inlined into PropagationMPlex.cc(388,3)
+      remark #25436: completely unrolled by 5   (pre-vector) 
+   LOOP END
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+../Matriplex/Matriplex.h(40,10):remark #34026: call to memset implemented as a call to optimized library version
+===========================================================================
+
+Begin optimization report for: helixAtRFromIterative(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, bool)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (helixAtRFromIterative(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, bool)) [13] PropagationMPlex.cc(395,1)
+  -> INLINE: (396,13) Matriplex::Matriplex<float, 6, 6, 16>::SetVal(Matriplex::Matriplex<float, 6, 6, 16> *, float)
+  -> INLINE: (398,3) helixAtRFromIterative_impl<MPlexLV, MPlexQI, MPlexLV, MPlexQF, MPlexLL>(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, int, int, bool)
+    -> INLINE: PropagationMPlex.icc:(21,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(22,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(23,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(24,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(25,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(26,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(28,31) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(29,31) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(30,31) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(31,31) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(32,31) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(33,31) Matriplex::Matriplex<float, 1, 1, 16>::operator()(const Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(34,18) hipo(float, float)
+      -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+    -> INLINE: PropagationMPlex.icc:(39,11) std::abs(float)
+    -> INLINE: PropagationMPlex.icc:(45,28) std::sqrt(float)
+    -> INLINE: PropagationMPlex.icc:(49,28) Matriplex::Matriplex<int, 1, 1, 16>::operator()(const Matriplex::Matriplex<int, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(49,78) Config::BfieldFromZR(float, float)
+    -> INLINE: PropagationMPlex.icc:(49,104) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+    -> INLINE: PropagationMPlex.icc:(66,27) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(67,27) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(68,27) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(69,27) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(70,9) hipo(float, float)
+      -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+    -> INLINE: PropagationMPlex.icc:(70,20) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(70,37) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(82,6) sincos4(float, float &, float &)
+    -> INLINE: PropagationMPlex.icc:(90,10) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(90,28) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(91,10) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(91,28) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(92,10) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(92,28) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(93,10) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(94,10) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(97,42) std::abs(float)
+    -> INLINE: PropagationMPlex.icc:(153,2) sincos4(float, float &, float &)
+    -> INLINE: PropagationMPlex.icc:(171,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(172,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(173,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(174,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(175,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(176,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(178,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(179,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(180,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(181,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(182,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(183,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(185,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(186,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(187,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(188,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(189,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(190,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(192,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(193,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(194,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(195,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(196,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(197,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(199,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(200,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(201,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(202,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(203,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(204,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(206,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(207,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(208,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(209,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(210,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: PropagationMPlex.icc:(211,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at ../Matriplex/Matriplex.h(38,7) inlined into PropagationMPlex.cc(396,13)
+   remark #25408: memset generated
+   remark #15398: loop was not vectorized: loop was transformed to memset or memcpy
+LOOP END
+
+LOOP BEGIN at PropagationMPlex.icc(19,3) inlined into PropagationMPlex.cc(398,3)
+   remark #25261: Invariant Condition eliminated(Proven True) at line 97
+   remark #25261: Invariant Condition eliminated(Proven True) at line 97
+   remark #25261: Invariant Condition eliminated(Proven True) at line 97
+   remark #25261: Invariant Condition eliminated(Proven True) at line 97
+   remark #25260: Invariant Condition eliminated(Proven False) at line 97
+   remark #15301: SIMD LOOP WAS VECTORIZED
+
+   LOOP BEGIN at PropagationMPlex.icc(62,7) inlined into PropagationMPlex.cc(398,3)
+      remark #25436: completely unrolled by 5   (pre-vector) 
+   LOOP END
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+../Matriplex/Matriplex.h(40,10):remark #34026: call to memset implemented as a call to optimized library version
+===========================================================================
+
+Begin optimization report for: helixAtRFromIterative_impl<MPlexLV, MPlexQI, MPlexLV, MPlexQF, MPlexLL>(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, int, int, bool)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (helixAtRFromIterative_impl<MPlexLV, MPlexQI, MPlexLV, MPlexQF, MPlexLL>(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, int, int, bool)) PropagationMPlex.icc(17,1)
+
+===========================================================================
+
+Begin optimization report for: propagateHelixToRMPlex(const MPlexLS &, const MPlexLV &, const MPlexQI &, const MPlexHV &, MPlexLS &, MPlexLV &, int, bool)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (propagateHelixToRMPlex(const MPlexLS &, const MPlexLV &, const MPlexQI &, const MPlexHV &, MPlexLS &, MPlexLV &, int, bool)) [15] PropagationMPlex.cc(522,1)
+  -> INLINE: (525,11) Matriplex::MatriplexSym<float, 6, 16>::operator=(Matriplex::MatriplexSym<float, 6, 16> *, const Matriplex::MatriplexSym<float, 6, 16> &)
+  -> INLINE: (526,11) Matriplex::Matriplex<float, 6, 1, 16>::operator=(Matriplex::Matriplex<float, 6, 1, 16> *, const Matriplex::Matriplex<float, 6, 1, 16> &)
+  -> DELETED: (528,12) Matriplex::Matriplex<float, 6, 6, 16>::Matriplex(Matriplex::Matriplex<float, 6, 6, 16> *)
+  -> DELETED: (530,12) Matriplex::Matriplex<float, 1, 1, 16>::Matriplex(Matriplex::Matriplex<float, 1, 1, 16> *)
+  -> INLINE: (533,12) Matriplex::Matriplex<float, 1, 1, 16>::At(Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (533,26) hipo(float, float)
+    -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+  -> INLINE: (533,37) Matriplex::Matriplex<float, 3, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 3, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (533,61) Matriplex::Matriplex<float, 3, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 3, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (537,4) helixAtRFromIterativeCCS(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, bool)
+    -> INLINE: (386,13) Matriplex::Matriplex<float, 6, 6, 16>::SetVal(Matriplex::Matriplex<float, 6, 6, 16> *, float)
+    -> INLINE: (388,3) helixAtRFromIterativeCCS_impl<MPlexLV, MPlexQI, MPlexLV, MPlexQF, MPlexLL>(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, int, int, bool)
+      -> INLINE: PropagationMPlex.icc:(249,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(250,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(251,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(252,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(253,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(254,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(256,18) hipo(float, float)
+        -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+      -> INLINE: PropagationMPlex.icc:(256,28) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+      -> INLINE: PropagationMPlex.icc:(256,44) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+      -> INLINE: PropagationMPlex.icc:(257,28) Matriplex::Matriplex<int, 1, 1, 16>::operator()(const Matriplex::Matriplex<int, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+      -> INLINE: PropagationMPlex.icc:(257,78) Config::BfieldFromZR(float, float)
+      -> INLINE: PropagationMPlex.icc:(257,104) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+      -> INLINE: PropagationMPlex.icc:(258,28) Matriplex::Matriplex<float, 1, 1, 16>::operator()(const Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+      -> INLINE: PropagationMPlex.icc:(265,32) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+      -> INLINE: PropagationMPlex.icc:(266,32) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+      -> INLINE: PropagationMPlex.icc:(267,32) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+      -> INLINE: PropagationMPlex.icc:(268,32) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+      -> INLINE: PropagationMPlex.icc:(269,32) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+      -> INLINE: PropagationMPlex.icc:(270,32) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+      -> INLINE: PropagationMPlex.icc:(286,23) std::cos(float)
+         {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+      -> INLINE: PropagationMPlex.icc:(286,50) std::sin(float)
+         {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+      -> INLINE: PropagationMPlex.icc:(306,14) hipo(float, float)
+        -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+      -> INLINE: PropagationMPlex.icc:(306,25) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(306,42) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(310,11) sincos4(float, float &, float &)
+      -> INLINE: PropagationMPlex.icc:(322,33) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(323,33) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(324,41) std::abs(float)
+      -> INLINE: PropagationMPlex.icc:(348,15) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(348,33) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(349,15) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(349,33) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(365,9) sincos4(float, float &, float &)
+      -> INLINE: PropagationMPlex.icc:(371,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(372,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(373,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(374,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(375,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(376,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(378,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(379,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(380,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(381,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(382,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(383,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(386,15) std::cos(float)
+         {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+      -> INLINE: PropagationMPlex.icc:(387,15) std::sin(float)
+         {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+      -> INLINE: PropagationMPlex.icc:(391,13) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(391,30) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+      -> INLINE: PropagationMPlex.icc:(393,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(394,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(395,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(396,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(397,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(398,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(400,13) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(402,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(403,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(404,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(405,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(406,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(407,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(409,13) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(409,30) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+      -> INLINE: PropagationMPlex.icc:(411,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(412,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(413,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(414,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(415,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(416,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(418,13) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(420,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(421,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(422,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(423,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(424,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+      -> INLINE: PropagationMPlex.icc:(425,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> DELETED: (562,14) Matriplex::Matriplex<float, 1, 1, 16>::Matriplex(Matriplex::Matriplex<float, 1, 1, 16> *)
+  -> DELETED: (563,14) Matriplex::Matriplex<float, 1, 1, 16>::Matriplex(Matriplex::Matriplex<float, 1, 1, 16> *)
+  -> INLINE: (567,25) getZbinME(float)
+    -> INLINE: ../MaterialEffects.h:(6,45) std::abs(float)
+  -> INLINE: (567,40) Matriplex::Matriplex<float, 3, 1, 16>::operator()(const Matriplex::Matriplex<float, 3, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (568,25) getRbinME(float)
+  -> INLINE: (568,40) Matriplex::Matriplex<float, 1, 1, 16>::operator()(Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (570,14) Matriplex::Matriplex<float, 1, 1, 16>::operator()(Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (570,26) getRlVal(int, int)
+  -> INLINE: (571,14) Matriplex::Matriplex<float, 1, 1, 16>::operator()(Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (571,26) getXiVal(int, int)
+  -> (573,6) applyMaterialEffects(const MPlexQF &, const MPlexQF &, MPlexLS &, MPlexLV &, int)
+  -> DELETED: (578,12) Matriplex::Matriplex<float, 6, 6, 16>::Matriplex(Matriplex::Matriplex<float, 6, 6, 16> *)
+  -> (579,4) <unnamed>::MultHelixProp(const MPlexLL &, const MPlexLS &, MPlexLL &)
+  -> (580,4) <unnamed>::MultHelixPropTransp(const MPlexLL &, const MPlexLL &, MPlexLS &)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at PropagationMPlex.cc(532,4)
+   remark #15301: SIMD LOOP WAS VECTORIZED
+LOOP END
+
+LOOP BEGIN at ../Matriplex/Matriplex.h(38,7) inlined into PropagationMPlex.cc(537,4)
+   remark #25408: memset generated
+   remark #15398: loop was not vectorized: loop was transformed to memset or memcpy
+LOOP END
+
+LOOP BEGIN at PropagationMPlex.icc(246,3) inlined into PropagationMPlex.cc(537,4)
+   remark #25261: Invariant Condition eliminated(Proven True) at line 320
+   remark #25261: Invariant Condition eliminated(Proven True) at line 320
+   remark #25261: Invariant Condition eliminated(Proven True) at line 320
+   remark #25261: Invariant Condition eliminated(Proven True) at line 320
+   remark #25260: Invariant Condition eliminated(Proven False) at line 320
+   remark #15301: SIMD LOOP WAS VECTORIZED
+
+   LOOP BEGIN at PropagationMPlex.icc(300,7) inlined into PropagationMPlex.cc(537,4)
+      remark #25436: completely unrolled by 5   (pre-vector) 
+   LOOP END
+LOOP END
+
+LOOP BEGIN at PropagationMPlex.cc(565,6)
+   remark #15301: SIMD LOOP WAS VECTORIZED
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+../Matriplex/MatriplexSym.h(75,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(40,10):remark #34026: call to memset implemented as a call to optimized library version
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 1, 1, 16>::Matriplex(Matriplex::Matriplex<float, 1, 1, 16> *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 1, 1, 16>::Matriplex(Matriplex::Matriplex<float, 1, 1, 16> *)) ../Matriplex/Matriplex.h(31,19)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 6, 16>::Matriplex(Matriplex::Matriplex<float, 6, 6, 16> *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 6, 16>::Matriplex(Matriplex::Matriplex<float, 6, 6, 16> *)) ../Matriplex/Matriplex.h(31,19)
+
+===========================================================================
+
+Begin optimization report for: <unnamed>::MultHelixProp(const MPlexLL &, const MPlexLS &, MPlexLL &)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (<unnamed>::MultHelixProp(const MPlexLL &, const MPlexLS &, MPlexLL &)) [18] PropagationMPlex.cc(82,1)
+
+===========================================================================
+
+Begin optimization report for: applyMaterialEffects(const MPlexQF &, const MPlexQF &, MPlexLS &, MPlexLV &, int)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (applyMaterialEffects(const MPlexQF &, const MPlexQF &, MPlexLS &, MPlexLV &, int)) [19] PropagationMPlex.cc(405,1)
+  -> INLINE: (411,27) Matriplex::Matriplex<float, 1, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (413,30) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (414,30) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (415,34) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (416,23) std::sqrt(float)
+  -> INLINE: (417,35) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (418,26) std::sin(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (423,26) std::sqrt(float)
+  -> INLINE: (425,52) std::abs(float)
+  -> INLINE: (425,61) std::cos(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (429,38) std::sqrt(float)
+  -> INLINE: (429,66) std::log(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (431,14) Matriplex::MatriplexSym<float, 6, 16>::At(Matriplex::MatriplexSym<float, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: ../Matriplex/MatriplexSym.h:(68,53) Matriplex::MatriplexSym<float, 6, 16>::Off(const Matriplex::MatriplexSym<float, 6, 16> *, Matriplex::idx_t) const
+  -> INLINE: (432,14) Matriplex::MatriplexSym<float, 6, 16>::At(Matriplex::MatriplexSym<float, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: ../Matriplex/MatriplexSym.h:(68,53) Matriplex::MatriplexSym<float, 6, 16>::Off(const Matriplex::MatriplexSym<float, 6, 16> *, Matriplex::idx_t) const
+  -> INLINE: (436,31) std::sqrt(float)
+  -> INLINE: (441,31) std::log(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (441,53) std::sqrt(float)
+  -> INLINE: (441,82) std::log(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (442,50) Matriplex::Matriplex<float, 1, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (442,82) std::log(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (446,14) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (448,14) Matriplex::MatriplexSym<float, 6, 16>::At(Matriplex::MatriplexSym<float, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+    -> INLINE: ../Matriplex/MatriplexSym.h:(68,53) Matriplex::MatriplexSym<float, 6, 16>::Off(const Matriplex::MatriplexSym<float, 6, 16> *, Matriplex::idx_t) const
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at PropagationMPlex.cc(407,3)
+   remark #15301: SIMD LOOP WAS VECTORIZED
+LOOP END
+===========================================================================
+
+Begin optimization report for: <unnamed>::MultHelixPropTransp(const MPlexLL &, const MPlexLL &, MPlexLS &)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (<unnamed>::MultHelixPropTransp(const MPlexLL &, const MPlexLL &, MPlexLS &)) [20] PropagationMPlex.cc(96,1)
+
+===========================================================================
+
+Begin optimization report for: propagateHelixToRMPlex(const MPlexLS &, const MPlexLV &, const MPlexQI &, float, MPlexLS &, MPlexLV &, int)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (propagateHelixToRMPlex(const MPlexLS &, const MPlexLV &, const MPlexQI &, float, MPlexLS &, MPlexLV &, int)) [21] PropagationMPlex.cc(610,1)
+  -> INLINE: (611,11) Matriplex::MatriplexSym<float, 6, 16>::operator=(Matriplex::MatriplexSym<float, 6, 16> *, const Matriplex::MatriplexSym<float, 6, 16> &)
+  -> INLINE: (612,11) Matriplex::Matriplex<float, 6, 1, 16>::operator=(Matriplex::Matriplex<float, 6, 1, 16> *, const Matriplex::Matriplex<float, 6, 1, 16> &)
+  -> DELETED: (614,12) Matriplex::Matriplex<float, 6, 6, 16>::Matriplex(Matriplex::Matriplex<float, 6, 6, 16> *)
+  -> DELETED: (616,12) Matriplex::Matriplex<float, 1, 1, 16>::Matriplex(Matriplex::Matriplex<float, 1, 1, 16> *)
+  -> INLINE: (619,12) Matriplex::Matriplex<float, 1, 1, 16>::At(Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (623,4) helixAtRFromIterativeCCS(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, bool)
+    -> INLINE: (386,13) Matriplex::Matriplex<float, 6, 6, 16>::SetVal(Matriplex::Matriplex<float, 6, 6, 16> *, float)
+    -> (388,3) helixAtRFromIterativeCCS_impl<MPlexLV, MPlexQI, MPlexLV, MPlexQF, MPlexLL>(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, int, int, bool)
+  -> DELETED: (631,14) Matriplex::Matriplex<float, 1, 1, 16>::Matriplex(Matriplex::Matriplex<float, 1, 1, 16> *)
+  -> DELETED: (632,14) Matriplex::Matriplex<float, 1, 1, 16>::Matriplex(Matriplex::Matriplex<float, 1, 1, 16> *)
+  -> INLINE: (643,14) Matriplex::Matriplex<float, 1, 1, 16>::operator()(Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (643,26) getRlValCond(float, float)
+    -> INLINE: PropagationMPlex.h:(58,13) std::abs(float)
+  -> INLINE: (643,48) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (644,14) Matriplex::Matriplex<float, 1, 1, 16>::operator()(Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (644,26) getXiValCond(float, float)
+    -> INLINE: PropagationMPlex.h:(301,13) std::abs(float)
+  -> INLINE: (644,48) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> (646,6) applyMaterialEffects(const MPlexQF &, const MPlexQF &, MPlexLS &, MPlexLV &, int)
+  -> DELETED: (653,12) Matriplex::Matriplex<float, 6, 6, 16>::Matriplex(Matriplex::Matriplex<float, 6, 6, 16> *)
+  -> (654,4) <unnamed>::MultHelixProp(const MPlexLL &, const MPlexLS &, MPlexLL &)
+  -> (655,4) <unnamed>::MultHelixPropTransp(const MPlexLL &, const MPlexLL &, MPlexLS &)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at PropagationMPlex.cc(618,4)
+   remark #15301: SIMD LOOP WAS VECTORIZED
+LOOP END
+
+LOOP BEGIN at ../Matriplex/Matriplex.h(38,7) inlined into PropagationMPlex.cc(623,4)
+   remark #25408: memset generated
+   remark #15398: loop was not vectorized: loop was transformed to memset or memcpy
+LOOP END
+
+LOOP BEGIN at PropagationMPlex.cc(635,6)
+   remark #15301: SIMD LOOP WAS VECTORIZED
+LOOP END
+
+Fusion of IFs performed in _Z22propagateHelixToRMPlexRKN9Matriplex12MatriplexSymIfLi6ELi16EEERKNS_9MatriplexIfLi6ELi1ELi16EEERKNS4_IiLi1ELi1ELi16EEEfRS1_RS5_i at line 65
+
+Fusion of IFs performed in _Z22propagateHelixToRMPlexRKN9Matriplex12MatriplexSymIfLi6ELi16EEERKNS_9MatriplexIfLi6ELi1ELi16EEERKNS4_IiLi1ELi1ELi16EEEfRS1_RS5_i at line 87
+
+Fusion of IFs performed in _Z22propagateHelixToRMPlexRKN9Matriplex12MatriplexSymIfLi6ELi16EEERKNS_9MatriplexIfLi6ELi1ELi16EEERKNS4_IiLi1ELi1ELi16EEEfRS1_RS5_i at line 308
+
+Fusion of IFs performed in _Z22propagateHelixToRMPlexRKN9Matriplex12MatriplexSymIfLi6ELi16EEERKNS_9MatriplexIfLi6ELi1ELi16EEERKNS4_IiLi1ELi1ELi16EEEfRS1_RS5_i at line 330
+
+    Report from: Code generation optimizations [cg]
+
+../Matriplex/MatriplexSym.h(75,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(40,10):remark #34026: call to memset implemented as a call to optimized library version
+===========================================================================
+
+Begin optimization report for: helixAtRFromIterativeCCS_impl<MPlexLV, MPlexQI, MPlexLV, MPlexQF, MPlexLL>(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, int, int, bool)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (helixAtRFromIterativeCCS_impl<MPlexLV, MPlexQI, MPlexLV, MPlexQF, MPlexLL>(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, int, int, bool)) [22] PropagationMPlex.icc(244,1)
+  -> INLINE: (249,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (250,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (251,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (252,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (253,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (254,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (256,18) hipo(float, float)
+    -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+  -> INLINE: (256,28) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (256,44) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (257,28) Matriplex::Matriplex<int, 1, 1, 16>::operator()(const Matriplex::Matriplex<int, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (257,78) Config::BfieldFromZR(float, float)
+  -> INLINE: (257,104) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (258,28) Matriplex::Matriplex<float, 1, 1, 16>::operator()(const Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (265,32) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (266,32) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (267,32) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (268,32) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (269,32) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (270,32) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (286,23) std::cos(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (286,50) std::sin(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (306,14) hipo(float, float)
+    -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+  -> INLINE: (306,25) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (306,42) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (310,11) sincos4(float, float &, float &)
+  -> INLINE: (322,33) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (323,33) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (324,41) std::abs(float)
+  -> INLINE: (348,15) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (348,33) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (349,15) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (349,33) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (365,9) sincos4(float, float &, float &)
+  -> INLINE: (371,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (372,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (373,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (374,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (375,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (376,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (378,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (379,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (380,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (381,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (382,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (383,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (386,15) std::cos(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (387,15) std::sin(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (391,13) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (391,30) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (393,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (394,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (395,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (396,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (397,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (398,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (400,13) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (402,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (403,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (404,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (405,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (406,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (407,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (409,13) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (409,30) Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (411,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (412,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (413,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (414,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (415,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (416,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (418,13) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (420,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (421,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (422,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (423,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (424,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (425,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at PropagationMPlex.icc(246,3)
+   remark #25261: Invariant Condition eliminated(Proven True) at line 320
+   remark #25261: Invariant Condition eliminated(Proven True) at line 320
+   remark #25261: Invariant Condition eliminated(Proven True) at line 320
+   remark #25261: Invariant Condition eliminated(Proven True) at line 320
+   remark #25260: Invariant Condition eliminated(Proven False) at line 320
+   remark #15301: SIMD LOOP WAS VECTORIZED
+
+   LOOP BEGIN at PropagationMPlex.icc(300,7)
+      remark #25436: completely unrolled by 5   (pre-vector) 
+   LOOP END
+LOOP END
+===========================================================================
+
+Begin optimization report for: propagateHelixToZMPlex(const MPlexLS &, const MPlexLV &, const MPlexQI &, const MPlexHV &, MPlexLS &, MPlexLV &, int, bool)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (propagateHelixToZMPlex(const MPlexLS &, const MPlexLV &, const MPlexQI &, const MPlexHV &, MPlexLS &, MPlexLV &, int, bool)) [23] PropagationMPlex.cc(688,1)
+  -> INLINE: (691,11) Matriplex::MatriplexSym<float, 6, 16>::operator=(Matriplex::MatriplexSym<float, 6, 16> *, const Matriplex::MatriplexSym<float, 6, 16> &)
+  -> INLINE: (692,11) Matriplex::Matriplex<float, 6, 1, 16>::operator=(Matriplex::Matriplex<float, 6, 1, 16> *, const Matriplex::Matriplex<float, 6, 1, 16> &)
+  -> DELETED: (694,12) Matriplex::Matriplex<float, 6, 6, 16>::Matriplex(Matriplex::Matriplex<float, 6, 6, 16> *)
+  -> DELETED: (696,12) Matriplex::Matriplex<float, 1, 1, 16>::Matriplex(Matriplex::Matriplex<float, 1, 1, 16> *)
+  -> INLINE: (699,10) Matriplex::Matriplex<float, 1, 1, 16>::At(Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (699,30) Matriplex::Matriplex<float, 3, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 3, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> (702,4) helixAtZ(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, bool)
+  -> DELETED: (724,14) Matriplex::Matriplex<float, 1, 1, 16>::Matriplex(Matriplex::Matriplex<float, 1, 1, 16> *)
+  -> DELETED: (725,14) Matriplex::Matriplex<float, 1, 1, 16>::Matriplex(Matriplex::Matriplex<float, 1, 1, 16> *)
+  -> INLINE: (729,25) getZbinME(float)
+    -> INLINE: ../MaterialEffects.h:(6,45) std::abs(float)
+  -> INLINE: (729,38) Matriplex::Matriplex<float, 1, 1, 16>::operator()(Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (730,25) getRbinME(float)
+  -> INLINE: (730,35) hipo(float, float)
+    -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+  -> INLINE: (730,45) Matriplex::Matriplex<float, 3, 1, 16>::operator()(const Matriplex::Matriplex<float, 3, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (730,61) Matriplex::Matriplex<float, 3, 1, 16>::operator()(const Matriplex::Matriplex<float, 3, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (732,14) Matriplex::Matriplex<float, 1, 1, 16>::operator()(Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (732,26) getRlVal(int, int)
+  -> INLINE: (733,14) Matriplex::Matriplex<float, 1, 1, 16>::operator()(Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (733,26) getXiVal(int, int)
+  -> (735,6) applyMaterialEffects(const MPlexQF &, const MPlexQF &, MPlexLS &, MPlexLV &, int)
+  -> DELETED: (740,12) Matriplex::Matriplex<float, 6, 6, 16>::Matriplex(Matriplex::Matriplex<float, 6, 6, 16> *)
+  -> (741,4) <unnamed>::MultHelixPropEndcap(const MPlexLL &, const MPlexLS &, MPlexLL &)
+  -> (742,4) <unnamed>::MultHelixPropTranspEndcap(const MPlexLL &, const MPlexLL &, MPlexLS &)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at PropagationMPlex.cc(698,4)
+   remark #15301: SIMD LOOP WAS VECTORIZED
+LOOP END
+
+LOOP BEGIN at PropagationMPlex.cc(727,6)
+   remark #15301: SIMD LOOP WAS VECTORIZED
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+../Matriplex/MatriplexSym.h(75,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+===========================================================================
+
+Begin optimization report for: helixAtZ(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, bool)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (helixAtZ(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, bool)) [24] PropagationMPlex.cc(863,1)
+  -> INLINE: (864,13) Matriplex::Matriplex<float, 6, 6, 16>::SetVal(Matriplex::Matriplex<float, 6, 6, 16> *, float)
+  -> INLINE: (870,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (871,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (872,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (873,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (874,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (876,30) Matriplex::Matriplex<float, 1, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (878,33) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (879,33) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (880,33) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (881,33) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (882,33) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (883,33) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (885,29) Matriplex::Matriplex<int, 1, 1, 16>::ConstAt(const Matriplex::Matriplex<int, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (885,86) Config::BfieldFromZR(float, float)
+  -> INLINE: (885,111) hipo(float, float)
+    -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+  -> INLINE: (885,122) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (885,143) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (901,20) std::cos(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (901,44) std::sin(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (902,20) std::cos(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (902,44) std::sin(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (915,2) sincos4(float, float &, float &)
+  -> INLINE: (922,14) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (922,35) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (923,14) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (923,35) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (924,14) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (925,14) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (930,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (931,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (932,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (933,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (935,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (936,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (937,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (938,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (940,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (941,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (942,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at ../Matriplex/Matriplex.h(38,7) inlined into PropagationMPlex.cc(864,13)
+   remark #25408: memset generated
+   remark #15398: loop was not vectorized: loop was transformed to memset or memcpy
+LOOP END
+
+LOOP BEGIN at PropagationMPlex.cc(867,3)
+   remark #15301: SIMD LOOP WAS VECTORIZED
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+../Matriplex/Matriplex.h(40,10):remark #34026: call to memset implemented as a call to optimized library version
+===========================================================================
+
+Begin optimization report for: <unnamed>::MultHelixPropEndcap(const MPlexLL &, const MPlexLS &, MPlexLL &)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (<unnamed>::MultHelixPropEndcap(const MPlexLL &, const MPlexLS &, MPlexLL &)) [25] PropagationMPlex.cc(110,1)
+
+===========================================================================
+
+Begin optimization report for: <unnamed>::MultHelixPropTranspEndcap(const MPlexLL &, const MPlexLL &, MPlexLS &)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (<unnamed>::MultHelixPropTranspEndcap(const MPlexLL &, const MPlexLL &, MPlexLS &)) [26] PropagationMPlex.cc(124,1)
+
+===========================================================================
+
+Begin optimization report for: propagateHelixToZMPlex(const MPlexLS &, const MPlexLV &, const MPlexQI &, float, MPlexLS &, MPlexLV &, int)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (propagateHelixToZMPlex(const MPlexLS &, const MPlexLV &, const MPlexQI &, float, MPlexLS &, MPlexLV &, int)) [27] PropagationMPlex.cc(773,1)
+  -> INLINE: (776,11) Matriplex::MatriplexSym<float, 6, 16>::operator=(Matriplex::MatriplexSym<float, 6, 16> *, const Matriplex::MatriplexSym<float, 6, 16> &)
+  -> INLINE: (777,11) Matriplex::Matriplex<float, 6, 1, 16>::operator=(Matriplex::Matriplex<float, 6, 1, 16> *, const Matriplex::Matriplex<float, 6, 1, 16> &)
+  -> DELETED: (779,12) Matriplex::Matriplex<float, 6, 6, 16>::Matriplex(Matriplex::Matriplex<float, 6, 6, 16> *)
+  -> DELETED: (781,12) Matriplex::Matriplex<float, 1, 1, 16>::Matriplex(Matriplex::Matriplex<float, 1, 1, 16> *)
+  -> INLINE: (784,10) Matriplex::Matriplex<float, 1, 1, 16>::At(Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (784,31) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> CP_CLONE (787,4) helixAtZ..0(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, bool)
+  -> DELETED: (809,14) Matriplex::Matriplex<float, 1, 1, 16>::Matriplex(Matriplex::Matriplex<float, 1, 1, 16> *)
+  -> DELETED: (810,14) Matriplex::Matriplex<float, 1, 1, 16>::Matriplex(Matriplex::Matriplex<float, 1, 1, 16> *)
+  -> INLINE: (815,25) getZbinME(float)
+    -> INLINE: ../MaterialEffects.h:(6,45) std::abs(float)
+  -> INLINE: (816,25) getRbinME(float)
+  -> INLINE: (816,35) hipo(float, float)
+    -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+  -> INLINE: (816,46) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (816,63) Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (818,14) Matriplex::Matriplex<float, 1, 1, 16>::operator()(Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (818,63) getRlVal(int, int)
+  -> INLINE: (819,14) Matriplex::Matriplex<float, 1, 1, 16>::operator()(Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (819,63) getXiVal(int, int)
+  -> (826,6) applyMaterialEffects(const MPlexQF &, const MPlexQF &, MPlexLS &, MPlexLV &, int)
+  -> DELETED: (831,12) Matriplex::Matriplex<float, 6, 6, 16>::Matriplex(Matriplex::Matriplex<float, 6, 6, 16> *)
+  -> (832,4) <unnamed>::MultHelixPropEndcap(const MPlexLL &, const MPlexLS &, MPlexLL &)
+  -> (833,4) <unnamed>::MultHelixPropTranspEndcap(const MPlexLL &, const MPlexLL &, MPlexLS &)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at PropagationMPlex.cc(783,4)
+   remark #15301: SIMD LOOP WAS VECTORIZED
+LOOP END
+
+LOOP BEGIN at PropagationMPlex.cc(813,6)
+   remark #15301: SIMD LOOP WAS VECTORIZED
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+../Matriplex/MatriplexSym.h(75,7):remark #34026: call to memcpy implemented as a call to optimized library version
+../Matriplex/Matriplex.h(56,7):remark #34026: call to memcpy implemented as a call to optimized library version
+===========================================================================
+
+Begin optimization report for: helixAtZ..0(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, bool)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (helixAtZ..0(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, bool)) [28] PropagationMPlex.cc(863,1)
+  CLONED FROM: helixAtZ(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, bool)(X,X,X,X,X,X,0)
+  -> INLINE: (864,13) Matriplex::Matriplex<float, 6, 6, 16>::SetVal(Matriplex::Matriplex<float, 6, 6, 16> *, float)
+  -> INLINE: (870,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (871,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (872,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (873,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (874,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (876,30) Matriplex::Matriplex<float, 1, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (878,33) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (879,33) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (880,33) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (881,33) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (882,33) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (883,33) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (885,29) Matriplex::Matriplex<int, 1, 1, 16>::ConstAt(const Matriplex::Matriplex<int, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (885,86) Config::BfieldFromZR(float, float)
+  -> INLINE: (885,111) hipo(float, float)
+    -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+  -> INLINE: (885,122) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (885,143) Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (901,20) std::cos(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (901,44) std::sin(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (902,20) std::cos(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (902,44) std::sin(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (915,2) sincos4(float, float &, float &)
+  -> INLINE: (922,14) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (922,35) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (923,14) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (923,35) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (924,14) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (925,14) Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (930,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (931,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (932,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (933,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (935,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (936,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (937,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (938,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (940,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (941,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (942,16) Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at ../Matriplex/Matriplex.h(38,7) inlined into PropagationMPlex.cc(864,13)
+   remark #25408: memset generated
+   remark #15398: loop was not vectorized: loop was transformed to memset or memcpy
+LOOP END
+
+LOOP BEGIN at PropagationMPlex.cc(867,3)
+   remark #15301: SIMD LOOP WAS VECTORIZED
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+../Matriplex/Matriplex.h(40,10):remark #34026: call to memset implemented as a call to optimized library version
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 1, 16>::operator[](const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(44,34)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 1, 16>::operator[](Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 1, 16>::operator[](Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t)) ../Matriplex/Matriplex.h(45,34)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(47,54)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 1, 16>::At(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)) ../Matriplex/Matriplex.h(49,37)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 1, 16>::operator()(Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)) ../Matriplex/Matriplex.h(51,45)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 1, 16>::operator()(const Matriplex::Matriplex<float, 6, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(52,57)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 1, 16>::operator=(Matriplex::Matriplex<float, 6, 1, 16> *, const Matriplex::Matriplex<float, 6, 1, 16> &)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 1, 16>::operator=(Matriplex::Matriplex<float, 6, 1, 16> *, const Matriplex::Matriplex<float, 6, 1, 16> &)) ../Matriplex/Matriplex.h(55,4)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 3, 1, 16>::operator[](const Matriplex::Matriplex<float, 3, 1, 16> *, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 3, 1, 16>::operator[](const Matriplex::Matriplex<float, 3, 1, 16> *, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(44,34)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 3, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 3, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 3, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 3, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(47,54)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 3, 1, 16>::operator()(const Matriplex::Matriplex<float, 3, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 3, 1, 16>::operator()(const Matriplex::Matriplex<float, 3, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(52,57)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::MatriplexSym<float, 6, 16>::Off(const Matriplex::MatriplexSym<float, 6, 16> *, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::MatriplexSym<float, 6, 16>::Off(const Matriplex::MatriplexSym<float, 6, 16> *, Matriplex::idx_t) const) ../Matriplex/MatriplexSym.h(64,37)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::MatriplexSym<float, 6, 16>::At(Matriplex::MatriplexSym<float, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::MatriplexSym<float, 6, 16>::At(Matriplex::MatriplexSym<float, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)) ../Matriplex/MatriplexSym.h(68,37)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::MatriplexSym<float, 6, 16>::operator=(Matriplex::MatriplexSym<float, 6, 16> *, const Matriplex::MatriplexSym<float, 6, 16> &)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::MatriplexSym<float, 6, 16>::operator=(Matriplex::MatriplexSym<float, 6, 16> *, const Matriplex::MatriplexSym<float, 6, 16> &)) ../Matriplex/MatriplexSym.h(74,4)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 6, 16>::Matriplex(Matriplex::Matriplex<float, 6, 6, 16> *, float)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 6, 16>::Matriplex(Matriplex::Matriplex<float, 6, 6, 16> *, float)) ../Matriplex/Matriplex.h(32,19)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 6, 16>::SetVal(Matriplex::Matriplex<float, 6, 6, 16> *, float)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 6, 16>::SetVal(Matriplex::Matriplex<float, 6, 6, 16> *, float)) ../Matriplex/Matriplex.h(37,4)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 6, 16>::operator()(Matriplex::Matriplex<float, 6, 6, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)) ../Matriplex/Matriplex.h(51,45)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 6, 16>::operator=(Matriplex::Matriplex<float, 6, 6, 16> *, const Matriplex::Matriplex<float, 6, 6, 16> &)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 6, 16>::operator=(Matriplex::Matriplex<float, 6, 6, 16> *, const Matriplex::Matriplex<float, 6, 6, 16> &)) ../Matriplex/Matriplex.h(55,4)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<int, 1, 1, 16>::ConstAt(const Matriplex::Matriplex<int, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<int, 1, 1, 16>::ConstAt(const Matriplex::Matriplex<int, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(47,54)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<int, 1, 1, 16>::operator()(const Matriplex::Matriplex<int, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<int, 1, 1, 16>::operator()(const Matriplex::Matriplex<int, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(52,57)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 1, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 1, 1, 16>::ConstAt(const Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(47,54)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 1, 1, 16>::At(Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 1, 1, 16>::At(Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)) ../Matriplex/Matriplex.h(49,37)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 1, 1, 16>::operator()(Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 1, 1, 16>::operator()(Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)) ../Matriplex/Matriplex.h(51,45)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 1, 1, 16>::operator()(const Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 1, 1, 16>::operator()(const Matriplex::Matriplex<float, 1, 1, 16> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(52,57)
+
+===========================================================================
+
+Begin optimization report for: Config::BfieldFromZR(float, float)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Config::BfieldFromZR(float, float)) ../Config.h(252,3)
+
+===========================================================================
+
+Begin optimization report for: <unnamed>::MultHelixPropTemp(const MPlexLL &, const MPlexLL &, MPlexLL &, int)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (<unnamed>::MultHelixPropTemp(const MPlexLL &, const MPlexLL &, MPlexLL &, int)) PropagationMPlex.cc(138,1)
+
+===========================================================================
+
+Begin optimization report for: __sti__$E()
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (__sti__$E()) [76] <compiler generated>
+  -> INLINE: ../Config.h:(149,72) __sti___ZN41_INTERNAL_19_PropagationMPlex_cc_de090cb1St8__ioinitE()
+  -> INLINE: ../Config.h:(149,72) __sti___ZN41_INTERNAL_19_PropagationMPlex_cc_de090cb16Config9inputFileE()
+    -> DELETED: (244,21) std::allocator<char>::~allocator(std::allocator<char> *)
+    -> DELETED: (244,33) std::allocator<char>::allocator(std::allocator<char> *)
+    -> DELETED: (244,33) std::allocator<char>::~allocator(std::allocator<char> *)
+  -> INLINE: ../Config.h:(149,72) std::tan(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: ../Config.h:(149,86) std::atan(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: ../Config.h:(149,96) std::exp(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+
+===========================================================================
+
+Begin optimization report for: __sti___ZN41_INTERNAL_19_PropagationMPlex_cc_de090cb16Config9inputFileE()
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (__sti___ZN41_INTERNAL_19_PropagationMPlex_cc_de090cb16Config9inputFileE()) <compiler generated>
+
+===========================================================================
+
+Begin optimization report for: __sti___ZN41_INTERNAL_19_PropagationMPlex_cc_de090cb1St8__ioinitE()
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (__sti___ZN41_INTERNAL_19_PropagationMPlex_cc_de090cb1St8__ioinitE()) <compiler generated>
+
+===========================================================================
+: MultHelixPropTranspEndcap.ah:(174,14) FMA(const __m256 &, const __m256 &, const __m256 &)
+
+===========================================================================
+
+Begin optimization report for: propagateHelixToZMPlex(const MPlexLS &, const MPlexLV &, const MPlexQI &, float, MPlexLS &, MPlexLV &, int)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (propagateHelixToZMPlex(const MPlexLS &, const MPlexLV &, const MPlexQI &, float, MPlexLS &, MPlexLV &, int)) [28] PropagationMPlex.cc(773,1)
+  -> INLINE: (776,11) Matriplex::MatriplexSym<float, 6, 8>::operator=(Matriplex::MatriplexSym<float, 6, 8> *, const Matriplex::MatriplexSym<float, 6, 8> &)
+  -> INLINE: (777,11) Matriplex::Matriplex<float, 6, 1, 8>::operator=(Matriplex::Matriplex<float, 6, 1, 8> *, const Matriplex::Matriplex<float, 6, 1, 8> &)
+  -> DELETED: (779,12) Matriplex::Matriplex<float, 6, 6, 8>::Matriplex(Matriplex::Matriplex<float, 6, 6, 8> *)
+  -> DELETED: (781,12) Matriplex::Matriplex<float, 1, 1, 8>::Matriplex(Matriplex::Matriplex<float, 1, 1, 8> *)
+  -> INLINE: (784,10) Matriplex::Matriplex<float, 1, 1, 8>::At(Matriplex::Matriplex<float, 1, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (784,31) Matriplex::Matriplex<float, 6, 1, 8>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> CP_CLONE (787,4) helixAtZ..0(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, bool)
+  -> DELETED: (809,14) Matriplex::Matriplex<float, 1, 1, 8>::Matriplex(Matriplex::Matriplex<float, 1, 1, 8> *)
+  -> DELETED: (810,14) Matriplex::Matriplex<float, 1, 1, 8>::Matriplex(Matriplex::Matriplex<float, 1, 1, 8> *)
+  -> INLINE: (815,25) getZbinME(float)
+    -> INLINE: ../MaterialEffects.h:(6,45) std::abs(float)
+  -> INLINE: (816,25) getRbinME(float)
+  -> INLINE: (816,35) hipo(float, float)
+    -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+  -> INLINE: (816,46) Matriplex::Matriplex<float, 6, 1, 8>::operator()(Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (816,63) Matriplex::Matriplex<float, 6, 1, 8>::operator()(Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (818,14) Matriplex::Matriplex<float, 1, 1, 8>::operator()(Matriplex::Matriplex<float, 1, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (818,63) getRlVal(int, int)
+  -> INLINE: (819,14) Matriplex::Matriplex<float, 1, 1, 8>::operator()(Matriplex::Matriplex<float, 1, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (819,63) getXiVal(int, int)
+  -> (826,6) applyMaterialEffects(const MPlexQF &, const MPlexQF &, MPlexLS &, MPlexLV &, int)
+  -> DELETED: (831,12) Matriplex::Matriplex<float, 6, 6, 8>::Matriplex(Matriplex::Matriplex<float, 6, 6, 8> *)
+  -> (832,4) <unnamed>::MultHelixPropEndcap(const MPlexLL &, const MPlexLS &, MPlexLL &)
+  -> (833,4) <unnamed>::MultHelixPropTranspEndcap(const MPlexLL &, const MPlexLL &, MPlexLS &)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at PropagationMPlex.cc(783,4)
+   remark #15301: SIMD LOOP WAS VECTORIZED
+LOOP END
+
+LOOP BEGIN at PropagationMPlex.cc(813,6)
+   remark #15301: SIMD LOOP WAS VECTORIZED
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+../Matriplex/MatriplexSym.h(75,7):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (1, 0), and destination (alignment, offset): (1, 0)
+../Matriplex/Matriplex.h(56,7):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (1, 0), and destination (alignment, offset): (1, 0)
+===========================================================================
+
+Begin optimization report for: helixAtZ..0(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, bool)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (helixAtZ..0(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, bool)) [29] PropagationMPlex.cc(863,1)
+  CLONED FROM: helixAtZ(const MPlexLV &, const MPlexQI &, MPlexLV &, const MPlexQF &, MPlexLL &, int, bool)(X,X,X,X,X,X,0)
+  -> INLINE: (864,13) Matriplex::Matriplex<float, 6, 6, 8>::SetVal(Matriplex::Matriplex<float, 6, 6, 8> *, float)
+  -> INLINE: (870,16) Matriplex::Matriplex<float, 6, 6, 8>::operator()(Matriplex::Matriplex<float, 6, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (871,16) Matriplex::Matriplex<float, 6, 6, 8>::operator()(Matriplex::Matriplex<float, 6, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (872,16) Matriplex::Matriplex<float, 6, 6, 8>::operator()(Matriplex::Matriplex<float, 6, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (873,16) Matriplex::Matriplex<float, 6, 6, 8>::operator()(Matriplex::Matriplex<float, 6, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (874,16) Matriplex::Matriplex<float, 6, 6, 8>::operator()(Matriplex::Matriplex<float, 6, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (876,30) Matriplex::Matriplex<float, 1, 1, 8>::ConstAt(const Matriplex::Matriplex<float, 1, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (878,33) Matriplex::Matriplex<float, 6, 1, 8>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (879,33) Matriplex::Matriplex<float, 6, 1, 8>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (880,33) Matriplex::Matriplex<float, 6, 1, 8>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (881,33) Matriplex::Matriplex<float, 6, 1, 8>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (882,33) Matriplex::Matriplex<float, 6, 1, 8>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (883,33) Matriplex::Matriplex<float, 6, 1, 8>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (885,29) Matriplex::Matriplex<int, 1, 1, 8>::ConstAt(const Matriplex::Matriplex<int, 1, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (885,86) Config::BfieldFromZR(float, float)
+  -> INLINE: (885,111) hipo(float, float)
+    -> INLINE: ../Matrix.h:(56,10) std::sqrt(float)
+  -> INLINE: (885,122) Matriplex::Matriplex<float, 6, 1, 8>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (885,143) Matriplex::Matriplex<float, 6, 1, 8>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+  -> INLINE: (901,20) std::cos(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (901,44) std::sin(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (902,20) std::cos(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (902,44) std::sin(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: (915,2) sincos4(float, float &, float &)
+  -> INLINE: (922,14) Matriplex::Matriplex<float, 6, 1, 8>::At(Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (922,35) Matriplex::Matriplex<float, 6, 1, 8>::At(Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (923,14) Matriplex::Matriplex<float, 6, 1, 8>::At(Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (923,35) Matriplex::Matriplex<float, 6, 1, 8>::At(Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (924,14) Matriplex::Matriplex<float, 6, 1, 8>::At(Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (925,14) Matriplex::Matriplex<float, 6, 1, 8>::At(Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (930,16) Matriplex::Matriplex<float, 6, 6, 8>::operator()(Matriplex::Matriplex<float, 6, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (931,16) Matriplex::Matriplex<float, 6, 6, 8>::operator()(Matriplex::Matriplex<float, 6, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (932,16) Matriplex::Matriplex<float, 6, 6, 8>::operator()(Matriplex::Matriplex<float, 6, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (933,16) Matriplex::Matriplex<float, 6, 6, 8>::operator()(Matriplex::Matriplex<float, 6, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (935,16) Matriplex::Matriplex<float, 6, 6, 8>::operator()(Matriplex::Matriplex<float, 6, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (936,16) Matriplex::Matriplex<float, 6, 6, 8>::operator()(Matriplex::Matriplex<float, 6, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (937,16) Matriplex::Matriplex<float, 6, 6, 8>::operator()(Matriplex::Matriplex<float, 6, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (938,16) Matriplex::Matriplex<float, 6, 6, 8>::operator()(Matriplex::Matriplex<float, 6, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (940,16) Matriplex::Matriplex<float, 6, 6, 8>::operator()(Matriplex::Matriplex<float, 6, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (941,16) Matriplex::Matriplex<float, 6, 6, 8>::operator()(Matriplex::Matriplex<float, 6, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+  -> INLINE: (942,16) Matriplex::Matriplex<float, 6, 6, 8>::operator()(Matriplex::Matriplex<float, 6, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at ../Matriplex/Matriplex.h(38,7) inlined into PropagationMPlex.cc(864,13)
+   remark #25408: memset generated
+   remark #15398: loop was not vectorized: loop was transformed to memset or memcpy
+LOOP END
+
+LOOP BEGIN at PropagationMPlex.cc(867,3)
+   remark #15301: SIMD LOOP WAS VECTORIZED
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+../Matriplex/Matriplex.h(40,10):remark #34026: call to memset implemented as a call to optimized library version
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 1, 8>::operator[](const Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 1, 8>::operator[](const Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(44,34)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 1, 8>::operator[](Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 1, 8>::operator[](Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t)) ../Matriplex/Matriplex.h(45,34)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 1, 8>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 1, 8>::ConstAt(const Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(47,54)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 1, 8>::At(Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 1, 8>::At(Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)) ../Matriplex/Matriplex.h(49,37)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 1, 8>::operator()(Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 1, 8>::operator()(Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)) ../Matriplex/Matriplex.h(51,45)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 1, 8>::operator()(const Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 1, 8>::operator()(const Matriplex::Matriplex<float, 6, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(52,57)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 1, 8>::operator=(Matriplex::Matriplex<float, 6, 1, 8> *, const Matriplex::Matriplex<float, 6, 1, 8> &)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 1, 8>::operator=(Matriplex::Matriplex<float, 6, 1, 8> *, const Matriplex::Matriplex<float, 6, 1, 8> &)) ../Matriplex/Matriplex.h(55,4)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 3, 1, 8>::operator[](const Matriplex::Matriplex<float, 3, 1, 8> *, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 3, 1, 8>::operator[](const Matriplex::Matriplex<float, 3, 1, 8> *, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(44,34)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 3, 1, 8>::ConstAt(const Matriplex::Matriplex<float, 3, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 3, 1, 8>::ConstAt(const Matriplex::Matriplex<float, 3, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(47,54)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 3, 1, 8>::operator()(const Matriplex::Matriplex<float, 3, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 3, 1, 8>::operator()(const Matriplex::Matriplex<float, 3, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(52,57)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::MatriplexSym<float, 6, 8>::Off(const Matriplex::MatriplexSym<float, 6, 8> *, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::MatriplexSym<float, 6, 8>::Off(const Matriplex::MatriplexSym<float, 6, 8> *, Matriplex::idx_t) const) ../Matriplex/MatriplexSym.h(64,37)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::MatriplexSym<float, 6, 8>::At(Matriplex::MatriplexSym<float, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::MatriplexSym<float, 6, 8>::At(Matriplex::MatriplexSym<float, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)) ../Matriplex/MatriplexSym.h(68,37)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::MatriplexSym<float, 6, 8>::operator=(Matriplex::MatriplexSym<float, 6, 8> *, const Matriplex::MatriplexSym<float, 6, 8> &)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::MatriplexSym<float, 6, 8>::operator=(Matriplex::MatriplexSym<float, 6, 8> *, const Matriplex::MatriplexSym<float, 6, 8> &)) ../Matriplex/MatriplexSym.h(74,4)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 6, 8>::Matriplex(Matriplex::Matriplex<float, 6, 6, 8> *, float)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 6, 8>::Matriplex(Matriplex::Matriplex<float, 6, 6, 8> *, float)) ../Matriplex/Matriplex.h(32,19)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 6, 8>::SetVal(Matriplex::Matriplex<float, 6, 6, 8> *, float)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 6, 8>::SetVal(Matriplex::Matriplex<float, 6, 6, 8> *, float)) ../Matriplex/Matriplex.h(37,4)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 6, 8>::operator()(Matriplex::Matriplex<float, 6, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 6, 8>::operator()(Matriplex::Matriplex<float, 6, 6, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)) ../Matriplex/Matriplex.h(51,45)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 6, 6, 8>::operator=(Matriplex::Matriplex<float, 6, 6, 8> *, const Matriplex::Matriplex<float, 6, 6, 8> &)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 6, 6, 8>::operator=(Matriplex::Matriplex<float, 6, 6, 8> *, const Matriplex::Matriplex<float, 6, 6, 8> &)) ../Matriplex/Matriplex.h(55,4)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<int, 1, 1, 8>::ConstAt(const Matriplex::Matriplex<int, 1, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<int, 1, 1, 8>::ConstAt(const Matriplex::Matriplex<int, 1, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(47,54)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<int, 1, 1, 8>::operator()(const Matriplex::Matriplex<int, 1, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<int, 1, 1, 8>::operator()(const Matriplex::Matriplex<int, 1, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(52,57)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 1, 1, 8>::ConstAt(const Matriplex::Matriplex<float, 1, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 1, 1, 8>::ConstAt(const Matriplex::Matriplex<float, 1, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(47,54)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 1, 1, 8>::At(Matriplex::Matriplex<float, 1, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 1, 1, 8>::At(Matriplex::Matriplex<float, 1, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)) ../Matriplex/Matriplex.h(49,37)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 1, 1, 8>::operator()(Matriplex::Matriplex<float, 1, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 1, 1, 8>::operator()(Matriplex::Matriplex<float, 1, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t)) ../Matriplex/Matriplex.h(51,45)
+
+===========================================================================
+
+Begin optimization report for: Matriplex::Matriplex<float, 1, 1, 8>::operator()(const Matriplex::Matriplex<float, 1, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Matriplex::Matriplex<float, 1, 1, 8>::operator()(const Matriplex::Matriplex<float, 1, 1, 8> *, Matriplex::idx_t, Matriplex::idx_t, Matriplex::idx_t) const) ../Matriplex/Matriplex.h(52,57)
+
+===========================================================================
+
+Begin optimization report for: Config::BfieldFromZR(float, float)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (Config::BfieldFromZR(float, float)) ../Config.h(252,3)
+
+===========================================================================
+
+Begin optimization report for: <unnamed>::MultHelixPropTemp(const MPlexLL &, const MPlexLL &, MPlexLL &, int)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (<unnamed>::MultHelixPropTemp(const MPlexLL &, const MPlexLL &, MPlexLL &, int)) PropagationMPlex.cc(138,1)
+
+===========================================================================
+
+Begin optimization report for: __sti__$E()
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (__sti__$E()) [77] <compiler generated>
+  -> INLINE: ../Config.h:(149,72) __sti___ZN41_INTERNAL_19_PropagationMPlex_cc_6c233b6eSt8__ioinitE()
+  -> INLINE: ../Config.h:(149,72) __sti___ZN41_INTERNAL_19_PropagationMPlex_cc_6c233b6e6Config9inputFileE()
+    -> DELETED: (244,21) std::allocator<char>::~allocator(std::allocator<char> *)
+    -> INLINE: (244,33) std::allocator<char>::allocator(std::allocator<char> *)
+       {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+    -> DELETED: (244,33) std::allocator<char>::~allocator(std::allocator<char> *)
+  -> INLINE: ../Config.h:(149,72) std::tan(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: ../Config.h:(149,86) std::atan(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+  -> INLINE: ../Config.h:(149,96) std::exp(float)
+     {{ Inlining of routines from system headers is omitted. Use -qopt-report=3 to view full report. }}
+
+===========================================================================
+
+Begin optimization report for: __sti___ZN41_INTERNAL_19_PropagationMPlex_cc_6c233b6e6Config9inputFileE()
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (__sti___ZN41_INTERNAL_19_PropagationMPlex_cc_6c233b6e6Config9inputFileE()) <compiler generated>
+
+===========================================================================
+
+Begin optimization report for: __sti___ZN41_INTERNAL_19_PropagationMPlex_cc_6c233b6eSt8__ioinitE()
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (__sti___ZN41_INTERNAL_19_PropagationMPlex_cc_6c233b6eSt8__ioinitE()) <compiler generated>
+
+===========================================================================

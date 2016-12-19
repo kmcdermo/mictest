@@ -23,8 +23,8 @@ inline int getDetId(const float zin, const float r)
   }
   //pixel endcap
   if (r<20 && z>30) {
-    if (z<40) return 5;
-    else      return 6;
+    if      (z<40)  return 5;
+    else if (z<280) return 6;
   }
   //TIB
   if (r<30 && z<70) {
@@ -83,7 +83,7 @@ inline int getDetId(const float zin, const float r)
     else           return 37; 
   }
   //TEC
-  if (z>120) {
+  if (z>120 && r<102) {
     if (z<128) {
       if (r<55)      return 38; 
       else if (r<80) return 39;

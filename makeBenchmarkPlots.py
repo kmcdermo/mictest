@@ -45,7 +45,7 @@ for test in ['BH','STD','CE','FIT']:
     g_VU_speedup = ROOT.TGraphErrors(len(vuvals))
     point = 0
     for vu in vuvals:
-        if    vu == '16int': xval = 16.0
+        if    vu == '16int': xval = 16.0 
         elif  vu == '8int' : xval = 8.0
         else               : xval = float(vu)
         yvals = array.array('d');
