@@ -100,6 +100,11 @@ namespace Config
   extern float RlgridME[Config::nBinsZME][Config::nBinsRME];
   extern float XigridME[Config::nBinsZME][Config::nBinsRME];
 
+  // more constants in material effects
+  constexpr float me  = 0.0005; // m=0.5 MeV, electron
+  constexpr float I   = 16.0e-9 * 10.75;
+  constexpr float mpi = 0.140; // m=140 MeV, pion
+
   // These could be parameters, layer dependent.
   static constexpr int   m_nphi = 1024;
   static constexpr float m_max_dz   = 1; // default: 1; cmssw tests: 20
