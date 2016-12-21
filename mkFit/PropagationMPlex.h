@@ -49,7 +49,7 @@ void helixAtZ(const MPlexLV& inPar,  const MPlexQI& inChg,
 	            MPlexLL& errorProp,
 	      const int      N_proc, const bool useParamBfield = false);
 
-void applyEnergyLoss(const MPlexQF& hitsXi, MPlexLS &outErr, MPlexLV& outPar, const int N_proc);
+void applyEnergyLoss(const MPlexQF& hitsXi, MPlexLL &errorProp, MPlexLV& outPar, const int N_proc);
 
 void applyMultipleScattering(const MPlexQF &hitsRl, MPlexLS &outErr, MPlexLV& outPar, const int N_proc);
 

@@ -398,7 +398,7 @@ void helixAtRFromIterative(const MPlexLV& inPar, const MPlexQI& inChg, MPlexLV& 
   helixAtRFromIterative_impl(inPar, inChg, outPar, msRad, errorProp, 0, NN, N_proc, useParamBfield);
 }
 
-void applyEnergyLoss(const MPlexQF& hitsXi, MPlexLS &outErr, MPlexLV& outPar, const int N_proc)
+void applyEnergyLoss(const MPlexQF& hitsXi, MPlexLL &errorProp, MPlexLV& outPar, const int N_proc)
 {
 #pragma simd
   for (int n = 0; n < NN; ++n)
@@ -416,7 +416,7 @@ void applyEnergyLoss(const MPlexQF& hitsXi, MPlexLS &outErr, MPlexLV& outPar, co
     const float dP = dEdx/beta;
     outPar.At(n, 0, 3) = p/((p+dP)*pt);
     //assume 100% uncertainty
-    outErr.At(n, 3, 3) += dP*dP/(p*p*pt*pt);
+    errorProp.At(n, 3, 3) += dP*dP/(p*p*pt*pt);
   }    
 }
 
@@ -685,7 +685,7 @@ void propagateHelixToRMPlex(const MPlexLS& inErr,  const MPlexLV& inPar,
        //       hitsRl(n, 0, 0) = getRlValCond(r, outPar(n, 2, 0));
        //       hitsXi(n, 0, 0) = getXiValCond(r, outPar(n, 2, 0));
      }
-     applyEnergyLoss(hitsXi,outErr,outPar,N_proc);
+     applyEnergyLoss(hitsXi,errorProp,outPar,N_proc);
    }
 
    // Matriplex version of:
@@ -867,7 +867,7 @@ void propagateHelixToZMPlex(const MPlexLS &inErr,  const MPlexLV& inPar,
        //hitsRl(n, 0, 0) = getRlValCond(msRad(n, 0, 0), z);
        //hitsXi(n, 0, 0) = getXiValCond(msRad(n, 0, 0), z);
      }
-     applyEnergyLoss(hitsXi, outErr, outPar, N_proc);
+     applyEnergyLoss(hitsXi, errorProp, outPar, N_proc);
    }
 
    // Matriplex version of:
