@@ -661,30 +661,30 @@ void TTreeValidation::initializeFitTree()
   fittree_->Branch("ez_prop",&ez_prop_fit_,"ez_prop_fit_[nlayers_fit_]/F");
   fittree_->Branch("z_hit",&z_hit_fit_,"z_hit_fit_[nlayers_fit_]/F");
   fittree_->Branch("ez_hit",&ez_hit_fit_,"ez_hit_fit_[nlayers_fit_]/F");
-  fittree_->Branch("z_sim",&z_sim_fit_,"z_sim_fit_[nlayers_fit_]/F");
-  fittree_->Branch("ez_sim",&ez_sim_fit_,"ez_sim_fit_[nlayers_fit_]/F");
+  // fittree_->Branch("z_sim",&z_sim_fit_,"z_sim_fit_[nlayers_fit_]/F");
+  // fittree_->Branch("ez_sim",&ez_sim_fit_,"ez_sim_fit_[nlayers_fit_]/F");
 
   fittree_->Branch("pphi_prop",&pphi_prop_fit_,"pphi_prop_fit_[nlayers_fit_]/F");
   fittree_->Branch("epphi_prop",&epphi_prop_fit_,"epphi_prop_fit_[nlayers_fit_]/F");
   fittree_->Branch("pphi_hit",&pphi_hit_fit_,"pphi_hit_fit_[nlayers_fit_]/F");
   fittree_->Branch("epphi_hit",&epphi_hit_fit_,"epphi_hit_fit_[nlayers_fit_]/F");
-  fittree_->Branch("pphi_sim",&pphi_sim_fit_,"pphi_sim_fit_[nlayers_fit_]/F");
-  fittree_->Branch("epphi_sim",&epphi_sim_fit_,"epphi_sim_fit_[nlayers_fit_]/F");
+  // fittree_->Branch("pphi_sim",&pphi_sim_fit_,"pphi_sim_fit_[nlayers_fit_]/F");
+  // fittree_->Branch("epphi_sim",&epphi_sim_fit_,"epphi_sim_fit_[nlayers_fit_]/F");
 
   fittree_->Branch("pt_up",&pt_up_fit_,"pt_up_fit_[nlayers_fit_]/F");
   fittree_->Branch("ept_up",&ept_up_fit_,"ept_up_fit_[nlayers_fit_]/F");
-  fittree_->Branch("pt_sim",&pt_sim_fit_,"pt_sim_fit_[nlayers_fit_]/F");
-  fittree_->Branch("ept_sim",&ept_sim_fit_,"ept_sim_fit_[nlayers_fit_]/F");
+  // fittree_->Branch("pt_sim",&pt_sim_fit_,"pt_sim_fit_[nlayers_fit_]/F");
+  // fittree_->Branch("ept_sim",&ept_sim_fit_,"ept_sim_fit_[nlayers_fit_]/F");
 
   fittree_->Branch("mphi_up",&mphi_up_fit_,"mphi_up_fit_[nlayers_fit_]/F");
   fittree_->Branch("emphi_up",&emphi_up_fit_,"emphi_up_fit_[nlayers_fit_]/F");
-  fittree_->Branch("mphi_sim",&mphi_sim_fit_,"mphi_sim_fit_[nlayers_fit_]/F");
-  fittree_->Branch("emphi_sim",&emphi_sim_fit_,"emphi_sim_fit_[nlayers_fit_]/F");
+  // fittree_->Branch("mphi_sim",&mphi_sim_fit_,"mphi_sim_fit_[nlayers_fit_]/F");
+  // fittree_->Branch("emphi_sim",&emphi_sim_fit_,"emphi_sim_fit_[nlayers_fit_]/F");
 
   fittree_->Branch("meta_up",&meta_up_fit_,"meta_up_fit_[nlayers_fit_]/F");
   fittree_->Branch("emeta_up",&emeta_up_fit_,"emeta_up_fit_[nlayers_fit_]/F");
-  fittree_->Branch("meta_sim",&meta_sim_fit_,"meta_sim_fit_[nlayers_fit_]/F");
-  fittree_->Branch("emeta_sim",&emeta_sim_fit_,"emeta_sim_fit_[nlayers_fit_]/F");
+  // fittree_->Branch("meta_sim",&meta_sim_fit_,"meta_sim_fit_[nlayers_fit_]/F");
+  // fittree_->Branch("emeta_sim",&emeta_sim_fit_,"emeta_sim_fit_[nlayers_fit_]/F");
 }
 
 void TTreeValidation::alignTrackExtra(TrackVec& evt_tracks, TrackExtraVec& evt_extras){
@@ -1342,7 +1342,8 @@ void TTreeValidation::fillFitTree(const Event& ev)
   std::lock_guard<std::mutex> locker(glock_); 
 
   evtid_fit_ = ev.evtID();
-  const auto& simtracks  = ev.simTracks_;
+  //  const auto& simtracks  = ev.simTracks_;
+  const auto& fittracks  = ev.fitTracks_;
   const auto& layerhits  = ev.layerHits_;
 
   for(auto&& fitvalmapmap : fitValTkMapMap_)
@@ -1351,46 +1352,48 @@ void TTreeValidation::fillFitTree(const Event& ev)
     
     tkid_fit_ = fitvalmapmap.first; // seed id (label) is the same as the mcID
     
-    const auto& simtrack = simtracks[tkid_fit_];
-    const auto& initTSs  = simTkTSVecMap_[tkid_fit_];
+    const auto& fittrack = fittracks[tkid_fit_];
+    // const auto& simtrack = simtracks[tkid_fit_];
+    // const auto& initTSs  = simTkTSVecMap_[tkid_fit_];
     auto& fitvalmap = fitvalmapmap.second;
 
     for(int ilayer = 0; ilayer < Config::nLayers; ++ilayer)
     {
       if (fitvalmap.count(ilayer))
       {
-	const auto& hit    = layerhits[ilayer][simtrack.getHitIdx(ilayer)];
-	const auto& initTS = initTSs[ilayer];
+	//	const auto& hit    = layerhits[ilayer][simtrack.getHitIdx(ilayer)];
+	const auto& hit    = layerhits[ilayer][fittrack.getHitIdx(ilayer)];
+	//	const auto& initTS = initTSs[ilayer];
 	const auto& fitval = fitvalmap[ilayer];
 	
 	z_hit_fit_[ilayer]   = hit.z();
 	ez_hit_fit_[ilayer]  = std::sqrt(hit.ezz());
-	z_sim_fit_[ilayer]   = initTS.z();
-	ez_sim_fit_[ilayer]  = initTS.ezz();
+	// z_sim_fit_[ilayer]   = initTS.z();
+	// ez_sim_fit_[ilayer]  = initTS.ezz();
 	z_prop_fit_[ilayer]  = fitval.ppz;
 	ez_prop_fit_[ilayer] = fitval.eppz;
 
 	pphi_hit_fit_[ilayer]   = hit.phi();
 	epphi_hit_fit_[ilayer]  = std::sqrt(hit.ephi());
-	pphi_sim_fit_[ilayer]   = initTS.posPhi();
-	epphi_sim_fit_[ilayer]  = initTS.eposPhi();
+	// pphi_sim_fit_[ilayer]   = initTS.posPhi();
+	// epphi_sim_fit_[ilayer]  = initTS.eposPhi();
 	pphi_prop_fit_[ilayer]  = fitval.ppphi;
 	epphi_prop_fit_[ilayer] = fitval.eppphi;
 	
 	pt_up_fit_[ilayer]   = fitval.upt;
 	ept_up_fit_[ilayer]  = fitval.eupt;
-	pt_sim_fit_[ilayer]  = initTS.pT();
-	ept_sim_fit_[ilayer] = initTS.epT();
+	// pt_sim_fit_[ilayer]  = initTS.pT();
+	// ept_sim_fit_[ilayer] = initTS.epT();
 
 	mphi_up_fit_[ilayer]   = fitval.umphi;
 	emphi_up_fit_[ilayer]  = fitval.eumphi;
-	mphi_sim_fit_[ilayer]  = initTS.momPhi();
-	emphi_sim_fit_[ilayer] = initTS.emomPhi();
+	// mphi_sim_fit_[ilayer]  = initTS.momPhi();
+	// emphi_sim_fit_[ilayer] = initTS.emomPhi();
 
 	meta_up_fit_[ilayer]   = fitval.umeta;
 	emeta_up_fit_[ilayer]  = fitval.eumeta;
-	meta_sim_fit_[ilayer]  = initTS.momEta();
-	emeta_sim_fit_[ilayer] = initTS.emomEta();	
+	// meta_sim_fit_[ilayer]  = initTS.momEta();
+	// emeta_sim_fit_[ilayer] = initTS.emomEta();	
       }
     }
     fittree_->Fill();

@@ -53,6 +53,195 @@ int MkFitter::countInvalidHits(int itrack, int end_hit) const
   return result;
 }
 
+/// sorted stuff
+
+void MkFitter::InputTrackGoodLayers(const std::vector<Track>&  tracks,
+				   int beg, int end)
+{
+  int itrack;
+  for (int i = beg; i < end; ++i) 
+  {
+    itrack = i - beg;
+    const Track &trk = tracks[i];
+    
+    int pos = 0;
+    for (int hi = 0; hi < Config::nLayers; ++hi)
+    {
+      const int hidx = trk.getHitIdx(hi);
+      if (hidx<0) continue;
+      GoodLayer[pos++](itrack, 0, 0) = hi;
+    }
+  }
+}
+
+void MkFitter::InputSortedTracksAndHits(const std::vector<Track>&  tracks,
+					const std::vector<HitVec>& layerHits,
+					int beg, int end)
+{
+  int itrack;
+  for (int i = beg; i < end; ++i) 
+  {
+    itrack = i - beg;
+    const Track &trk = tracks[i];
+    
+    Label(itrack, 0, 0) = i;
+    
+    Err[iC].CopyIn(itrack, trk.errors().Array());
+    Par[iC].CopyIn(itrack, trk.parameters().Array());
+    
+    Chg(itrack, 0, 0) = trk.charge();
+    Chi2(itrack, 0, 0) = trk.chi2();
+    
+    for (int hi = 0; hi < Nhits; ++hi)
+    {
+      const int glay = GoodLayer[hi](itrack, 0, 0);
+      const int hidx = trk.getHitIdx(glay);
+      HitsIdx[hi](itrack, 0, 0) = hidx;
+      
+      const Hit &hit = layerHits[glay][hidx];
+      
+      msErr[hi].CopyIn(itrack, hit.errArray());
+      msPar[hi].CopyIn(itrack, hit.posArray());
+    }
+  }
+}
+
+void MkFitter::SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks,
+					  const std::vector<HitVec>& layerHits,
+					  int beg, int end)
+{
+  // Assign track parameters to initial state and copy hit values in.
+
+  const Track &trk = tracks[beg];
+  const char *varr       = (char*) &trk;
+  const int   off_error  = (char*) trk.errors().Array() - varr;
+  const int   off_param  = (char*) trk.parameters().Array() - varr;
+
+  int idx[NN]      __attribute__((aligned(64)));
+  int itrack;
+
+  for (int i = beg; i < end; ++i) 
+  {
+    itrack = i - beg;
+    const Track &trk = tracks[i];
+    
+    Label(itrack, 0, 0) = i;
+    
+    idx[itrack] = (char*) &trk - varr;
+    
+    Chg(itrack, 0, 0) = trk.charge();
+    Chi2(itrack, 0, 0) = trk.chi2();
+  }
+  
+#ifdef MIC_INTRINSICS
+  __m512i vi      = _mm512_load_epi32(idx);
+  Err[iC].SlurpIn(varr + off_error, vi);
+  Par[iC].SlurpIn(varr + off_param, vi);
+#else
+  Err[iC].SlurpIn(varr + off_error, idx);
+  Par[iC].SlurpIn(varr + off_param, idx);
+#endif
+  
+  for (int hi = 0; hi < Nhits; ++hi)
+  {
+    const int   glay      = GoodLayer[hi](0, 0, 0); // beg track is the first loaded in matriplex
+    const int   hidx      = tracks[beg].getHitIdx(glay);
+    const Hit  &hit       = layerHits[glay][hidx];
+    const char *varr      = (char*) &hit;
+    const int   off_error = (char*) hit.errArray() - varr;
+    const int   off_param = (char*) hit.posArray() - varr;
+    
+    for (int i = beg; i < end; ++i)
+    {
+      itrack = i - beg;
+      const int   glay = GoodLayer[hi](itrack, 0, 0);
+      const int   hidx = tracks[i].getHitIdx(glay);
+      const Hit  &hit  = layerHits[glay][hidx];
+      idx[itrack] = (char*) &hit - varr;
+      HitsIdx[hi](itrack, 0, 0) = hidx;
+    }
+    
+#ifdef MIC_INTRINSICS
+    __m512i vi      = _mm512_load_epi32(idx);
+    msErr[hi].SlurpIn(varr + off_error, vi);
+    msPar[hi].SlurpIn(varr + off_param, vi);
+#else
+    msErr[hi].SlurpIn(varr + off_error, idx);
+    msPar[hi].SlurpIn(varr + off_param, idx);
+#endif
+  }
+}
+
+void MkFitter::FitSortedTracks(const int N_proc, const Event * ev, const bool useParamBfield)
+{
+  // Fitting loop.
+
+  for (int hi = 0; hi < Nhits; ++hi)
+  {
+    if (Config::readCmsswSeeds && hi < Config::nlayers_per_seed) continue;
+
+    propagateHelixToRMPlex(Err[iC], Par[iC], Chg, msPar[hi],
+                           Err[iP], Par[iP], N_proc, useParamBfield);
+
+    updateParametersMPlex(Err[iP], Par[iP], Chg, msErr[hi], msPar[hi],
+                          Err[iC], Par[iC], N_proc);
+
+    if (Config::fit_val) MkFitter::CollectSortedFitValidation(hi,N_proc,ev);
+  }
+}
+
+void MkFitter::CollectSortedFitValidation(const int hi, const int N_proc, const Event * ev) const
+{
+  for (int n = 0; n < N_proc; ++n)
+  {
+    const float upt = 1.f/Par[iC](n,3,0);
+    const FitVal tmpfitval
+    {
+      Par[iP].ConstAt(n,2,0),
+      std::sqrt(Err[iP].ConstAt(n,2,2)),
+      getPhi(Par[iP].ConstAt(n,0,0),Par[iP].ConstAt(n,1,0)),
+      std::sqrt(getPhiErr2(Par[iP](n,0,0),Par[iP](n,1,0),Err[iP](n,0,0),Err[iP](n,1,1),Err[iP](n,0,1))),
+      upt,
+      std::sqrt(Err[iC](n,3,3))*upt*upt,
+      Par[iC](n,4,0),
+      std::sqrt(Err[iC](n,4,4)),
+      getEta(Par[iC](n,5,0)),
+      std::sqrt(Err[iC](n,5,5)/std::sin(Par[iC](n,5,0)))
+    };
+    
+    ev->validation_.collectFitInfo(tmpfitval,Label(n,0,0),GoodLayer[hi](n,0,0));
+  }
+}
+
+void MkFitter::OutputSortedFittedTracksAndHitIdx(std::vector<Track>& tracks, int beg, int end,
+						 bool outputProp) const
+{
+  // Copies last track parameters (updated) into Track objects and up to Nhits.
+  // The tracks vector should be resized to allow direct copying.
+
+  const int iO = outputProp ? iP : iC;
+
+  int itrack = 0;
+  for (int i = beg; i < end; ++i, ++itrack)
+  {
+    Err[iO].CopyOut(itrack, tracks[i].errors_nc().Array());
+    Par[iO].CopyOut(itrack, tracks[i].parameters_nc().Array());
+    
+    tracks[i].setCharge(Chg(itrack, 0, 0));
+    tracks[i].setChi2(Chi2(itrack, 0, 0));
+    tracks[i].setLabel(Label(itrack, 0, 0));
+
+    // XXXXX chi2 is not set (also not in SMatrix fit, it seems)
+    
+    tracks[i].resetHits();
+    for (int hi = 0; hi < Nhits; ++hi)
+    {
+      tracks[i].setHitIdx(GoodLayer[hi](itrack, 0, 0),HitsIdx[hi](itrack, 0, 0));
+    }
+    //    tracks[i].setPosIndices();
+  }
+}
+
 //==============================================================================
 
 void MkFitter::InputTracksAndHits(const std::vector<Track>&  tracks,

@@ -38,6 +38,7 @@ struct MkFitter
   MPlexQI SeedIdx;//this is the seed index in local thread (for bookkeeping at thread level)
   MPlexQI CandIdx;//this is the candidate index for the given seed (for bookkeeping of clone engine)
   MPlexQI HitsIdx[Config::nLayers];
+  MPlexQI GoodLayer[Config::nLayers];
 
   // Hold hit indices to explore at current layer.
   MPlexQI     XHitSize;
@@ -75,6 +76,17 @@ public:
   int countInvalidHits(int itrack, int end_hit) const;
   int countValidHits  (int itrack) const { return countValidHits  (itrack, Nhits); }
   int countInvalidHits(int itrack) const { return countInvalidHits(itrack, Nhits); }
+
+  void InputTrackGoodLayers(const std::vector<Track>&  tracks, int beg, int end);
+  void InputSortedTracksAndHits(const std::vector<Track>& tracks, const std::vector<HitVec>& layerHits, int beg, int end);
+  void SlurpInSortedTracksAndHits(const std::vector<Track>&  tracks, const std::vector<HitVec>& layerHits, int beg, int end);
+
+  void FitSortedTracks(const int N_proc, const Event * ev, const bool useParamBfield = false);
+  void CollectSortedFitValidation(const int hi, const int N_proc, const Event * ev) const;
+
+  void OutputSortedFittedTracksAndHitIdx(std::vector<Track>& tracks, int beg, int end, bool outputProp) const;
+  void OutputSortedFittedTracks(std::vector<Track>& tracks, int beg, int end) const
+  { return OutputSortedFittedTracksAndHitIdx(tracks,beg,end,iC); }
 
   void InputTracksAndHits(const std::vector<Track>& tracks, const std::vector<HitVec>& layerHits, int beg, int end);
   void InputTracksAndHits(const std::vector<Track>& tracks, const std::vector<LayerOfHits>& layerHits, int beg, int end);

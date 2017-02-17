@@ -328,25 +328,19 @@ void test_standard()
         ev.resetLayerHitMap(true);
       }
 
-      plex_tracks.resize(ev.simTracks_.size());
-
       double t_best[NT] = {0}, t_cur[NT];
       simtrackstot += ev.simTracks_.size();
       seedstot += ev.seedTracks_.size();
 
+      /////// For now, copy seeds into fit tracks ///////
+      ev.fitTracks_ = ev.seedTracks_;
+
       for (int b = 0; b < Config::finderReportBestOutOfN; ++b)
       {
-  #ifndef USE_CUDA
-        t_cur[0] = (g_run_fit_std) ? runFittingTestPlex(ev, plex_tracks) : 0;
-  #else
-        FitterCU<float> cuFitter(NN);
-        cuFitter.allocateDevice();
-        t_cur[0] = (g_run_fit_std) ? runFittingTestPlexGPU(cuFitter, ev, plex_tracks) : 0;
-        cuFitter.freeDevice();
-  #endif
-        t_cur[1] = (g_run_build_all || g_run_build_bh)  ? runBuildingTestPlexBestHit(ev, mkb) : 0;
-        t_cur[2] = (g_run_build_all || g_run_build_std) ? runBuildingTestPlexStandard(ev, ev_tmp, mkb) : 0;
-        t_cur[3] = (g_run_build_all || g_run_build_ce)  ? runBuildingTestPlexCloneEngine(ev, ev_tmp, mkb) : 0;
+	//        t_cur[1] = (g_run_build_all || g_run_build_bh)  ? runBuildingTestPlexBestHit(ev, mkb) : 0;
+	//        t_cur[2] = runBuildingTestPlexStandard(ev, ev_tmp, mkb);
+        t_cur[3] = (g_run_build_bh) ? runBuildingTestPlexCloneEngine(ev, ev_tmp, mkb) : 0;
+	t_cur[0] = (g_run_fit_std)  ? runFittingTestPlexSortedBuiltTracks(ev, plex_tracks) : 0;
 
         for (int i = 0; i < NT; ++i) t_best[i] = (b == 0) ? t_cur[i] : std::min(t_cur[i], t_best[i]);
 
@@ -374,7 +368,7 @@ void test_standard()
       for (int i = 0; i < NT; ++i) t_sum[i] += t_best[i];
       if (evt > 0) for (int i = 0; i < NT; ++i) t_skip[i] += t_best[i];
 
-      if (g_run_fit_std) make_validation_tree("validation-plex.root", ev.simTracks_, plex_tracks);
+      //      if (g_run_fit_std) make_validation_tree("validation-plex.root", ev.simTracks_, plex_tracks);
     }
   }, tbb::simple_partitioner());
 

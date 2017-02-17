@@ -428,9 +428,33 @@ void MkBuilder::quality_output_COMB()
 {
   quality_reset();
 
+  remap_seed_hits();
+
   quality_store_tracks_COMB();
 
   remap_cand_hits();
+
+  for (auto&& fittrack : m_event->fitTracks_)
+  {
+    for (auto&& candtrack : m_event->candidateTracks_)
+    {
+      int nhits = 0;
+      if (candtrack.label() != fittrack.label()) continue;
+      for (int ilay = 0; ilay < Config::nlayers_per_seed; ilay++)
+      {
+	if (candtrack.getHitIdx(ilay) != fittrack.getHitIdx(ilay)) break;
+	nhits++;
+      }
+      if (nhits == Config::nlayers_per_seed)
+      {
+	for (int ilay = Config::nlayers_per_seed; ilay < Config::nLayers; ilay++)
+	{
+	  fittrack.setHitIdx(ilay,candtrack.getHitIdx(ilay));
+	}
+	break;
+      }
+    }
+  }
 
   align_simtracks();
 
