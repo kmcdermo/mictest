@@ -434,6 +434,7 @@ void MkBuilder::quality_output_COMB()
 
   remap_cand_hits();
 
+  int itk = 0;
   for (auto&& fittrack : m_event->fitTracks_)
   {
     for (auto&& candtrack : m_event->candidateTracks_)

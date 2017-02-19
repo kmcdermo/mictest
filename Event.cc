@@ -432,7 +432,8 @@ void Event::read_in(FILE *fp, int version)
   fread(&simTracks_[0], sizeof(Track), nt, fp);
   Config::nTracks = nt;
 
-  if (Config::normal_val || Config::fit_val) {
+  //  if (Config::normal_val || Config::fit_val) {
+  if (Config::normal_val) {
     simTrackStates_.resize(nt);
     for (int it = 0; it<nt; ++it) {
       int nts;

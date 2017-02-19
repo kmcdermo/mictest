@@ -35,6 +35,11 @@ inline bool sortByLessNhits(const Track& track1, const Track& track2){return tra
 
 void prepFitTracks(std::vector<Track>& fittracks, std::map<int,int>& nHitsToTks)
 {
+  for (auto&& fittrack : fittracks)
+  {
+    fittrack.setNGoodHitIdx();
+  }
+
   std::sort(fittracks.begin(),fittracks.end(),sortByLessNhits);
   std::map<int,int> rawCounts;
   for (auto&& fittrack : fittracks)
@@ -212,8 +217,8 @@ double runFittingTestPlexSortedBuiltTracks(Event& ev, std::vector<Track>& plextr
   __itt_resume();
 #endif
 
-  std::vector<Track>& fittracks = ev.fitTracks_;
-  
+  std::vector<Track>& fittracks = ev.fitTracks_;  
+
   double time = dtime();
 
   std::map<int,int> nHitsToTks;
@@ -221,42 +226,42 @@ double runFittingTestPlexSortedBuiltTracks(Event& ev, std::vector<Track>& plextr
   plextracks.resize(fittracks.size());
 
   tbb::parallel_for(tbb::blocked_range<int>(Config::nlayers_per_seed, Config::nLayers+1),
-   [&](const tbb::blocked_range<int>& nhits)
-   {
-     for (int nhit = nhits.begin(); nhit != nhits.end(); ++nhit)
-     {	
-       const int theBeg = ((nhit != Config::nlayers_per_seed) ? nHitsToTks[nhit-1] : 0);
-       const int theEnd = nHitsToTks[nhit];
-       const int count  = (theEnd - theBeg + NN - 1)/NN;
-       
-       tbb::parallel_for(tbb::blocked_range<int>(0, count, std::max(1, Config::numSeedsPerTask/NN)),
+    [&](const tbb::blocked_range<int>& nhits)
+  {
+    for (int nhit = nhits.begin(); nhit != nhits.end(); ++nhit)
+    {	
+      const int theBeg = ((nhit != Config::nlayers_per_seed) ? nHitsToTks[nhit-1] : 0);
+      const int theEnd = nHitsToTks[nhit];
+      const int count  = (theEnd - theBeg + NN - 1)/NN;
+
+      tbb::parallel_for(tbb::blocked_range<int>(0, count, std::max(1, Config::numSeedsPerTask/NN)),
         [&](const tbb::blocked_range<int>& i)
+      {
+	std::unique_ptr<MkFitter, decltype(retfitr)> mkfp(g_exe_ctx.m_fitters.GetFromPool(), retfitr);
+	mkfp->SetNhits(nhit);
+	for (int it = i.begin(); it < i.end(); ++it)
         {
-	  std::unique_ptr<MkFitter, decltype(retfitr)> mkfp(g_exe_ctx.m_fitters.GetFromPool(), retfitr);
-	  mkfp->SetNhits(nhit);
-	  for (int it = i.begin(); it < i.end(); ++it)
+	  int itrack = theBeg+it*NN;
+	  int end = itrack + NN;
+
+	  // copy/slurp In equivalents
+	  if (theEnd < end) 
 	  {
-	    int itrack = theBeg+it*NN;
-	    int end = itrack + NN;
-	    
-	    // copy/slurp In equivalents
-	    if (theEnd < end) 
-	    {
-	      end = theEnd;
-	      mkfp->InputTrackGoodLayers(fittracks, itrack, end);
-	      mkfp->InputSortedTracksAndHits(fittracks, ev.layerHits_, itrack, end);
-	    } 
-	    else 
-            {
-	      mkfp->InputTrackGoodLayers(fittracks, itrack, end);
-	      mkfp->SlurpInSortedTracksAndHits(fittracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
-	    }
-	    mkfp->FitSortedTracks(end - itrack, &ev, true);
-	    mkfp->OutputSortedFittedTracks(plextracks, itrack, end);
+	    end = theEnd;
+	    mkfp->InputTrackGoodLayers(fittracks, itrack, end);
+	    mkfp->InputSortedTracksAndHits(fittracks, ev.layerHits_, itrack, end);
+	  } 
+	  else 
+          {
+	    mkfp->InputTrackGoodLayers(fittracks, itrack, end);
+	    mkfp->SlurpInSortedTracksAndHits(fittracks, ev.layerHits_, itrack, end); // only safe for a full matriplex
 	  }
-	});
-     }
-   });
+	  mkfp->FitSortedTracks(end - itrack, &ev, true);
+	  mkfp->OutputSortedFittedTracks(plextracks, itrack, end);
+	}
+      });
+    }
+  });
   
   time = dtime() - time;
 
