@@ -5,9 +5,11 @@
 #include "EventTmp.h"
 #include "Track.h"
 
+#include <fstream>
+
 class MkBuilder;
 
-double runBuildingTestPlexBestHit(Event& ev, MkBuilder& builder);
+double runBuildingTestPlexBestHit(Event& ev, MkBuilder& builder, std::ofstream& times);
 double runBuildingTestPlexStandard(Event& ev, EventTmp& ev_tmp, MkBuilder& builder);
 double runBuildingTestPlexCloneEngine(Event& ev, EventTmp& evtmp, MkBuilder& builder);
 

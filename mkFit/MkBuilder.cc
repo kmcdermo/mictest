@@ -201,7 +201,7 @@ void MkBuilder::end_event()
 // Seeding functions: finding and fitting
 //------------------------------------------------------------------------------
 
-int MkBuilder::find_seeds()
+double MkBuilder::find_seeds(std::ofstream & times)
 {
 #ifdef DEBUG
   bool debug(false);
@@ -212,6 +212,9 @@ int MkBuilder::find_seeds()
   findSeedsByRoadSearch(seed_idcs,m_event_of_hits.m_layers_of_hits,m_event->layerHits_[1].size(),m_event);
   time = dtime() - time;
 
+  times << time << ",";
+  time = dtime();
+
   // use this to initialize tracks
   const Hit * lay0hits = m_event_of_hits.m_layers_of_hits[0].m_hits;
   const Hit * lay1hits = m_event_of_hits.m_layers_of_hits[1].m_hits;
@@ -220,31 +223,39 @@ int MkBuilder::find_seeds()
   // make seed tracks
   TrackVec & seedtracks = m_event->seedTracks_;
   seedtracks.resize(seed_idcs.size());
-  for (int iseed = 0; iseed < seedtracks.size(); iseed++)
+
+  tbb::parallel_for(tbb::blocked_range<int>(0, seedtracks.size(), std::max(1, Config::numSeedsPerTask)),
+    [&](const tbb::blocked_range<int>& i) 
   {
-    auto & seedtrack = seedtracks[iseed];
-    seedtrack.setLabel(iseed);
-
-    // use to set charge
-    const Hit & hit0 = lay0hits[seed_idcs[iseed][0]];
-    const Hit & hit1 = lay1hits[seed_idcs[iseed][1]];
-    const Hit & hit2 = lay2hits[seed_idcs[iseed][2]];
-
-    seedtrack.setCharge(calculateCharge(hit0,hit1,hit2));
-
-    for (int ihit = 0; ihit < Config::nlayers_per_seed; ihit++)
+    for (int iseed = i.begin(); iseed < i.end(); iseed++)
     {
-      seedtrack.addHitIdx(seed_idcs[iseed][ihit],0.0f);
-    }
+      auto & seedtrack = seedtracks[iseed];
+      seedtrack.setLabel(iseed);
 
-    for (int ihit = Config::nlayers_per_seed; ihit < Config::nLayers; ihit++)
-    {
-      seedtrack.setHitIdx(ihit,-1);
+      // use to set charge
+      const Hit & hit0 = lay0hits[seed_idcs[iseed][0]];
+      const Hit & hit1 = lay1hits[seed_idcs[iseed][1]];
+      const Hit & hit2 = lay2hits[seed_idcs[iseed][2]];
+      
+      seedtrack.setCharge(calculateCharge(hit0,hit1,hit2));
+      
+      for (int ihit = 0; ihit < Config::nlayers_per_seed; ihit++)
+      {
+	seedtrack.addHitIdx(seed_idcs[iseed][ihit],0.0f);
+      }
+      
+      for (int ihit = Config::nlayers_per_seed; ihit < Config::nLayers; ihit++)
+      {
+	seedtrack.setHitIdx(ihit,-1);
+      }
+      
+      dprint("iseed: " << iseed << " mcids: " << hit0.mcTrackID(m_event->simHitsInfo_) << " " <<
+	     hit1.mcTrackID(m_event->simHitsInfo_) << " " << hit1.mcTrackID(m_event->simHitsInfo_));
     }
-    
-    dprint("iseed: " << iseed << " mcids: " << hit0.mcTrackID(m_event->simHitsInfo_) << " " <<
-	   hit1.mcTrackID(m_event->simHitsInfo_) << " " << hit1.mcTrackID(m_event->simHitsInfo_));
-  }
+  });
+  
+  times << (dtime()-time) << ",";
+
   return time;
 }
 

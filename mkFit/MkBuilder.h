@@ -2,7 +2,7 @@
 #define MkBuilder_h
 
 #include <vector>
-
+#include <fstream>
 //------------------------------------------------------------------------------
 
 #include "MkFitter.h"
@@ -57,7 +57,7 @@ public:
 
   virtual void begin_event(Event* ev, EventTmp* ev_tmp, const char* build_type);
 
-  int find_seeds();
+  double find_seeds(std::ofstream& times);
   virtual void fit_seeds();
 
   void end_event();

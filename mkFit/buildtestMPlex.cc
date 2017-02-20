@@ -74,14 +74,22 @@ inline bool sortByZ(const Hit& hit1, const Hit& hit2)
 // runBuildTestPlexBestHit
 //==============================================================================
 
-double runBuildingTestPlexBestHit(Event& ev, MkBuilder& builder)
+double runBuildingTestPlexBestHit(Event& ev, MkBuilder& builder, std::ofstream& times)
 {
   builder.begin_event(&ev, 0, __func__);
 
-  if   (Config::findSeeds) {builder.find_seeds();}
+  if   (Config::findSeeds) {builder.find_seeds(times);}
   else                     {builder.map_seed_hits();} // all other simulated seeds need to have hit indices line up in LOH for seed fit
 
+  double time0 = dtime();
   builder.fit_seeds();
+  time0 = dtime() - time0;
+
+  times << time0 << std::endl;
+
+  builder.end_event();
+
+  return time0;
 
   EventOfCandidates event_of_cands;
   builder.find_tracks_load_seeds(event_of_cands);
@@ -133,7 +141,7 @@ double runBuildingTestPlexStandard(Event& ev, EventTmp& ev_tmp, MkBuilder& build
 
   builder.begin_event(&ev, &ev_tmp, __func__);
 
-  if   (Config::findSeeds) {builder.find_seeds();}
+  if   (Config::findSeeds) {}
   else                     {builder.map_seed_hits();} // all other simulated seeds need to have hit indices line up in LOH for seed fit
 
   builder.fit_seeds();
@@ -174,7 +182,7 @@ double runBuildingTestPlexCloneEngine(Event& ev, EventTmp& ev_tmp, MkBuilder& bu
 
   builder.begin_event(&ev, &ev_tmp, __func__);
 
-  if   (Config::findSeeds) {builder.find_seeds();}
+  if   (Config::findSeeds) {}
   else                     {builder.map_seed_hits();} // all other simulated seeds need to have hit indices line up in LOH for seed fit
 
   builder.fit_seeds();

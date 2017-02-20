@@ -23,6 +23,9 @@
 #include "Validation.h"
 #endif
 
+#include <fstream>
+#include <string>
+
 #ifdef USE_CUDA
 #include "FitterCU.h"
 #include "gpu_utils.h"
@@ -164,6 +167,16 @@ void close_simtrack_file()
 
 void test_standard()
 {
+  std::ofstream times;
+  //  const int NNN = MPT_SIZE;
+  std::string name = "seedingtimes_nTH" + std::to_string(Config::numThreadsFinder) + "_nVU" + std::to_string(NN) + "_nTk" + std::to_string(Config::nTracks) + ".txt";
+  // name.append(Config::numThreadsFinder);
+  // name.append("_nVU"+NN);
+  // name.append("_nTks"+Config::nTracks);
+  // name.append(".txt");
+
+  times.open(name.c_str(),std::ios::trunc);
+
   // ---- MT test eta bins
   // int nb, b1, b2;
   // for (float eta = -1.2; eta <= 1.2; eta += 0.01)
@@ -344,7 +357,7 @@ void test_standard()
         t_cur[0] = (g_run_fit_std) ? runFittingTestPlexGPU(cuFitter, ev, plex_tracks) : 0;
         cuFitter.freeDevice();
   #endif
-        t_cur[1] = (g_run_build_all || g_run_build_bh)  ? runBuildingTestPlexBestHit(ev, mkb) : 0;
+        t_cur[1] = (g_run_build_all || g_run_build_bh)  ? runBuildingTestPlexBestHit(ev, mkb, times) : 0;
         t_cur[2] = (g_run_build_all || g_run_build_std) ? runBuildingTestPlexStandard(ev, ev_tmp, mkb) : 0;
         t_cur[3] = (g_run_build_all || g_run_build_ce)  ? runBuildingTestPlexCloneEngine(ev, ev_tmp, mkb) : 0;
 
@@ -401,6 +414,8 @@ void test_standard()
   for (auto& val : vals) {
     val->saveTTrees();
   }
+
+  times.close();
 }
 
 //==============================================================================
