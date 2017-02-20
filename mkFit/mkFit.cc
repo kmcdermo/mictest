@@ -167,16 +167,6 @@ void close_simtrack_file()
 
 void test_standard()
 {
-  std::ofstream times;
-  //  const int NNN = MPT_SIZE;
-  std::string name = "seedingtimes_nTH" + std::to_string(Config::numThreadsFinder) + "_nVU" + std::to_string(NN) + "_nTk" + std::to_string(Config::nTracks) + ".txt";
-  // name.append(Config::numThreadsFinder);
-  // name.append("_nVU"+NN);
-  // name.append("_nTks"+Config::nTracks);
-  // name.append(".txt");
-
-  times.open(name.c_str(),std::ios::trunc);
-
   // ---- MT test eta bins
   // int nb, b1, b2;
   // for (float eta = -1.2; eta <= 1.2; eta += 0.01)
@@ -222,6 +212,10 @@ void test_standard()
   initGeom(geom);
 
   if (Config::useCMSGeom) fillZRgridME();
+
+  std::ofstream times;
+  std::string name = "seedingtimes_nTH" + std::to_string(Config::numThreadsFinder) + "_nVU" + std::to_string(NN) + "_nTk" + std::to_string(Config::nTracks) + ".txt";
+  times.open(name.c_str(),std::ios::trunc);
 
   const int NT = 4;
   double t_sum[NT] = {0};
