@@ -207,31 +207,42 @@ double MkBuilder::find_seeds(std::ofstream & times)
   bool debug(false);
 #endif
   TripletIdxConVec seed_idcs;
+  //  TripletIdxConVec g_seed_idcs;
 
   double time = dtime();
   findSeedsByRoadSearch(seed_idcs,m_event_of_hits.m_layers_of_hits,m_event->layerHits_[1].size(),m_event);
+  //  findSeedsByRoadSearch(g_seed_idcs,m_event_of_hits.m_layers_of_hits,m_event->layerHits_[1].size(),m_event);
   time = dtime() - time;
 
   times << time << ",";
   time = dtime();
 
+  TrackVec & seedtracks = m_event->seedTracks_;
+  seedtracks.resize(seed_idcs.size());
   // use this to initialize tracks
   const Hit * lay0hits = m_event_of_hits.m_layers_of_hits[0].m_hits;
   const Hit * lay1hits = m_event_of_hits.m_layers_of_hits[1].m_hits;
   const Hit * lay2hits = m_event_of_hits.m_layers_of_hits[2].m_hits;
 
-  // make seed tracks
-  TrackVec & seedtracks = m_event->seedTracks_;
-  seedtracks.resize(seed_idcs.size());
-
-  tbb::parallel_for(tbb::blocked_range<int>(0, seedtracks.size(), std::max(1, Config::numSeedsPerTask)),
+  tbb::parallel_for(tbb::blocked_range<int>(0, m_event->seedTracks_.size(), std::max(1, Config::numSeedsPerTask)),
     [&](const tbb::blocked_range<int>& i) 
   {
+    // const TripletIdxConVec & seed_idcs = g_seed_idcs;
+
+    // // use this to initialize tracks
+    // const Hit * lay0hits = m_event_of_hits.m_layers_of_hits[0].m_hits;
+    // const Hit * lay1hits = m_event_of_hits.m_layers_of_hits[1].m_hits;
+    // const Hit * lay2hits = m_event_of_hits.m_layers_of_hits[2].m_hits;
+    
+    // TrackVec seedtracks(i.end()-i.begin());
     for (int iseed = i.begin(); iseed < i.end(); iseed++)
     {
-      auto & seedtrack = seedtracks[iseed];
-      seedtrack.setLabel(iseed);
+      //      const int itrack = iseed - i.begin();
+      //      Track & seedtrack = seedtracks[itrack];
 
+      Track & seedtrack = seedtracks[iseed];
+      seedtrack.setLabel(iseed);
+      
       // use to set charge
       const Hit & hit0 = lay0hits[seed_idcs[iseed][0]];
       const Hit & hit1 = lay1hits[seed_idcs[iseed][1]];
@@ -253,8 +264,9 @@ double MkBuilder::find_seeds(std::ofstream & times)
 	     hit1.mcTrackID(m_event->simHitsInfo_) << " " << hit1.mcTrackID(m_event->simHitsInfo_));
     }
   });
-  
-  times << (dtime()-time) << ",";
+  time = dtime()-time;
+
+  times << time << ",";
 
   return time;
 }
