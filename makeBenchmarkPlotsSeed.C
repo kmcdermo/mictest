@@ -14,8 +14,8 @@ void makeBenchmarkPlotsSeed(bool isKNC)
   std::vector<TString> tests  = {"triplets","merge","seeding","fit","full"};
   std::vector<TString> stests = {"Triplet Finding Only","Triplets to Tracks Only","Seeding Only","Seed Fit Only (CF + KF fit)","Seed Finding + Fitting"};
 
-  float maxth = 24;
-  float maxvu = 8;
+  float maxth = (isKNC)?240:24;
+  float maxvu = (isKNC)?16:8;
   TString nth = "1"; // isMic?"60":"12"; // for multithreaded VU tests
   TString nvu = Form("%i",int(maxvu));
 
@@ -29,7 +29,7 @@ void makeBenchmarkPlotsSeed(bool isKNC)
     // TGraphErrors* g_1000_VU  = (TGraphErrors*) f->Get(Form("g_%s_nTk1000_VU",tests[i].Data()));
     // TGraphErrors* g_5000_VU  = (TGraphErrors*) f->Get(Form("g_%s_nTk5000_VU",tests[i].Data()));
     // TGraphErrors* g_10000_VU = (TGraphErrors*) f->Get(Form("g_%s_nTk10000_VU",tests[i].Data()));
-    // g_1000_VU->SetTitle(Form("%s Vectorization Benchmark on %s [nTH="+nth+"]",stests[i].Data(),shORm[i].Data()));
+    // g_1000_VU->SetTitle(Form("%s Vectorization Benchmark on %s [nTH="+nth+"]",stests[i].Data(),shORm.Data()));
     // g_1000_VU->GetXaxis()->SetTitle("Matriplex Vector Width [floats]");
     // g_1000_VU->GetYaxis()->SetTitle("Average Time per Event [s]");
     // g_1000_VU->GetXaxis()->SetRangeUser(1,maxvu);
@@ -66,7 +66,7 @@ void makeBenchmarkPlotsSeed(bool isKNC)
     // TGraphErrors* g_1000_VU_speedup  = (TGraphErrors*) f->Get(Form("g_%s_nTk1000_VU_speedup",tests[i].Data()));
     // TGraphErrors* g_5000_VU_speedup  = (TGraphErrors*) f->Get(Form("g_%s_nTk5000_VU_speedup",tests[i].Data()));
     // TGraphErrors* g_10000_VU_speedup = (TGraphErrors*) f->Get(Form("g_%s_nTk10000_VU_speedup",tests[i].Data()));
-    // g_1000_VU_speedup->SetTitle(Form("%s Vectorization Speedup on %s [nTH="+nth+"]",stests[i].Data(),shORm[i].Data()));
+    // g_1000_VU_speedup->SetTitle(Form("%s Vectorization Speedup on %s [nTH="+nth+"]",stests[i].Data(),shORm.Data()));
     // g_1000_VU_speedup->GetXaxis()->SetTitle("Matriplex Vector Width [floats]");
     // g_1000_VU_speedup->GetYaxis()->SetTitle("Speedup");
     // g_1000_VU_speedup->GetXaxis()->SetRangeUser(1,maxvu);
@@ -105,7 +105,7 @@ void makeBenchmarkPlotsSeed(bool isKNC)
     TGraphErrors* g_1000_TH  = (TGraphErrors*) f->Get(Form("g_%s_nTk1000_TH",tests[i].Data()));
     TGraphErrors* g_5000_TH  = (TGraphErrors*) f->Get(Form("g_%s_nTk5000_TH",tests[i].Data()));
     TGraphErrors* g_10000_TH = (TGraphErrors*) f->Get(Form("g_%s_nTk10000_TH",tests[i].Data()));
-    g_1000_TH->SetTitle(Form("%s Parallelization Benchmark on %s [nVU="+nvu+"]",stests[i].Data(),shORm[i].Data()));
+    g_1000_TH->SetTitle(Form("%s Parallelization Benchmark on %s [nVU="+nvu+"]",stests[i].Data(),shORm.Data()));
     g_1000_TH->GetXaxis()->SetTitle("Number of Threads");
     g_1000_TH->GetYaxis()->SetTitle("Average Time per Event [s]");
     g_1000_TH->GetXaxis()->SetRangeUser(1,maxth);
@@ -143,7 +143,7 @@ void makeBenchmarkPlotsSeed(bool isKNC)
     TGraphErrors* g_1000_TH_speedup  = (TGraphErrors*) f->Get(Form("g_%s_nTk1000_TH_speedup",tests[i].Data()));
     TGraphErrors* g_5000_TH_speedup  = (TGraphErrors*) f->Get(Form("g_%s_nTk5000_TH_speedup",tests[i].Data()));
     TGraphErrors* g_10000_TH_speedup = (TGraphErrors*) f->Get(Form("g_%s_nTk10000_TH_speedup",tests[i].Data()));
-    g_1000_TH_speedup->SetTitle(Form("%s Parallelization Speedup on %s [nVU="+nvu+"]",stests[i].Data(),shORm[i].Data()));
+    g_1000_TH_speedup->SetTitle(Form("%s Parallelization Speedup on %s [nVU="+nvu+"]",stests[i].Data(),shORm.Data()));
     g_1000_TH_speedup->GetXaxis()->SetTitle("Number of Threads");
     g_1000_TH_speedup->GetYaxis()->SetTitle("Speedup");
     g_1000_TH_speedup->GetXaxis()->SetRangeUser(1,maxth);
