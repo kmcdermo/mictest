@@ -1,6 +1,5 @@
 #! /bin/bash
 
-make clean
 make -j 12
 
 dir=/data/nfsmic/kmcdermo/toymc/seedtests/
