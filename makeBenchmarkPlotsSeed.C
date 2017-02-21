@@ -30,7 +30,7 @@ void makeBenchmarkPlotsSeed()
     g_1000_VU->GetXaxis()->SetTitle("Matriplex Vector Width [floats]");
     g_1000_VU->GetYaxis()->SetTitle("Average Time per Event [s]");
     g_1000_VU->GetXaxis()->SetRangeUser(1,maxvu);
-    g_1000_VU->GetYaxis()->SetRangeUser(0,0.5);
+    g_1000_VU->GetYaxis()->SetRangeUser(0.0001,10.0);
     g_1000_VU->SetLineWidth(2);
     g_5000_VU->SetLineWidth(2);
     g_10000_VU->SetLineWidth(2);
@@ -53,6 +53,7 @@ void makeBenchmarkPlotsSeed()
     leg_VU->AddEntry(g_10000_VU,"10000 Tks/Ev","LP");
     leg_VU->Draw();
     c1.SetGridy();
+    c1.SetLogy();
     c1.Update();
     c1.SaveAs(Form("%s_vu_time.png",tests[i].Data()));
     delete leg_VU;
@@ -106,7 +107,7 @@ void makeBenchmarkPlotsSeed()
     g_1000_TH->GetXaxis()->SetTitle("Number of Threads");
     g_1000_TH->GetYaxis()->SetTitle("Average Time per Event [s]");
     g_1000_TH->GetXaxis()->SetRangeUser(1,maxth);
-    g_1000_TH->GetYaxis()->SetRangeUser(0.001,0.5);
+    g_1000_TH->GetYaxis()->SetRangeUser(0.0001,10.0);
     g_1000_TH->SetLineWidth(2);
     g_5000_TH->SetLineWidth(2);
     g_10000_TH->SetLineWidth(2);
@@ -173,5 +174,4 @@ void makeBenchmarkPlotsSeed()
     c4.SaveAs(Form("%s_th_speedup.png",tests[i].Data()));
     delete leg_TH_speedup;
   }
-
 }
