@@ -14,6 +14,9 @@ do
     ssh mic0 ./mkFit-mic --read --file-name ${micdir}/simtracks_10kx10.bin --num-tracks 10000 --build-bh --find-seeds --num-thr ${nth} >& log.txt
 done
 
+scp kmcdermo@mic0:~/seedingtimes*.txt .
+rename seedingtimes seedingtimes_knc seedingtimes*.txt
+
 # sed -i 's/# USE_INTRINSICS := -DMPT_SIZE=1/USE_INTRINSICS := -DMPT_SIZE=XX/g' Makefile.config
 # for nvu in 1 2 4 8 16
 # do

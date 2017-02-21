@@ -14,6 +14,8 @@ do
     ./mkFit/mkFit --read --file-name ${dir}/simtracks_10kx10.bin --num-tracks 10000 --build-bh --find-seeds --num-thr ${nth} >& log.txt
 done
 
+rename seedingtimes seedingtimes_snb seedingtimes*.txt
+
 # sed -i 's/# USE_INTRINSICS := -DMPT_SIZE=1/USE_INTRINSICS := -DMPT_SIZE=XX/g' Makefile.config
 # for nvu in 1 2 4 8
 # do
