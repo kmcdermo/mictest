@@ -214,7 +214,11 @@ void test_standard()
   if (Config::useCMSGeom) fillZRgridME();
 
   std::ofstream times;
-  std::string name = "seedingtimes_nTH" + std::to_string(Config::numThreadsFinder) + "_nVU" + std::to_string(NN) + "_nTk" + std::to_string(Config::nTracks) + ".txt";
+  std::string nvu  = "_nVU" + std::to_string(NN);
+#ifdef MPLEX_USE_INTRINSICS
+  nvu.append("int");
+#endif
+  std::string name = "seedingtimes_nTH" + std::to_string(Config::numThreadsFinder) + nvu + "_nTk" + std::to_string(Config::nTracks) + ".txt";
   times.open(name.c_str(),std::ios::trunc);
 
   const int NT = 4;
