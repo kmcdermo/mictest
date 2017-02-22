@@ -16,6 +16,9 @@
 
 ExecutionContext g_exe_ctx;
 
+
+typedef tbb::concurrent_vector<Track> TrackConVec;
+
 namespace
 {
   auto retcand = [](CandCloner* cloner) { g_exe_ctx.m_cloners.ReturnToPool(cloner); };
@@ -207,14 +210,13 @@ double MkBuilder::find_seeds(std::ofstream & times)
   bool debug(false);
 #endif
   TripletIdxConVec seed_idcs;
-  //  TripletIdxConVec g_seed_idcs;
 
   double time = dtime();
   findSeedsByRoadSearch(seed_idcs,m_event_of_hits.m_layers_of_hits,m_event->layerHits_[1].size(),m_event);
-  //  findSeedsByRoadSearch(g_seed_idcs,m_event_of_hits.m_layers_of_hits,m_event->layerHits_[1].size(),m_event);
   time = dtime() - time;
 
-  times << time << ",";
+  times << time << ",0,0" << std::endl;
+  return time;
   time = dtime();
 
   TrackVec & seedtracks = m_event->seedTracks_;
@@ -227,19 +229,8 @@ double MkBuilder::find_seeds(std::ofstream & times)
   tbb::parallel_for(tbb::blocked_range<int>(0, m_event->seedTracks_.size(), std::max(1, Config::numSeedsPerTask)),
     [&](const tbb::blocked_range<int>& i) 
   {
-    // const TripletIdxConVec & seed_idcs = g_seed_idcs;
-
-    // // use this to initialize tracks
-    // const Hit * lay0hits = m_event_of_hits.m_layers_of_hits[0].m_hits;
-    // const Hit * lay1hits = m_event_of_hits.m_layers_of_hits[1].m_hits;
-    // const Hit * lay2hits = m_event_of_hits.m_layers_of_hits[2].m_hits;
-    
-    // TrackVec seedtracks(i.end()-i.begin());
     for (int iseed = i.begin(); iseed < i.end(); iseed++)
     {
-      //      const int itrack = iseed - i.begin();
-      //      Track & seedtrack = seedtracks[itrack];
-
       Track & seedtrack = seedtracks[iseed];
       seedtrack.setLabel(iseed);
       
