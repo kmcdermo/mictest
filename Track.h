@@ -115,6 +115,19 @@ class Track
 public:
   Track() {}
 
+  Track(int label, int chg, int nHits, const int* hitIdxArr) :
+    label_(label)
+  {
+    state_.charge=chg;
+    for (int h = 0; h < nHits; ++h)
+    {
+      addHitIdx(hitIdxArr[h],0.0f);
+    }
+    for (int h = nHits; h < Config::nLayers; ++h){
+      setHitIdx(h,-1);
+    }
+  }
+
   Track(const TrackState& state, float chi2, int label, int nHits, const int* hitIdxArr) :
     state_(state),
     chi2_(chi2),

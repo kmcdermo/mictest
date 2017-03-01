@@ -15,7 +15,7 @@ do
 done
 
 scp kmcdermo@mic0:~/seedingtimes*.txt .
-rename seedingtimes seedingtimes_knc seedingtimes*.txt
+python makeBenchmarkPlotsSeed.py knc
 
 # sed -i 's/# USE_INTRINSICS := -DMPT_SIZE=1/USE_INTRINSICS := -DMPT_SIZE=XX/g' Makefile.config
 # for nvu in 1 2 4 8 16
@@ -35,5 +35,5 @@ rename seedingtimes seedingtimes_knc seedingtimes*.txt
 # done
 # sed -i 's/USE_INTRINSICS := -DMPT_SIZE=XX/# USE_INTRINSICS := -DMPT_SIZE=1/g' Makefile.config
 
-make clean
+#make clean
 

@@ -218,7 +218,14 @@ void test_standard()
 #ifdef MPLEX_USE_INTRINSICS
   nvu.append("int");
 #endif
-  std::string name = "seedingtimes_nTH" + std::to_string(Config::numThreadsFinder) + nvu + "_nTk" + std::to_string(Config::nTracks) + ".txt";
+  std::string device;
+#ifdef __MIC__
+  device.append("_knc");
+#else
+  device.append("_snb");
+#endif
+
+  std::string name = "seedingtimes" + device + "_nTH" + std::to_string(Config::numThreadsFinder) + nvu + "_nTk" + std::to_string(Config::nTracks) + ".txt";
   times.open(name.c_str(),std::ios::trunc);
 
   const int NT = 4;

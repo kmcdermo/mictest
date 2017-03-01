@@ -80,6 +80,8 @@ double runBuildingTestPlexBestHit(Event& ev, MkBuilder& builder, std::ofstream& 
 
   if   (Config::findSeeds) {builder.find_seeds(times);}
   else                     {builder.map_seed_hits();} // all other simulated seeds need to have hit indices line up in LOH for seed fit
+
+  // skip fitting and all the rest
   return 0;
 
   double time0 = dtime();

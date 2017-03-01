@@ -1,6 +1,8 @@
 #include "seedtestMPlex.h"
 #include "tbb/tbb.h"
 
+typedef tbb::concurrent_vector<Track> TrackConVec;
+
 // #define DEBUG
 #include "Debug.h"
 
@@ -29,6 +31,8 @@ inline void intersectThirdLayer(const float a, const float b, const float hit1_x
 
 void findSeedsByRoadSearch(TripletIdxConVec & seed_idcs, std::vector<LayerOfHits>& evt_lay_hits, int lay1_size, Event *& ev)
 {
+  //  TrackConVec seedtracks;
+
 #ifdef DEBUG
   bool debug(false);
 #endif
@@ -37,10 +41,13 @@ void findSeedsByRoadSearch(TripletIdxConVec & seed_idcs, std::vector<LayerOfHits
   LayerOfHits& lay0_hits = evt_lay_hits[0];
   LayerOfHits& lay2_hits = evt_lay_hits[2];
 
-  tbb::parallel_for(tbb::blocked_range<int>(0, lay1_size, std::max(1, Config::numHitsPerTask)),
+  //  int max_size = lay1_size/Config::numThreadsFinder + 1;
+
+  tbb::parallel_for(tbb::blocked_range<int>(0, lay1_size, std::max(1,Config::numHitsPerTask)), //std::max(Config::numHitsPerTask,max_size)),
     [&](const tbb::blocked_range<int>& i) 
   {
-    //    TripletIdxVec temp_thr_seed_idcs;		      
+    //TrackVec tmp_thr_seedtracks;
+    TripletIdxVec temp_thr_seed_idcs;		      
     for (int ihit1 = i.begin(); ihit1 < i.end(); ++ihit1)
     {
       const Hit & hit1   = lay1_hits.m_hits[ihit1];
@@ -113,11 +120,16 @@ void findSeedsByRoadSearch(TripletIdxConVec & seed_idcs, std::vector<LayerOfHits
 	  
 	  dprint(" ihit2: " << ihit2 << " mcTrackID: " << hit2.mcTrackID(ev->simHitsInfo_) << " phi: " << hit2.phi() << " z: " << hit2.z()); 
 	  
-	  //  temp_thr_seed_idcs.emplace_back(TripletIdx{{ihit0,ihit1,ihit2}});
-	  seed_idcs.emplace_back(TripletIdx{{ihit0,ihit1,ihit2}});
+	  // int tmpidcs[3] = {ihit0,ihit1,ihit2};
+	  // int charge = calculateCharge(hit0_x,hit0_y,hit1_x,hit1_y,hit2_x,hit2_y);
+	  // tmp_thr_seedtracks.emplace_back(ihit1,charge,Config::nlayers_per_seed,tmpidcs);
+	  temp_thr_seed_idcs.emplace_back(TripletIdx{{ihit0,ihit1,ihit2}});
+	  //seed_idcs.push_back(TripletIdx{{ihit0,ihit1,ihit2}});
 	} // end loop over third layer matches
       } // end loop over first layer matches
     } // end chunk of hits for parallel for
-    //    seed_idcs.grow_by(temp_thr_seed_idcs.begin(), temp_thr_seed_idcs.end());
+    
+    //seedtracks.grow_by(tmp_thr_seedtracks.begin(), tmp_thr_seedtracks.end());
+    seed_idcs.grow_by(temp_thr_seed_idcs.begin(), temp_thr_seed_idcs.end());
   }); // end parallel for loop over second layer hits
 }

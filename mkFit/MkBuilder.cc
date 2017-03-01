@@ -215,30 +215,43 @@ double MkBuilder::find_seeds(std::ofstream & times)
   findSeedsByRoadSearch(seed_idcs,m_event_of_hits.m_layers_of_hits,m_event->layerHits_[1].size(),m_event);
   time = dtime() - time;
 
-  times << time << ",0,0" << std::endl;
-  return time;
+  times << time << ",";//",0,0" << std::endl; return 0;
   time = dtime();
 
+  // use this to initialize tracks
   TrackVec & seedtracks = m_event->seedTracks_;
   seedtracks.resize(seed_idcs.size());
-  // use this to initialize tracks
+  
+  //  TrackConVec seedtracks;
+
   const Hit * lay0hits = m_event_of_hits.m_layers_of_hits[0].m_hits;
   const Hit * lay1hits = m_event_of_hits.m_layers_of_hits[1].m_hits;
   const Hit * lay2hits = m_event_of_hits.m_layers_of_hits[2].m_hits;
+  
+  int max_size = seedtracks.size()/Config::numThreadsFinder + 1;
 
-  tbb::parallel_for(tbb::blocked_range<int>(0, m_event->seedTracks_.size(), std::max(1, Config::numSeedsPerTask)),
+  tbb::parallel_for(tbb::blocked_range<int>(0, seed_idcs.size(), std::max(1,Config::numSeedsPerTask)),//std::max(Config::numSeedsPerTask,max_size)),//
     [&](const tbb::blocked_range<int>& i) 
   {
+    //    TrackVec tmpseedtracks;//(i.end()-i.begin());
     for (int iseed = i.begin(); iseed < i.end(); iseed++)
     {
+      //      Track seedtrack;// = tmpseedtracks[iseed-i.begin()];
+
       Track & seedtrack = seedtracks[iseed];
-      seedtrack.setLabel(iseed);
+      seedtrack.setLabel(iseed);      
       
+      //      int tmp_idcs[3] = {seed_idcs[iseed][0],seed_idcs[iseed][1],seed_idcs[iseed][2]};
+
       // use to set charge
+      // const Hit & hit0 = lay0hits[tmp_idcs[0]];
+      // const Hit & hit1 = lay1hits[tmp_idcs[1]];
+      // const Hit & hit2 = lay2hits[tmp_idcs[2]];
       const Hit & hit0 = lay0hits[seed_idcs[iseed][0]];
       const Hit & hit1 = lay1hits[seed_idcs[iseed][1]];
       const Hit & hit2 = lay2hits[seed_idcs[iseed][2]];
       
+      //int charge = calculateCharge(hit0,hit1,hit2);
       seedtrack.setCharge(calculateCharge(hit0,hit1,hit2));
       
       for (int ihit = 0; ihit < Config::nlayers_per_seed; ihit++)
@@ -248,16 +261,20 @@ double MkBuilder::find_seeds(std::ofstream & times)
       
       for (int ihit = Config::nlayers_per_seed; ihit < Config::nLayers; ihit++)
       {
-	seedtrack.setHitIdx(ihit,-1);
+      	seedtrack.setHitIdx(ihit,-1);
       }
       
       dprint("iseed: " << iseed << " mcids: " << hit0.mcTrackID(m_event->simHitsInfo_) << " " <<
 	     hit1.mcTrackID(m_event->simHitsInfo_) << " " << hit1.mcTrackID(m_event->simHitsInfo_));
+
+      //tmpseedtracks.emplace_back(iseed,charge,Config::nlayers_per_seed,tmp_idcs);
     }
+
+    //    seedtracks.grow_by(tmpseedtracks.begin(),tmpseedtracks.end());
   });
   time = dtime()-time;
 
-  times << time << ",";
+  times << time << ",0" <<std::endl;
 
   return time;
 }
