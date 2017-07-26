@@ -13,6 +13,8 @@
 #include <functional>
 #include <mutex>
 
+#include "dumpVal.h"
+
 #include "Pool.h"
 
 class TrackerInfo;
@@ -89,6 +91,8 @@ public:
   void quality_print();
 
   void quality_store_tracks_COMB();
+
+  void dump_rec_tracks();
 
   void root_val_BH();
   void root_val_COMB();

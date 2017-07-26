@@ -186,7 +186,11 @@ double runBuildingTestPlexCloneEngine(Event& ev, MkBuilder& builder)
 #endif
 
   if (!Config::root_val) {
-    if (!Config::silent) builder.quality_output_COMB();
+    if (Config::readExtRecTracks) builder.dump_rec_tracks();
+    else
+    {
+      if (!Config::silent) builder.quality_output_COMB();
+    }
   } else {
     builder.root_val_COMB();
   }

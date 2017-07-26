@@ -911,6 +911,14 @@ void MkBuilder::quality_print()
   }
 }
 
+// dump stuff
+void MkBuilder::dump_rec_tracks()
+{
+  remap_cand_hits();
+  quality_store_tracks_COMB();
+  fill_dump(m_event);
+}
+
 //------------------------------------------------------------------------------
 // Root validation
 //------------------------------------------------------------------------------
