@@ -17,8 +17,12 @@ void resetdumpval(dumpval& vals)
 {
   vals.minchi2=-99999.f,vals.meanchi2=-99999.f,vals.maxchi2=-99999.f;
   vals.minchi2_r=-99999.f,vals.meanchi2_r=-99999.f,vals.maxchi2_r=-99999.f;
-  vals.phi=-99999.f,vals.phiMin=-99999.f,vals.phiMax=-99999.f,vals.eta=-99999.f,vals.etaMin=-99999.f,vals.etaMax=-99999.f,vals.pt=-99999.f,vals.ptMin=-99999.f,vals.ptMax=-99999.f;
+  vals.phi=-99999.f,vals.phiMin=-99999.f,vals.phiMax=-99999.f;
+  vals.eta=-99999.f,vals.etaMin=-99999.f,vals.etaMax=-99999.f;
+  vals.pt=-99999.f,vals.ptMin=-99999.f,vals.ptMax=-99999.f;
+  vals.diffPhiMin=-99999.f,vals.diffPhiMax=-99999.f;
   vals.nHits=-99999,vals.nHitsMin=-99999,vals.nHitsMax=-99999,vals.nHitsMatchedMin=-99999,vals.nHitsMatchedMax=-99999;
+  vals.nLayers=-99999,vals.nLayersMin=-99999,vals.nLayersMax=-99999,vals.nLayersMatchedMin=-99999,vals.nLayersMatchedMax=-99999;
   vals.evID=-99999,vals.tkID=-99999,vals.tkIDMin=-99999,vals.tkIDMax=-99999;
 }
 
@@ -46,11 +50,13 @@ void fill_dump(Event * m_event)
 
   for (auto& track : m_event->candidateTracks_)
   {
+    track.sortHitsByLayer();
     if (track.nUniqueLayers() >= 7) nmkFitTks7++;
   }
 
   for (auto& track : m_event->extRecTracks_)
   {
+    track.sortHitsByLayer();
     if (track.nUniqueLayers() >= 7) nCMSSWTks7++;
   }
   stattree->Fill();
@@ -71,6 +77,8 @@ void fill_dump(Event * m_event)
   dumptree->Branch("phi"   ,&vals.phi);
   dumptree->Branch("phiMin",&vals.phiMin);
   dumptree->Branch("phiMax",&vals.phiMax);
+  dumptree->Branch("diffPhiMin",&vals.diffPhiMin);
+  dumptree->Branch("diffPhiMax",&vals.diffPhiMax);
   dumptree->Branch("eta"   ,&vals.eta);
   dumptree->Branch("etaMin",&vals.etaMin);
   dumptree->Branch("etaMax",&vals.etaMax);
@@ -82,6 +90,11 @@ void fill_dump(Event * m_event)
   dumptree->Branch("nHitsMax",&vals.nHitsMax);
   dumptree->Branch("nHitsMatchedMin",&vals.nHitsMatchedMin);
   dumptree->Branch("nHitsMatchedMax",&vals.nHitsMatchedMax);
+  dumptree->Branch("nLayers"   ,&vals.nLayers);
+  dumptree->Branch("nLayersMin",&vals.nLayersMin);
+  dumptree->Branch("nLayersMax",&vals.nLayersMax);
+  dumptree->Branch("nLayersMatchedMin",&vals.nLayersMatchedMin);
+  dumptree->Branch("nLayersMatchedMax",&vals.nLayersMatchedMax);
   dumptree->Branch("evID",&vals.evID);
   dumptree->Branch("tkID"   ,&vals.tkID);
   dumptree->Branch("tkIDMin",&vals.tkIDMin);
@@ -94,20 +107,8 @@ void fill_dump(Event * m_event)
     m_event->extRecTracks_[itrack].setLabel(itrack);
   }
   
-  for (int itrack = 0; itrack < m_event->extRecTracks_.size(); itrack++)
-  {
-    auto& track = m_event->extRecTracks_[itrack];
-    auto& trackextra = m_event->extRecTracksExtra_[itrack];
-    //    std::cout << track.label() << "[" << trackextra.seedID() << "]" << " pt: " << track.pT() << " phi: " << track.momPhi() << " eta: " << track.momEta() << std::endl;
-  }
-
-  //  std::cout << "------------------------" << std::endl;
-
   for (auto& track : m_event->candidateTracks_)
   {
-    // std::cout << std::endl << "++++++++++++++++++++++" << std::endl << std::endl;
-    // std::cout << "mkFit: " << track.label() << " pt: " << track.pT() << " phi: " << track.momPhi() << " eta: " << track.momEta() << std::endl;
-
     resetdumpval(vals);
     vals.evID = m_event->evtID();
 
@@ -120,8 +121,6 @@ void fill_dump(Event * m_event)
     //    diagonalOnly(recoErrs);
     int invFail(0);
     const SMatrixSym33 & recoErrsI = recoErrs.InverseFast(invFail);
-    // if (debug) dumpMatrix(recoErrsI);
-    // std::cout << "======================" << std::endl;
     for (auto& cmsswtrack : m_event->extRecTracks_)
     {
       const SVector3 & simParams = cmsswtrack.parameters().Sub<SVector3>(3);
@@ -129,21 +128,14 @@ void fill_dump(Event * m_event)
       SVector3 diffParams = recoParams - simParams;
       squashPhiGeneral(diffParams);
 
-      //      std::cout << "  cmssw: " << cmsswtrack.label() << std::endl;
       float chi2_r = 0;
       for (int iparam = 0; iparam < diffParams.kSize; iparam++)
       {
 	const float chi2_i = diffParams[iparam]*diffParams[iparam] / recoErrs[iparam][iparam];
-	// std::cout << "   param: " << iparam
-	// 	  << " diff: " <<diffParams[iparam] 
-	// 	  << " err2: " << recoErrs[iparam][iparam] 
-	// 	  << " diff/e2:" << chi2_i << std::endl;
-
 	if (iparam != diffParams.kSize-2) chi2_r += chi2_i;
       }
 
       const float chi2 = computeHelixChi2(simParams,recoParams,recoErrs);
-      //      std::cout << "   chi2: " << chi2 << " chi2_r:" << chi2_reduced << std::endl << std::endl;;
 
       // normalize it
       chi2_r /= 2.f;
@@ -167,8 +159,19 @@ void fill_dump(Event * m_event)
     vals.eta = track.momEta();
     vals.pt = track.pT();
     vals.nHits = track.nFoundHits();
+    vals.nLayers = track.nUniqueLayers();
 
-    //    std::cout << "  " << tmpminlbl << std::endl;
+    std::vector<int> mcHitIDs;
+    std::vector<int> unLayers;
+    int tmplyr = -1;
+    for (int i = 0; i < track.nTotalHits(); i++)
+    {
+      const int lyr = track.getHitLyr(i);
+      const int idx = track.getHitIdx(i);
+      if (idx >= 0) mcHitIDs.push_back(m_event->layerHits_[lyr][idx].mcHitID());
+
+      if (lyr >= 0 && tmplyr != lyr) {tmplyr = lyr; unLayers.push_back(lyr);}
+    }
 
     if (tmpminlbl != -1) 
     {
@@ -178,21 +181,18 @@ void fill_dump(Event * m_event)
       vals.etaMin = trackMin.momEta();
       vals.ptMin = trackMin.pT();
       vals.nHitsMin = trackMin.nFoundHits();
-
-      std::vector<int> mcHitIDs;
-      for (int i = 0; i < track.nTotalHits(); i++)
-      {
-	const int lyr = track.getHitLyr(i);
-	const int idx = track.getHitIdx(i);
-	if (idx >= 0) mcHitIDs.push_back(m_event->layerHits_[lyr][idx].mcHitID());
-      }
+      vals.nLayersMin = trackMin.nUniqueLayers();
 
       std::vector<int> mcHitIDsMin;
+      std::vector<int> unLayersMin;
+      int tmplyrMin = -1;
       for (int i = 0; i < trackMin.nTotalHits(); i++)
       {
 	const int lyr = trackMin.getHitLyr(i);
 	const int idx = trackMin.getHitIdx(i);
 	if (idx >= 0) mcHitIDsMin.push_back(m_event->layerHits_[lyr][idx].mcHitID());
+
+	if (lyr >= 0 && tmplyrMin != lyr) {tmplyrMin = lyr; unLayersMin.push_back(lyr);}
       }
       
       int tmpnHitsMatched = 0;
@@ -202,12 +202,24 @@ void fill_dump(Event * m_event)
 	{  
 	  if (mcHitID == mcHitIDMin) tmpnHitsMatched++;
 	}
-      }
-      
+      }      
       vals.nHitsMatchedMin = tmpnHitsMatched;
-    }
 
-    //    std::cout << "  " << tmpmaxlbl << std::endl;
+      int tmpnLyrsMatched = 0;
+      for (auto lyr : unLayers)
+      {
+	for (auto lyrMin : unLayersMin)
+	{  
+	  if (lyr == lyrMin) tmpnLyrsMatched++;
+	}
+      }
+      vals.nLayersMatchedMin = tmpnLyrsMatched;
+
+      const SVector3 & simParamsMin = trackMin.parameters().Sub<SVector3>(3);
+      SVector3 diffParamsMin = simParamsMin-recoParams;
+      squashPhiGeneral(diffParamsMin);
+      vals.diffPhiMin = diffParamsMin[diffParamsMin.kSize-2];
+    }
 
     if (tmpmaxlbl != -1) 
     {
@@ -217,21 +229,18 @@ void fill_dump(Event * m_event)
       vals.etaMax = trackMax.momEta();
       vals.ptMax = trackMax.pT();
       vals.nHitsMax = trackMax.nFoundHits();
-
-      std::vector<int> mcHitIDs;
-      for (int i = 0; i < track.nTotalHits(); i++)
-      {
-	const int lyr = track.getHitLyr(i);
-	const int idx = track.getHitIdx(i);
-	if (idx >= 0) mcHitIDs.push_back(m_event->layerHits_[lyr][idx].mcHitID());
-      }
+      vals.nLayersMax = trackMax.nUniqueLayers();
 
       std::vector<int> mcHitIDsMax;
+      std::vector<int> unLayersMax;
+      int tmplyrMax = -1;
       for (int i = 0; i < trackMax.nTotalHits(); i++)
       {
 	const int lyr = trackMax.getHitLyr(i);
 	const int idx = trackMax.getHitIdx(i);
 	if (idx >= 0) mcHitIDsMax.push_back(m_event->layerHits_[lyr][idx].mcHitID());
+
+	if (lyr >= 0 && tmplyrMax != lyr) {tmplyrMax = lyr; unLayersMax.push_back(lyr);}
       }
       
       int tmpnHitsMatched = 0;
@@ -242,8 +251,22 @@ void fill_dump(Event * m_event)
 	  if (mcHitID == mcHitIDMax) tmpnHitsMatched++;
 	}
       }
-      
       vals.nHitsMatchedMax = tmpnHitsMatched;
+
+      int tmpnLyrsMatched = 0;
+      for (auto lyr : unLayers)
+      {
+	for (auto lyrMax : unLayersMax)
+	{  
+	  if (lyr == lyrMax) tmpnLyrsMatched++;
+	}
+      }
+      vals.nLayersMatchedMax = tmpnLyrsMatched;
+
+      const SVector3 & simParamsMax = trackMax.parameters().Sub<SVector3>(3);
+      SVector3 diffParamsMax = simParamsMax-recoParams;
+      squashPhiGeneral(diffParamsMax);
+      vals.diffPhiMax = diffParamsMax[diffParamsMax.kSize-2];
     }
 
     dumptree->Fill();
