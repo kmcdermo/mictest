@@ -14,6 +14,6 @@ struct dumpval
 };
 
 void resetdumpval(dumpval& vals);
-void fill_dump(const Event *);
+void fill_dump(Event *);
 
 #endif

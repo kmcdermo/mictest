@@ -2,7 +2,7 @@
 
 #ifdef NO_ROOT
 void resetdumpval(dumpval& vals){}
-void fill_dump(const Event *){}
+void fill_dump(Event *){}
 #else
 
 #include "TFile.h"
@@ -19,7 +19,7 @@ void resetdumpval(dumpval& vals)
   vals.evID=-99999,vals.tkID=-99999,vals.tkIDMin=-99999,vals.tkIDMax=-99999;
 }
 
-void fill_dump(const Event * m_event)
+void fill_dump(Event * m_event)
 {
   std::ostringstream filename;
   filename << "dump_" << m_event->evtID() << ".root";
@@ -79,14 +79,15 @@ void fill_dump(const Event * m_event)
   // relabel recTracks
   for (int itrack = 0; itrack < m_event->extRecTracks_.size(); itrack++)
   {
-    
-
+    m_event->extRecTracksExtra_.emplace_back(m_event->extRecTracks_[itrack].label());
+    m_event->extRecTracks_[itrack].setLabel(itrack);
   }
   
-
-  for (auto& track : m_event->extRecTracks_)
+  for (int itrack = 0; itrack < m_event->extRecTracks_.size(); itrack++)
   {
-    std::cout << track.label() << " pt: " << track.pT() << " phi: " << track.momPhi() << " eta: " << track.momEta() << std::endl;
+    auto& track = m_event->extRecTracks_[itrack];
+    auto& trackextra = m_event->extRecTracksExtra_[itrack];
+    std::cout << track.label() << "[" << trackextra.seedID() << "]" << " pt: " << track.pT() << " phi: " << track.momPhi() << " eta: " << track.momEta() << std::endl;
   }
 
   std::cout << "------------------------" << std::endl;
@@ -111,6 +112,12 @@ void fill_dump(const Event * m_event)
 
       std::cout << "  " << cmsswtrack.label() << " " << chi2 << std::endl;
 
+      int invFail(0);
+      const SMatrixSym33 recoErrsI = recoErrs.InverseFast(invFail);
+      SVector3 diffParams = recoParams - simParams;
+      squashPhi(diffParams);
+      
+      std::cout << "     " << diffParams[diffParams.kSize-2] << std::endl;
 
       if (chi2 < tmpminchi2) {tmpminchi2 = chi2; tmpminlbl = cmsswtrack.label();}
       if (chi2 > tmpmaxchi2) {tmpmaxchi2 = chi2; tmpmaxlbl = cmsswtrack.label();}
