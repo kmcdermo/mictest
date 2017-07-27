@@ -53,8 +53,11 @@ void fill_dump(Event * m_event)
   {
     if (track.nUniqueLayers() >= 7) nCMSSWTks7++;
   }
+  stattree->Fill();
 
+  outfile->cd();
   stattree->Write();
+  delete stattree;
 
   // full dump
   TTree * dumptree = new TTree("dumptree","dumptree");
@@ -114,7 +117,7 @@ void fill_dump(Event * m_event)
 
     const SVector3 & recoParams = track.parameters().Sub<SVector3>(3);
     SMatrixSym33 recoErrs = track.errors().Sub<SMatrixSym33>(3,3);
-    diagonalOnly(recoErrs);
+    //    diagonalOnly(recoErrs);
     int invFail(0);
     const SMatrixSym33 & recoErrsI = recoErrs.InverseFast(invFail);
     // if (debug) dumpMatrix(recoErrsI);
@@ -250,7 +253,6 @@ void fill_dump(Event * m_event)
   outfile->Write();
 
   delete dumptree;
-  delete stattree;
   delete outfile;
 }
 #endif
