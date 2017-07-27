@@ -7,6 +7,8 @@ void fill_dump(Event *){}
 
 #include "TFile.h"
 #include "TTree.h"
+#include "Debug.h"
+#define DEBUG
 
 #include <sstream>
 #include <vector>
@@ -14,6 +16,7 @@ void fill_dump(Event *){}
 void resetdumpval(dumpval& vals)
 {
   vals.minchi2=-99999.f,vals.meanchi2=-99999.f,vals.maxchi2=-99999.f;
+  vals.minchi2_r=-99999.f,vals.meanchi2_r=-99999.f,vals.maxchi2_r=-99999.f;
   vals.phi=-99999.f,vals.phiMin=-99999.f,vals.phiMax=-99999.f,vals.eta=-99999.f,vals.etaMin=-99999.f,vals.etaMax=-99999.f,vals.pt=-99999.f,vals.ptMin=-99999.f,vals.ptMax=-99999.f;
   vals.nHits=-99999,vals.nHitsMin=-99999,vals.nHitsMax=-99999,vals.nHitsMatchedMin=-99999,vals.nHitsMatchedMax=-99999;
   vals.evID=-99999,vals.tkID=-99999,vals.tkIDMin=-99999,vals.tkIDMax=-99999;
@@ -21,6 +24,8 @@ void resetdumpval(dumpval& vals)
 
 void fill_dump(Event * m_event)
 {
+  bool debug = false;
+
   std::ostringstream filename;
   filename << "dump_" << m_event->evtID() << ".root";
   TFile * outfile = TFile::Open(filename.str().c_str(),"recreate");
@@ -57,6 +62,9 @@ void fill_dump(Event * m_event)
   dumptree->Branch("minchi2" ,&vals.minchi2);
   dumptree->Branch("meanchi2",&vals.meanchi2);
   dumptree->Branch("maxchi2" ,&vals.maxchi2);
+  dumptree->Branch("minchi2_r" ,&vals.minchi2_r);
+  dumptree->Branch("meanchi2_r",&vals.meanchi2_r);
+  dumptree->Branch("maxchi2_r" ,&vals.maxchi2_r);
   dumptree->Branch("phi"   ,&vals.phi);
   dumptree->Branch("phiMin",&vals.phiMin);
   dumptree->Branch("phiMax",&vals.phiMax);
@@ -87,47 +95,67 @@ void fill_dump(Event * m_event)
   {
     auto& track = m_event->extRecTracks_[itrack];
     auto& trackextra = m_event->extRecTracksExtra_[itrack];
-    std::cout << track.label() << "[" << trackextra.seedID() << "]" << " pt: " << track.pT() << " phi: " << track.momPhi() << " eta: " << track.momEta() << std::endl;
+    //    std::cout << track.label() << "[" << trackextra.seedID() << "]" << " pt: " << track.pT() << " phi: " << track.momPhi() << " eta: " << track.momEta() << std::endl;
   }
 
-  std::cout << "------------------------" << std::endl;
+  //  std::cout << "------------------------" << std::endl;
 
   for (auto& track : m_event->candidateTracks_)
   {
-    std::cout << std::endl << std::endl;
-    std::cout << track.label() << " pt: " << track.pT() << " phi: " << track.momPhi() << " eta: " << track.momEta() << std::endl;
+    // std::cout << std::endl << "++++++++++++++++++++++" << std::endl << std::endl;
+    // std::cout << "mkFit: " << track.label() << " pt: " << track.pT() << " phi: " << track.momPhi() << " eta: " << track.momEta() << std::endl;
 
     resetdumpval(vals);
     vals.evID = m_event->evtID();
 
     float tmpminchi2 = 1e6; float tmpmaxchi2 = -1e6; float tmpmeanchi2 = 0;
+    float tmpminchi2_r = 1e6; float tmpmaxchi2_r = -1e6; float tmpmeanchi2_r = 0;
     int tmpminlbl = -1, tmpmaxlbl = -1;
 
     const SVector3 & recoParams = track.parameters().Sub<SVector3>(3);
+    SMatrixSym33 recoErrs = track.errors().Sub<SMatrixSym33>(3,3);
+    diagonalOnly(recoErrs);
+    int invFail(0);
+    const SMatrixSym33 & recoErrsI = recoErrs.InverseFast(invFail);
+    // if (debug) dumpMatrix(recoErrsI);
+    // std::cout << "======================" << std::endl;
     for (auto& cmsswtrack : m_event->extRecTracks_)
     {
       const SVector3 & simParams = cmsswtrack.parameters().Sub<SVector3>(3);
-      const SMatrixSym33 & recoErrs = track.errors().Sub<SMatrixSym33>(3,3);
-      const float chi2 = computeHelixChi2(simParams,recoParams,recoErrs);
-
-      std::cout << "  " << cmsswtrack.label() << " " << chi2 << std::endl;
-
-      int invFail(0);
-      const SMatrixSym33 recoErrsI = recoErrs.InverseFast(invFail);
-      SVector3 diffParams = recoParams - simParams;
-      squashPhi(diffParams);
       
-      std::cout << "     " << diffParams[diffParams.kSize-2] << std::endl;
+      SVector3 diffParams = recoParams - simParams;
+      squashPhiGeneral(diffParams);
 
-      if (chi2 < tmpminchi2) {tmpminchi2 = chi2; tmpminlbl = cmsswtrack.label();}
-      if (chi2 > tmpmaxchi2) {tmpmaxchi2 = chi2; tmpmaxlbl = cmsswtrack.label();}
+      //      std::cout << "  cmssw: " << cmsswtrack.label() << std::endl;
+      float chi2_r = 0;
+      for (int iparam = 0; iparam < diffParams.kSize; iparam++)
+      {
+	const float chi2_i = diffParams[iparam]*diffParams[iparam] / recoErrs[iparam][iparam];
+	// std::cout << "   param: " << iparam
+	// 	  << " diff: " <<diffParams[iparam] 
+	// 	  << " err2: " << recoErrs[iparam][iparam] 
+	// 	  << " diff/e2:" << chi2_i << std::endl;
+
+	if (iparam != diffParams.kSize-2) chi2_r += chi2_i;
+      }
+
+      const float chi2 = computeHelixChi2(simParams,recoParams,recoErrs);
+      //      std::cout << "   chi2: " << chi2 << " chi2_r:" << chi2_reduced << std::endl << std::endl;;
+    
+      if (chi2_r < tmpminchi2_r) {tmpminchi2_r = chi2_r; tmpminlbl = cmsswtrack.label(); tmpminchi2 = chi2;}
+      if (chi2_r > tmpmaxchi2_r) {tmpmaxchi2_r = chi2_r; tmpmaxlbl = cmsswtrack.label(); tmpmaxchi2 = chi2;}
       tmpmeanchi2 += chi2;
+      tmpmeanchi2_r += chi2_r;
     }
 
     vals.minchi2 = tmpminchi2;
     vals.meanchi2 = tmpmeanchi2 / nCMSSWTks;
     vals.maxchi2 = tmpmaxchi2;
-    
+
+    vals.minchi2_r = tmpminchi2_r;
+    vals.meanchi2_r = tmpmeanchi2_r / nCMSSWTks;
+    vals.maxchi2_r = tmpmaxchi2_r;
+
     vals.tkID = track.label();
     vals.phi = track.momPhi();
     vals.eta = track.momEta();

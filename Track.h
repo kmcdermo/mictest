@@ -413,6 +413,18 @@ inline bool sortByHitsChi2(const Track & cand1, const Track & cand2)
   return cand1.nFoundHits()>cand2.nFoundHits();
 }
 
+template <class M>
+inline void diagonalOnly(M& errs)
+{
+  for (int r = 0; r < errs.kRows; r++)
+  {
+    for (int c = 0; c < errs.kCols; c++)
+    {
+      if (r != c) errs[r][c] = 0.f;
+    }
+  }
+}
+
 template <class V>
 inline void squashPhiGeneral(V& params)
 {
