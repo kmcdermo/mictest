@@ -141,6 +141,9 @@ void fill_dump(Event * m_event)
 
       const float chi2 = computeHelixChi2(simParams,recoParams,recoErrs);
       //      std::cout << "   chi2: " << chi2 << " chi2_r:" << chi2_reduced << std::endl << std::endl;;
+
+      // normalize it
+      chi2_r /= 2.f;
     
       if (chi2_r < tmpminchi2_r) {tmpminchi2_r = chi2_r; tmpminlbl = cmsswtrack.label(); tmpminchi2 = chi2;}
       if (chi2_r > tmpmaxchi2_r) {tmpmaxchi2_r = chi2_r; tmpmaxlbl = cmsswtrack.label(); tmpmaxchi2 = chi2;}
@@ -178,7 +181,7 @@ void fill_dump(Event * m_event)
       {
 	const int lyr = track.getHitLyr(i);
 	const int idx = track.getHitIdx(i);
-	mcHitIDs.push_back(m_event->layerHits_[lyr][idx].mcHitID());
+	if (idx >= 0) mcHitIDs.push_back(m_event->layerHits_[lyr][idx].mcHitID());
       }
 
       std::vector<int> mcHitIDsMin;
@@ -186,7 +189,7 @@ void fill_dump(Event * m_event)
       {
 	const int lyr = trackMin.getHitLyr(i);
 	const int idx = trackMin.getHitIdx(i);
-	mcHitIDsMin.push_back(m_event->layerHits_[lyr][idx].mcHitID());
+	if (idx >= 0) mcHitIDsMin.push_back(m_event->layerHits_[lyr][idx].mcHitID());
       }
       
       int tmpnHitsMatched = 0;
@@ -217,7 +220,7 @@ void fill_dump(Event * m_event)
       {
 	const int lyr = track.getHitLyr(i);
 	const int idx = track.getHitIdx(i);
-	mcHitIDs.push_back(m_event->layerHits_[lyr][idx].mcHitID());
+	if (idx >= 0) mcHitIDs.push_back(m_event->layerHits_[lyr][idx].mcHitID());
       }
 
       std::vector<int> mcHitIDsMax;
@@ -225,7 +228,7 @@ void fill_dump(Event * m_event)
       {
 	const int lyr = trackMax.getHitLyr(i);
 	const int idx = trackMax.getHitIdx(i);
-	mcHitIDsMax.push_back(m_event->layerHits_[lyr][idx].mcHitID());
+	if (idx >= 0) mcHitIDsMax.push_back(m_event->layerHits_[lyr][idx].mcHitID());
       }
       
       int tmpnHitsMatched = 0;
