@@ -118,7 +118,7 @@ void fill_dump(Event * m_event)
 
     const SVector3 & recoParams = track.parameters().Sub<SVector3>(3);
     SMatrixSym33 recoErrs = track.errors().Sub<SMatrixSym33>(3,3);
-    //    diagonalOnly(recoErrs);
+    diagonalOnly(recoErrs);
     int invFail(0);
     const SMatrixSym33 & recoErrsI = recoErrs.InverseFast(invFail);
     for (auto& cmsswtrack : m_event->extRecTracks_)
@@ -138,7 +138,7 @@ void fill_dump(Event * m_event)
       const float chi2 = computeHelixChi2(simParams,recoParams,recoErrs);
 
       // normalize it
-      chi2_r /= 2.f;
+      chi2_r /= diffParams.kSize-2;
     
       if (chi2_r < tmpminchi2_r) {tmpminchi2_r = chi2_r; tmpminlbl = cmsswtrack.label(); tmpminchi2 = chi2;}
       if (chi2_r > tmpmaxchi2_r) {tmpmaxchi2_r = chi2_r; tmpmaxlbl = cmsswtrack.label(); tmpmaxchi2 = chi2;}
@@ -161,6 +161,7 @@ void fill_dump(Event * m_event)
     vals.nHits = track.nFoundHits();
     vals.nLayers = track.nUniqueLayers();
 
+    //    std::cout << vals.tkID << " " << track.nTotalHits() << " " << track.nFoundHits() << " " << track.nUniqueLayers() << std::endl;
     std::vector<int> mcHitIDs;
     std::vector<int> unLayers;
     int tmplyr = -1;
@@ -170,8 +171,18 @@ void fill_dump(Event * m_event)
       const int idx = track.getHitIdx(i);
       if (idx >= 0) mcHitIDs.push_back(m_event->layerHits_[lyr][idx].mcHitID());
 
-      if (lyr >= 0 && tmplyr != lyr) {tmplyr = lyr; unLayers.push_back(lyr);}
+      if (lyr >= 0 && idx>= 0 && tmplyr != lyr) {tmplyr = lyr; unLayers.push_back(lyr);}
+
+      //      std::cout << std::setw(3) << i << " " << lyr << " " << idx << std::endl;
     }
+
+    // std::cout << "      ";
+    // for (auto hit : mcHitIDs) std::cout << std::setw(6) << hit << " ";
+    // std::cout << std::endl;
+
+    // std::cout << "      ";
+    // for (auto lyr : unLayers) std::cout << std::setw(6) << lyr << " ";
+    // std::cout << std::endl << std::endl;
 
     if (tmpminlbl != -1) 
     {
@@ -192,7 +203,7 @@ void fill_dump(Event * m_event)
 	const int idx = trackMin.getHitIdx(i);
 	if (idx >= 0) mcHitIDsMin.push_back(m_event->layerHits_[lyr][idx].mcHitID());
 
-	if (lyr >= 0 && tmplyrMin != lyr) {tmplyrMin = lyr; unLayersMin.push_back(lyr);}
+	if (lyr >= 0 && idx>=0 && tmplyrMin != lyr) {tmplyrMin = lyr; unLayersMin.push_back(lyr);}
       }
       
       int tmpnHitsMatched = 0;
@@ -240,7 +251,7 @@ void fill_dump(Event * m_event)
 	const int idx = trackMax.getHitIdx(i);
 	if (idx >= 0) mcHitIDsMax.push_back(m_event->layerHits_[lyr][idx].mcHitID());
 
-	if (lyr >= 0 && tmplyrMax != lyr) {tmplyrMax = lyr; unLayersMax.push_back(lyr);}
+	if (lyr >= 0 && idx >=0 && tmplyrMax != lyr) {tmplyrMax = lyr; unLayersMax.push_back(lyr);}
       }
       
       int tmpnHitsMatched = 0;
