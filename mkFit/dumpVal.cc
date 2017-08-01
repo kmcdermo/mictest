@@ -21,6 +21,7 @@ void resetdumpval(dumpval& vals)
   vals.diffphiMin=-99999.f,vals.diffphiMinatR=-99999.f,vals.diffphi0=-99999.f;
   vals.eta=-99999.f,vals.etaMin=-99999.f;
   vals.pt=-99999.f,vals.ptMin=-99999.f;
+  vals.charge=-99999,vals.chargeMin=-99999;
   vals.nHits=-99999,vals.nHitsMin=-99999,vals.nHitsMatchedMin=-99999;
   vals.nLayers=-99999,vals.nLayersMin=-99999,vals.nLayersMatchedMin=-99999;
   vals.evID=-99999,vals.tkID=-99999,vals.tkIDMin=-99999;
@@ -28,20 +29,21 @@ void resetdumpval(dumpval& vals)
 
 void fill_dump(Event * m_event)
 {
-  bool debug = false;
-
+  const bool debug = false;
+  const bool diagonly = true;
+  
   std::ostringstream filename;
   filename << "dump_" << m_event->evtID() << ".root";
   TFile * outfile = TFile::Open(filename.str().c_str(),"recreate");
 
   // simple stats
   TTree * stattree = new TTree("stattree","stattree");
-  int evID=-1,nmkFitTks=0,nCMSSWTks=0,nmkFitTks7=0,nCMSSWTks7=0;
+  int evID=-1,nmkFitTks=0,nCMSSWTks=0,nmkFitTks11=0,nCMSSWTks11=0;
   stattree->Branch("evID",&evID);
   stattree->Branch("nmkFitTks",&nmkFitTks);  
   stattree->Branch("nCMSSWTks",&nCMSSWTks);
-  stattree->Branch("nmkFitTks7",&nmkFitTks7);  
-  stattree->Branch("nCMSSWTks7",&nCMSSWTks7);
+  stattree->Branch("nmkFitTks11",&nmkFitTks11);  
+  stattree->Branch("nCMSSWTks11",&nCMSSWTks11);
   
   evID = m_event->evtID();
 
@@ -51,13 +53,13 @@ void fill_dump(Event * m_event)
   for (auto& track : m_event->candidateTracks_)
   {
     track.sortHitsByLayer();
-    if (track.nUniqueLayers() >= 7) nmkFitTks7++;
+    if (track.nUniqueLayers() >= 11) nmkFitTks11++;
   }
 
   for (auto& track : m_event->extRecTracks_)
   {
     track.sortHitsByLayer();
-    if (track.nUniqueLayers() >= 7) nCMSSWTks7++;
+    if (track.nUniqueLayers() >= 11) nCMSSWTks11++;
   }
   stattree->Fill();
 
@@ -82,6 +84,8 @@ void fill_dump(Event * m_event)
   dumptree->Branch("etaMin",&vals.etaMin);
   dumptree->Branch("pt"   ,&vals.pt);
   dumptree->Branch("ptMin",&vals.ptMin);
+  dumptree->Branch("charge"   ,&vals.charge);
+  dumptree->Branch("chargeMin",&vals.chargeMin);
   dumptree->Branch("nHits"   ,&vals.nHits);
   dumptree->Branch("nHitsMin",&vals.nHitsMin);
   dumptree->Branch("nHitsMatchedMin",&vals.nHitsMatchedMin);
@@ -122,7 +126,7 @@ void fill_dump(Event * m_event)
 
     const SVector3 & recoParams = track.parameters().Sub<SVector3>(3);
     SMatrixSym33 recoErrs = track.errors().Sub<SMatrixSym33>(3,3);
-    diagonalOnly(recoErrs);
+    if (diagonly) diagonalOnly(recoErrs);
     int invFail(0);
     const SMatrixSym33 & recoErrsI = recoErrs.InverseFast(invFail);
     for (auto& cmsswtrack : m_event->extRecTracks_)
@@ -155,13 +159,15 @@ void fill_dump(Event * m_event)
     vals.ephi= std::pow(track.emomPhi(),2);
     vals.eta = track.momEta();
     vals.pt = track.pT();
+    vals.charge = track.charge();
     vals.nHits = track.nFoundHits();
     vals.nLayers = track.nUniqueLayers();
 
+    //    if (tmpminlbl != -1) // used for actual root files
     if (tmpminlbl != -1 && vals.nHits >= 11 && vals.minchi2_r < 20.f)
     {
       std::cout << "mkFit id: " << vals.tkID << " nTH: " << track.nTotalHits() << " nFH: " << track.nFoundHits() << " nUL: " << track.nUniqueLayers() 
-		<< " pT: " << vals.pt << " mom. eta: " << vals.eta << " mom. phi: " << vals.phi 
+    		<< " pT: " << vals.pt << " mom. eta: " << vals.eta << " mom. phi: " << vals.phi 
 		<< std::endl;
      
       std::vector<int> mcHitIDs;
@@ -201,14 +207,15 @@ void fill_dump(Event * m_event)
       vals.phiMin = trackMin.momPhi();
       vals.etaMin = trackMin.momEta();
       vals.ptMin = trackMin.pT();
+      vals.chargeMin = trackMin.charge();
       vals.nHitsMin = trackMin.nFoundHits();
       vals.nLayersMin = trackMin.nUniqueLayers();
 
       std::cout << "reduced chi2: " << vals.minchi2_r << std::endl;
 
       std::cout << "cmssw id: " << vals.tkIDMin << " nTH: " << trackMin.nTotalHits() << " nFH: " << trackMin.nFoundHits() << " nUL: " << trackMin.nUniqueLayers() 
-		<< " pT: " << vals.ptMin << " mom. eta: " << vals.etaMin << " mom. phi: " << vals.phiMin 
-		<< std::endl;
+      		<< " pT: " << vals.ptMin << " mom. eta: " << vals.etaMin << " mom. phi: " << vals.phiMin 
+      		<< std::endl;
       std::vector<int> mcHitIDsMin;
       std::vector<int> unLayersMin;
       int tmplyrMin = -1;
