@@ -822,6 +822,23 @@ void MkBuilder::quality_output_COMB()
 
   remap_cand_hits();
 
+  
+  // std::cout << "DUMP HITS" << std::endl;
+  // for (int ilyr = 0; ilyr < 18; ilyr++)
+  // {
+  //   std::cout << "LAYER: " << ilyr << std::endl;
+  //   for (int ihit = 0; ihit < m_event->layerHits_[ilyr].size(); ihit++)
+  //   {
+  //     const auto & hit = m_event->layerHits_[ilyr][ihit];
+  //     std::cout << std::setw(5) << ihit << " [" << hit.mcHitID() << "] " << hit.x() << " " << hit.y() << " " << hit.z() << std::endl;
+  //   }
+  // }
+  // std::cout << "===============================" << std::endl;
+
+
+
+
+
   for (int i = 0; i < m_event->candidateTracks_.size(); i++)
   {
     quality_process(m_event->candidateTracks_[i]);
@@ -853,7 +870,7 @@ void MkBuilder::quality_process(Track &tkcand)
 {
   TrackExtra extra(tkcand.label());
   
-  if (Config::useCMSGeom || Config::findSeeds)
+  if (Config::readCmsswSeeds || Config::findSeeds)
   {
     extra.setMCTrackIDInfo(tkcand, m_event->layerHits_, m_event->simHitsInfo_, m_event->simTracks_, false);
   }
@@ -863,10 +880,107 @@ void MkBuilder::quality_process(Track &tkcand)
   }
   int mctrk = extra.mcTrackID();
 
+  if (mctrk < 0 || tkcand.nFoundHits() < 11) 
+  {
+    std::cout << "--------------------------------------------" << std::endl;
+    return;
+  }
+
   //  int mctrk = tkcand.label(); // assumes 100% "efficiency"
 
   float pt    = tkcand.pT();
   float ptmc = 0., pr = 0., nfoundmc = 0., chi2mc = 0.;
+
+  const SVector3 & recoParams = tkcand.parameters().Sub<SVector3>(3);
+  SMatrixSym33 recoErrs = tkcand.errors().Sub<SMatrixSym33>(3,3);
+  diagonalOnly(recoErrs);
+  int invFail(0);
+  const SMatrixSym33 & recoErrsI = recoErrs.InverseFast(invFail);
+
+  Track & simtrack = m_event->simTracks_[mctrk];
+  const SVector3 & simParams = simtrack.parameters().Sub<SVector3>(3);
+  SVector3 diffParams = recoParams - simParams;
+  squashPhiGeneral(diffParams);
+
+  float chi2_r = 0;
+  for (int iparam = 0; iparam < diffParams.kSize; iparam++)
+  {
+    const float chi2_i = diffParams[iparam]*diffParams[iparam] / recoErrs[iparam][iparam];
+    if (iparam != diffParams.kSize-2) chi2_r += chi2_i;
+  }
+
+  tkcand.sortHitsByLayer();
+
+  std::cout << "mkFit id: " << tkcand.label() << " nTH: " << tkcand.nTotalHits() << " nFH: " << tkcand.nFoundHits() << " nUL: " << tkcand.nUniqueLayers() 
+	    << " pT: " << tkcand.pT() << " mom. eta: " << tkcand.momEta() << " mom. phi: " << tkcand.momPhi()
+	    << std::endl;
+     
+  for (int i = 0; i < tkcand.nTotalHits(); i++)
+  {
+    const int lyr = tkcand.getHitLyr(i);
+    const int idx = tkcand.getHitIdx(i);
+    int mcHitID = -1;
+    int mcTrackID = -1;
+    float x=-999,y=-999,z=-999;
+    if (idx >= 0) 
+    {
+      const auto & hit = m_event->layerHits_[lyr][idx];
+      x = hit.x(); y = hit.y(); z = hit.z();
+      mcHitID = m_event->layerHits_[lyr][idx].mcHitID(); 
+      mcTrackID = m_event->simHitsInfo_[mcHitID].mcTrackID();
+    }
+    
+    std::cout << " i: " << std::setw(2) << i 
+	      << " lyr: " << std::setw(2) << lyr 
+	      << " idx: " << std::setw(2) << idx 
+	      << " [mcHitID: " << std::setw(3) << mcHitID 
+	      << " mcTkID: " << std::setw(2) << mcTrackID
+	      << "] x: " << std::setw(8) << std::setprecision(5) << x 
+	      << " y: " << std::setw(8) << std::setprecision(5) << y
+	      << " [r: " << std::setw(8) << std::setprecision(5) << getHypot(x,y) 
+      	      << " [phi: " << std::setw(8) << std::setprecision(5) << getPhi(x,y) 
+	      << "] z: " << std::setw(8) << std::setprecision(5) << z << std::endl;
+  }
+
+  std::cout << "reduced chi2: " << chi2_r << std::endl;
+
+  simtrack.sortHitsByLayer();
+
+  std::cout << "sim id: " << simtrack.label() << " nTH: " << simtrack.nTotalHits() << " nFH: " << simtrack.nFoundHits() << " nUL: " << simtrack.nUniqueLayers() 
+	    << " pT: " << simtrack.pT() << " mom. eta: " << simtrack.momEta() << " mom. phi: " << simtrack.momPhi()
+	    << std::endl;
+  
+  for (int i = 0; i < simtrack.nTotalHits(); i++)
+  {
+    const int lyr = simtrack.getHitLyr(i);
+    const int idx = simtrack.getHitIdx(i);
+    int mcHitID = -1;
+    int mcTrackID = -1;
+    float x=-999,y=-999,z=-999;
+    if (idx >= 0) 
+    {
+      const auto & hit = m_event->layerHits_[lyr][idx];
+      x = hit.x(); y = hit.y(); z = hit.z();
+      mcHitID = m_event->layerHits_[lyr][idx].mcHitID(); 
+      mcTrackID = m_event->simHitsInfo_[mcHitID].mcTrackID();
+    }
+    
+    std::cout << " i: " << std::setw(2) << i 
+	      << " lyr: " << std::setw(2) << lyr 
+	      << " idx: " << std::setw(2) << idx 
+	      << " [mcHitID: " << std::setw(3) << mcHitID 
+	      << " mcTkID: " << std::setw(2) << mcTrackID
+	      << "] x: " << std::setw(8) << std::setprecision(5) << x 
+	      << " y: " << std::setw(8) << std::setprecision(5) << y
+	      << " [r: " << std::setw(8) << std::setprecision(5) << getHypot(x,y) 
+      	      << " [phi: " << std::setw(8) << std::setprecision(5) << getPhi(x,y) 
+	      << "] z: " << std::setw(8) << std::setprecision(5) << z << std::endl;
+  }
+
+  std::cout << "--------------------------------------------" << std::endl;
+
+  return;
+
 
   if (mctrk < 0 || mctrk >= m_event->simTracks_.size())
   {
