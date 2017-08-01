@@ -192,7 +192,7 @@ void fill_dump(Event * m_event)
 		  << "] x: " << std::setw(8) << std::setprecision(5) << x 
 		  << " y: " << std::setw(8) << std::setprecision(5) << y
 		  << " [r: " << std::setw(8) << std::setprecision(5) << getHypot(x,y) 
-		  << " [phi: " << std::setw(8) << std::setprecision(5) << getPhi(x,y) 
+		  << " phi: " << std::setw(8) << std::setprecision(5) << getPhi(x,y) 
 		  << "] z: " << std::setw(8) << std::setprecision(5) << z << std::endl;
       }
       
@@ -237,7 +237,7 @@ void fill_dump(Event * m_event)
 		  << "] x: " << std::setw(8) << std::setprecision(5) << x 
 		  << " y: " << std::setw(8) << std::setprecision(5) << y
 		  << " [r: " << std::setw(8) << std::setprecision(5) << getHypot(x,y) 
-		  << " [phi: " << std::setw(8) << std::setprecision(5) << getPhi(x,y) 
+		  << " phi: " << std::setw(8) << std::setprecision(5) << getPhi(x,y) 
 		  << "] z: " << std::setw(8) << std::setprecision(5) << z << std::endl;
       }
       
