@@ -7,17 +7,14 @@
 // dump in mplex
 struct dumpval
 {
-  float minchi2=0.f,minchi2_r=0.f;
-  float phi=0.f,phiMin=0.f,phi0=0.f,phiMinatR=0.f,ephi=0.f;
-  float eta=0.f,etaMin=0.f,pt=0.f,ptMin=0.f;
-  int charge=0,chargeMin=0;
-  float diffphiMin=0.f,diffphi0=0.f,diffphiMinatR=0.f;
-  int nHits=0,nHitsMin=0,nHitsMatchedMin=0;
-  int nLayers=0,nLayersMin=0,nLayersMatchedMin=0;
-  int evID=0,tkID=0,tkIDMin=0;
-  float D=0.f,Dmin=0.f;
-  float px=0.f,pxatR=0.f;
-  float py=0.f,pyatR=0.f;
+  float chi2=-99999.f,chi2_d=-99999.f;
+  float ipt_m=-99999.f,ipt_c=-99999.f,eipt_m=-99999.f;
+  float phi_m=-99999.f,phi_c=-99999.f,ephi_m=-99999.f;
+  float eta_m=-99999.f,eta_c=-99999.f,eeta_m=-99999.f;
+  int charge_m=-99999,charge_c=-99999;
+  int nHits_m=-99999,nHits_c=-99999,nHitsMatched=-99999;
+  int nLayers_m=-99999,nLayers_c=-99999,nLayersMatched=-99999;
+  int evID=-99999,tkID_m=-99999,tkID_c=-99999;
 };
 
 void resetdumpval(dumpval& vals);

@@ -82,6 +82,13 @@ void Track::sortHitsByLayer()
             [&](HitOnTrack h1, HitOnTrack h2) { return h1.layer < h2.layer; });
 }
 
+float Track::swimPhiToR(const float x0, const float y0) const
+{
+  const float dR = getHypot(x()-x0,y()-y0); 
+  const float dphi = 2.f*std::asin(dR/176.f/pT()*charge());
+  return squashPhiGeneral(momPhi()+dphi);
+}
+
 //==============================================================================
 // TrackExtra
 //==============================================================================

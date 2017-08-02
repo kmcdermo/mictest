@@ -180,6 +180,9 @@ public:
   float emomPhi() const { return state_.emomPhi();}
   float emomEta() const { return state_.emomEta();}
   
+  // used for swimming cmssw rec tracks to mkFit position
+  float swimPhiToR(const float x, const float y) const;
+
   //this function is very inefficient, use only for debug and validation!
   const HitVec hitsVector(const std::vector<HitVec>& globalHitVec) const 
   {
@@ -413,33 +416,26 @@ inline bool sortByHitsChi2(const Track & cand1, const Track & cand2)
   return cand1.nFoundHits()>cand2.nFoundHits();
 }
 
-template <class M>
-inline void diagonalOnly(M& errs)
+template <typename Vector>
+inline void squashPhiGeneral(Vector& v)
 {
-  for (int r = 0; r < errs.kRows; r++)
-  {
-    for (int c = 0; c < errs.kCols; c++)
-    {
-      if (r != c) errs[r][c] = 0.f;
-    }
-  }
+  const int i = v.kSize-2; // phi index
+  squashPhiGeneral(v[i]);
 }
 
-template <class V>
-inline void squashPhiGeneral(V& params)
-{
-  const int i = params.kSize-2; // phi index
-  params[i] -= floor(0.5f*Config::InvPI*(params[i]+Config::PI)) * Config::TwoPI;
-}
-
-template <class V, class M> 
-inline float computeHelixChi2(const V& simParams, const V& recoParams, const M& recoErrs)
+//https://github.com/cms-sw/cmssw/blob/09c3fce6626f70fd04223e7dacebf0b485f73f54/SimTracker/TrackAssociatorProducers/plugins/getChi2.cc#L23
+template <typename Vector, typename Matrix> 
+float computeHelixChi2(const Vector& simV, const Vector& recoV, const Matrix& recoM, const bool diagOnly = false)
 { 
+  Vector diffV = recoV - simV;
+  squashPhiGeneral(diffV);
+
+  Matrix recoM_tmp = recoM;
+  if (diagOnly) diagonalOnly(recoM_tmp);
   int invFail(0);
-  const M recoErrsI = recoErrs.InverseFast(invFail);
-  V diffParams = recoParams - simParams;
-  squashPhiGeneral(diffParams);
-  return ROOT::Math::Dot(diffParams*recoErrsI,diffParams) / (diffParams.kSize - 1);
+  const Matrix recoMI = recoM_tmp.InverseFast(invFail);
+
+  return ROOT::Math::Dot(diffV*recoMI,diffV)/(diffV.kSize-1);
 }
 
 class TrackExtra

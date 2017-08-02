@@ -24,4 +24,6 @@ do
     rm dump_*.root
 done
 
+rm ${outdir}/*.txt
+
 make distclean
