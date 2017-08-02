@@ -85,8 +85,8 @@ void Track::sortHitsByLayer()
 float Track::swimPhiToR(const float x0, const float y0) const
 {
   const float dR = getHypot(x()-x0,y()-y0); 
-  const float dphi = 2.f*std::asin(dR/176.f/pT()*charge());
-  return squashPhiGeneral(momPhi()+dphi);
+  const float dPhi = 2.f*std::asin(dR/176.f/pT()*charge());
+  return squashPhiGeneral(momPhi()-dPhi);
 }
 
 //==============================================================================

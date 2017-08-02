@@ -420,7 +420,7 @@ template <typename Vector>
 inline void squashPhiGeneral(Vector& v)
 {
   const int i = v.kSize-2; // phi index
-  squashPhiGeneral(v[i]);
+  v[i] = squashPhiGeneral(v[i]);
 }
 
 //https://github.com/cms-sw/cmssw/blob/09c3fce6626f70fd04223e7dacebf0b485f73f54/SimTracker/TrackAssociatorProducers/plugins/getChi2.cc#L23
@@ -428,7 +428,7 @@ template <typename Vector, typename Matrix>
 float computeHelixChi2(const Vector& simV, const Vector& recoV, const Matrix& recoM, const bool diagOnly = false)
 { 
   Vector diffV = recoV - simV;
-  squashPhiGeneral(diffV);
+  if (diffV.kSize > 2) squashPhiGeneral(diffV);
 
   Matrix recoM_tmp = recoM;
   if (diagOnly) diagonalOnly(recoM_tmp);

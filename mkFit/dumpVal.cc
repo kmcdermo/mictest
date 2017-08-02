@@ -17,8 +17,9 @@ void fill_dump(Event *){}
 void resetdumpval(dumpval& vals)
 {
   vals.chi2=-99999.f,vals.chi2_d=-99999.f;
+  vals.chi2_wp=-99999.f,vals.chi2_d_wp=-99999.f;
   vals.ipt_m=-99999.f,vals.ipt_c=-99999.f,vals.eipt_m=-99999.f;
-  vals.phi_m=-99999.f,vals.phi_c=-99999.f,vals.ephi_m=-99999.f;
+  vals.phi_m=-99999.f,vals.phi_c=-99999.f,vals.diffPhi=-99999.f,vals.ephi_m=-99999.f;
   vals.eta_m=-99999.f,vals.eta_c=-99999.f,vals.eeta_m=-99999.f;
   vals.charge_m=-99999,vals.charge_c=-99999;
   vals.nHits_m=-99999,vals.nHits_c=-99999,vals.nHitsMatched=-99999;
@@ -71,11 +72,14 @@ void fill_dump(Event * m_event)
   dumpval vals;
   dumptree->Branch("chi2"  ,&vals.chi2);
   dumptree->Branch("chi2_d",&vals.chi2_d);
+  dumptree->Branch("chi2_wp"  ,&vals.chi2_wp);
+  dumptree->Branch("chi2_d_wp",&vals.chi2_d_wp);
   dumptree->Branch("ipt_m" ,&vals.ipt_m);
   dumptree->Branch("ipt_c" ,&vals.ipt_c);
   dumptree->Branch("eipt_m",&vals.eipt_m);
   dumptree->Branch("phi_m" ,&vals.phi_m);
   dumptree->Branch("phi_c" ,&vals.phi_c);
+  dumptree->Branch("diffPhi",&vals.diffPhi);
   dumptree->Branch("ephi_m",&vals.ephi_m);
   dumptree->Branch("eta_m" ,&vals.eta_m);
   dumptree->Branch("eta_c" ,&vals.eta_c);
@@ -123,18 +127,35 @@ void fill_dump(Event * m_event)
     vals.nLayers_m = mkfittrack.nUniqueLayers();
 
     // temps need for chi2
+    SVector2 mkfitParamsR;
+    mkfitParamsR[0] = mkfittrack.parameters()[3];
+    mkfitParamsR[1] = mkfittrack.parameters()[5];
+    
+    SMatrixSym22 mkfitErrsR;
+    mkfitErrsR[0][0] = mkfittrack.errors()[3][3];
+    mkfitErrsR[1][1] = mkfittrack.errors()[5][5];
+    mkfitErrsR[0][1] = mkfittrack.errors()[3][5];
+    mkfitErrsR[1][0] = mkfittrack.errors()[5][3];
+    
     const float x = mkfittrack.x(), y = mkfittrack.y();
     float chi2 = 1e6, chi2_d = 1e6;
     int   tkID_c = -1;
     for (auto&& cmsswtrack : m_event->extRecTracks_)
     {
+      // SVector2 cmsswParams;
+      // cmsswParams[0] = cmsswtrack.parameters()[3];
+      // cmsswParams[1] = cmsswtrack.parameters()[5];
+      
+      // const float tmpchi2   = computeHelixChi2(cmsswParams,mkfitParamsR,mkfitErrsR,false);
+      // const float tmpchi2_d = computeHelixChi2(cmsswParams,mkfitParamsR,mkfitErrsR,true);
+      
       SVector3 cmsswParams = cmsswtrack.parameters().Sub<SVector3>(3);
       cmsswParams[1] = cmsswtrack.swimPhiToR(x,y);
-
       const float tmpchi2   = computeHelixChi2(cmsswParams,mkfitParams,mkfitErrs,false);
       const float tmpchi2_d = computeHelixChi2(cmsswParams,mkfitParams,mkfitErrs,true);
     
       if (tmpchi2 < chi2) {chi2 = tmpchi2; tkID_c = cmsswtrack.label(); chi2_d = tmpchi2_d;}
+      //if (tmpchi2_d < chi2_d) {chi2 = tmpchi2; tkID_c = cmsswtrack.label(); chi2_d = tmpchi2_d;}
     }
 
     // store both chi2s for now
@@ -146,17 +167,22 @@ void fill_dump(Event * m_event)
       const Track& cmsswtrack = m_event->extRecTracks_[tkID_c];
       
       // CMSSW parameters
-      const SVector3 & cmsswParams = cmsswtrack.parameters().Sub<SVector3>(3);
-      const SMatrixSym33 & cmsswErrs = cmsswtrack.errors().Sub<SMatrixSym33>(3,3);
+      SVector3 cmsswParams = cmsswtrack.parameters().Sub<SVector3>(3);
+      cmsswParams[1] = cmsswtrack.swimPhiToR(x,y);
 
       vals.tkID_c = cmsswtrack.label();
       vals.ipt_c  = cmsswParams[0];
-      vals.phi_c  = cmsswtrack.swimPhiToR(x,y);
+      vals.phi_c  = cmsswParams[1];
+      vals.diffPhi= squashPhiGeneral(vals.phi_m-vals.phi_c);
       vals.eta_c  = cmsswParams[2];
       vals.charge_c  = cmsswtrack.charge();
       vals.nHits_c   = cmsswtrack.nFoundHits();
       vals.nLayers_c = cmsswtrack.nUniqueLayers();
 
+      // TEMPORARY
+      vals.chi2_wp   = computeHelixChi2(cmsswParams,mkfitParams,mkfitErrs,false);
+      vals.chi2_d_wp = computeHelixChi2(cmsswParams,mkfitParams,mkfitErrs,true);
+      
       // count mkFit good hits
       std::vector<int> mcHitIDs_m;
       std::vector<int> unLayers_m;
