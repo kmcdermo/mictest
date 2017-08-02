@@ -25,6 +25,9 @@ void resetdumpval(dumpval& vals)
   vals.nHits=-99999,vals.nHitsMin=-99999,vals.nHitsMatchedMin=-99999;
   vals.nLayers=-99999,vals.nLayersMin=-99999,vals.nLayersMatchedMin=-99999;
   vals.evID=-99999,vals.tkID=-99999,vals.tkIDMin=-99999;
+  vals.D=-99999.f,vals.Dmin=-99999.f;
+  vals.px=-99999.f,vals.pxatR=-99999.f;
+  vals.py=-99999.f,vals.pyatR=-99999.f;
 }
 
 void fill_dump(Event * m_event)
@@ -96,6 +99,13 @@ void fill_dump(Event * m_event)
   dumptree->Branch("tkID"   ,&vals.tkID);
   dumptree->Branch("tkIDMin",&vals.tkIDMin);
 
+  dumptree->Branch("D",&vals.D);
+  dumptree->Branch("Dmin",&vals.D);
+  dumptree->Branch("px",&vals.px);
+  dumptree->Branch("py",&vals.py);
+  dumptree->Branch("pxatR",&vals.pxatR);
+  dumptree->Branch("pyatR",&vals.pyatR);
+
   // std::cout << "DUMP HITS" << std::endl;
   // for (int ilyr = 0; ilyr < 18; ilyr++)
   // {
@@ -163,12 +173,12 @@ void fill_dump(Event * m_event)
     vals.nHits = track.nFoundHits();
     vals.nLayers = track.nUniqueLayers();
 
-    //    if (tmpminlbl != -1) // used for actual root files
-    if (tmpminlbl != -1 && vals.nHits >= 11 && vals.minchi2_r < 20.f)
+    if (tmpminlbl != -1) // used for actual root files
+    //    if (tmpminlbl != -1 && vals.nHits >= 11 && vals.minchi2_r < 20.f)
     {
-      std::cout << "mkFit id: " << vals.tkID << " nTH: " << track.nTotalHits() << " nFH: " << track.nFoundHits() << " nUL: " << track.nUniqueLayers() 
-    		<< " pT: " << vals.pt << " mom. eta: " << vals.eta << " mom. phi: " << vals.phi 
-		<< std::endl;
+      // std::cout << "mkFit id: " << vals.tkID << " nTH: " << track.nTotalHits() << " nFH: " << track.nFoundHits() << " nUL: " << track.nUniqueLayers() 
+      // 		<< " pT: " << vals.pt << " mom. eta: " << vals.eta << " mom. phi: " << vals.phi 
+      // 		<< std::endl;
      
       std::vector<int> mcHitIDs;
       std::vector<int> unLayers;
@@ -190,16 +200,16 @@ void fill_dump(Event * m_event)
 	}
 	
 	if (lyr >= 0 && idx>= 0 && tmplyr != lyr) {tmplyr = lyr; unLayers.push_back(lyr);}
-	std::cout << " i: " << std::setw(2) << i 
-		  << " lyr: " << std::setw(2) << lyr 
-		  << " idx: " << std::setw(2) << idx 
-		  << " [mcHitID: " << std::setw(3) << mcHitID 
-		  << " mcTkID: " << std::setw(2) << mcTrackID
-		  << "] x: " << std::setw(8) << std::setprecision(5) << x 
-		  << " y: " << std::setw(8) << std::setprecision(5) << y
-		  << " [r: " << std::setw(8) << std::setprecision(5) << getHypot(x,y) 
-		  << " phi: " << std::setw(8) << std::setprecision(5) << getPhi(x,y) 
-		  << "] z: " << std::setw(8) << std::setprecision(5) << z << std::endl;
+	// std::cout << " i: " << std::setw(2) << i 
+	// 	  << " lyr: " << std::setw(2) << lyr 
+	// 	  << " idx: " << std::setw(2) << idx 
+	// 	  << " [mcHitID: " << std::setw(3) << mcHitID 
+	// 	  << " mcTkID: " << std::setw(2) << mcTrackID
+	// 	  << "] x: " << std::setw(8) << std::setprecision(5) << x 
+	// 	  << " y: " << std::setw(8) << std::setprecision(5) << y
+	// 	  << " [r: " << std::setw(8) << std::setprecision(5) << getHypot(x,y) 
+	// 	  << " phi: " << std::setw(8) << std::setprecision(5) << getPhi(x,y) 
+	// 	  << "] z: " << std::setw(8) << std::setprecision(5) << z << std::endl;
       }
       
       vals.tkIDMin = tmpminlbl;
@@ -211,11 +221,11 @@ void fill_dump(Event * m_event)
       vals.nHitsMin = trackMin.nFoundHits();
       vals.nLayersMin = trackMin.nUniqueLayers();
 
-      std::cout << "reduced chi2: " << vals.minchi2_r << std::endl;
+      // std::cout << "reduced chi2: " << vals.minchi2_r << std::endl;
 
-      std::cout << "cmssw id: " << vals.tkIDMin << " nTH: " << trackMin.nTotalHits() << " nFH: " << trackMin.nFoundHits() << " nUL: " << trackMin.nUniqueLayers() 
-      		<< " pT: " << vals.ptMin << " mom. eta: " << vals.etaMin << " mom. phi: " << vals.phiMin 
-      		<< std::endl;
+      // std::cout << "cmssw id: " << vals.tkIDMin << " nTH: " << trackMin.nTotalHits() << " nFH: " << trackMin.nFoundHits() << " nUL: " << trackMin.nUniqueLayers() 
+      // 		<< " pT: " << vals.ptMin << " mom. eta: " << vals.etaMin << " mom. phi: " << vals.phiMin 
+      // 		<< std::endl;
       std::vector<int> mcHitIDsMin;
       std::vector<int> unLayersMin;
       int tmplyrMin = -1;
@@ -236,16 +246,16 @@ void fill_dump(Event * m_event)
 	}
 
 	if (lyr >= 0 && idx>=0 && tmplyrMin != lyr) {tmplyrMin = lyr; unLayersMin.push_back(lyr);}
-	std::cout << " i: " << std::setw(2) << i 
-		  << " lyr: " << std::setw(2) << lyr 
-		  << " idx: " << std::setw(2) << idx 
-		  << " [mcHitID: " << std::setw(3) << mcHitID 
-		  << " mcTkID: " << std::setw(2) << mcTrackID
-		  << "] x: " << std::setw(8) << std::setprecision(5) << x 
-		  << " y: " << std::setw(8) << std::setprecision(5) << y
-		  << " [r: " << std::setw(8) << std::setprecision(5) << getHypot(x,y) 
-		  << " phi: " << std::setw(8) << std::setprecision(5) << getPhi(x,y) 
-		  << "] z: " << std::setw(8) << std::setprecision(5) << z << std::endl;
+	// std::cout << " i: " << std::setw(2) << i 
+	// 	  << " lyr: " << std::setw(2) << lyr 
+	// 	  << " idx: " << std::setw(2) << idx 
+	// 	  << " [mcHitID: " << std::setw(3) << mcHitID 
+	// 	  << " mcTkID: " << std::setw(2) << mcTrackID
+	// 	  << "] x: " << std::setw(8) << std::setprecision(5) << x 
+	// 	  << " y: " << std::setw(8) << std::setprecision(5) << y
+	// 	  << " [r: " << std::setw(8) << std::setprecision(5) << getHypot(x,y) 
+	// 	  << " phi: " << std::setw(8) << std::setprecision(5) << getPhi(x,y) 
+	// 	  << "] z: " << std::setw(8) << std::setprecision(5) << z << std::endl;
       }
       
       int tmpnHitsMatched = 0;
@@ -281,7 +291,7 @@ void fill_dump(Event * m_event)
       SVector3 recophi0;
 
       const float px = track.px(); const float py = track.py(); const float x = track.x(); const float y = track.y();
-      const float a = 2.*(-0.1499)*3.8;
+      const float a = -0.2998*Config::Bfield*vals.charge;
       const float T = std::sqrt(vals.pt*vals.pt - 2*a*(x*py-y*px) + a*a*(x*x+y*y));
       const float phi0 = std::acos( (px + a*y)/ T );
 
@@ -305,9 +315,43 @@ void fill_dump(Event * m_event)
       dsimphiatR[dsimphiatR.kSize-2] = vals.phi - vals.phiMinatR;
       squashPhiGeneral(dsimphiatR);
       vals.diffphiMinatR = dsimphiatR[dsimphiatR.kSize-2];
+
+
+      vals.D = (1.f/a) * (T - vals.pt);
+      vals.Dmin = trackMin.y() / std::cos(vals.phiMin);
+      
+      //      std::cout << "pt: " << vals.pt << " x: " << x << " y: " << y << " px: " << px << " py: " << py << " T: " << T << " a: " << a << std::endl;
+      const float Dother = (-2*(x*py-y*px)+a*(x*x+y*y))/(T+vals.pt);
+
+      std::cout << vals.D << " " << Dother << " : " << vals.Dmin << " " << (-trackMin.x() / std::sin(vals.phiMin)) << std::endl;
+      // std::cout << vals.phi0 << " " << std::asin( (py - a*x) / T) << " " << vals.phiMin << std::endl;
+
+      const float px0min = trackMin.px();
+      const float py0min = trackMin.py();
+      const float rho = a/vals.ptMin;
+      const float rhos = rho*dr;
+      const float srhos = std::sin(rhos);
+      const float crhos = std::cos(rhos);
+
+      const float pxatR = (px0min*crhos - py0min*srhos);
+      const float pyatR = (py0min*crhos + px0min*srhos);
+      const float ptatR = getHypot(pxatR,pyatR);
+
+      //      std::cout << vals.phi0 << " : " << getPhi(trackMin.x(),trackMin.y()) << " " << vals.phiMin << std::endl;
+
+      vals.px = px; vals.py = py;
+      vals.pxatR = pxatR; vals.pyatR = pyatR;
+
+      // std::cout << px << " : " << px0min << " " << pxatR << std::endl;
+      // std::cout << py << " : " << py0min << " " << pyatR << std::endl;
+      // std::cout << vals.pt << " : " << vals.ptMin << " " << ptatR << std::endl;
+      // std::cout << x << " " << (trackMin.x() + (px0min/a)*srhos - (py0min/a)*(1.f-crhos)) << std::endl;
+      // std::cout << y << " " << (trackMin.y() + (py0min/a)*srhos - (px0min/a)*(1.f-crhos)) << std::endl;
+
+      //      std::cout << std::endl;
     }
 
-    std::cout << "--------------------------------------------" << std::endl;
+    //    std::cout << "--------------------------------------------" << std::endl;
 
     dumptree->Fill();
   }

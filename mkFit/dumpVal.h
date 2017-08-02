@@ -15,6 +15,9 @@ struct dumpval
   int nHits=0,nHitsMin=0,nHitsMatchedMin=0;
   int nLayers=0,nLayersMin=0,nLayersMatchedMin=0;
   int evID=0,tkID=0,tkIDMin=0;
+  float D=0.f,Dmin=0.f;
+  float px=0.f,pxatR=0.f;
+  float py=0.f,pyatR=0.f;
 };
 
 void resetdumpval(dumpval& vals);
