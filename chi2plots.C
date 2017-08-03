@@ -66,7 +66,7 @@ void getMinMax(const vth1 & hists, const Int_t nbinsx, const Bool_t isLogy, Floa
   }
 }
 
-void makePlots()
+void chi2plots()
 {
   const TString dir = "full_phiErr";
   const TString cut = "nHits_m>=11";
@@ -88,7 +88,11 @@ void makePlots()
   {
     HistInfo("pow(ipt_m-ipt_c,2)/eipt_m","chi2_iptonly",Form("1/p_{T} Diagonal #chi^{2} Only [%s]",cut.Data()),"","nTracks",100,0,50),
     HistInfo("pow(eta_m-eta_c,2)/eeta_m","chi2_etaonly",Form("#eta Diagonal #chi^{2} Only [%s]",cut.Data()),"","nTracks",100,0,25),
-    HistInfo("pow(phi_m-phi_c,2)/ephi_m","chi2_phionly",Form("#phi Diagonal #chi^{2} Only [%s]",cut.Data()),"","nTracks",100,0,50)
+    HistInfo("pow(phi_m-phi_c,2)/ephi_m","chi2_phionly",Form("#phi Diagonal #chi^{2} Only [%s]",cut.Data()),"","nTracks",100,0,50),
+    HistInfo("chi2","chi2",Form("Full #chi^{2} [%s]",cut.Data()),"","nTracks",100,0,100),
+    HistInfo("ipt_m-ipt_c","ipt_only",Form("1/p_{T} residual [%s]",cut.Data()),"","nTracks",100,-0.1,0.1),
+    HistInfo("eipt_m","eipt_only",Form("1/p_{T} variance [%s]",cut.Data()),"","nTracks",100,0,5e-4),
+    HistInfo("(ipt_c-ipt_m)/(ipt_m*ipt_c)","pt_only",Form("p_{T} residual [%s]",cut.Data()),"","nTracks",100,-0.5,1.0)
   };
   
   for (auto&& hi : histinfos)
@@ -118,7 +122,16 @@ void makePlots()
       for (Int_t i = 0; i < regions.size(); i++)
       {
 	hists[i]->Draw(i>0?"EP SAME":"EP");
-	leg->AddEntry(hists[i],Form("%s, #mu: %5.3f",regions[i].Data(),hists[i]->GetMean()),"epl");
+	TString label;
+	if (hi.title.Contains("variance") || hi.title.Contains("residual"))
+	{
+	  label = Form("%s, #mu: %f",regions[i].Data(),hists[i]->GetMean());
+	}
+	else 
+	{
+	  label = Form("%s, #mu: %5.3f",regions[i].Data(),hists[i]->GetMean());
+	}
+	leg->AddEntry(hists[i],label.Data(),"epl");
       }
       leg->Draw("SAME");
       canv->SaveAs(Form("%s/%s_%s.png",dir.Data(),hi.name.Data(),(isLogy?"log":"lin")));
