@@ -113,7 +113,9 @@ void fill_dump(Event * m_event)
 
     // mkFit parameters
     const SVector3 & mkfitParams = mkfittrack.parameters().Sub<SVector3>(3);
-    const SMatrixSym33 & mkfitErrs = mkfittrack.errors().Sub<SMatrixSym33>(3,3);
+    //    const SMatrixSym33 & mkfitErrs = mkfittrack.errors().Sub<SMatrixSym33>(3,3);
+    SMatrixSym33 mkfitErrs = mkfittrack.errors().Sub<SMatrixSym33>(3,3);
+    mkfitErrs[1][1] += 0.00002739;
 
     vals.tkID_m = mkfittrack.label();
     vals.ipt_m  = mkfitParams[0];
@@ -127,33 +129,34 @@ void fill_dump(Event * m_event)
     vals.nLayers_m = mkfittrack.nUniqueLayers();
 
     // temps need for chi2
-    SVector2 mkfitParamsR;
-    mkfitParamsR[0] = mkfittrack.parameters()[3];
-    mkfitParamsR[1] = mkfittrack.parameters()[5];
+    // SVector2 mkfitParamsR;
+    // mkfitParamsR[0] = mkfitParams[0];
+    // mkfitParamsR[1] = mkfitParams[2];
     
-    SMatrixSym22 mkfitErrsR;
-    mkfitErrsR[0][0] = mkfittrack.errors()[3][3];
-    mkfitErrsR[1][1] = mkfittrack.errors()[5][5];
-    mkfitErrsR[0][1] = mkfittrack.errors()[3][5];
-    mkfitErrsR[1][0] = mkfittrack.errors()[5][3];
+    // SMatrixSym22 mkfitErrsR;
+    // mkfitErrsR[0][0] = mkfitErrs[0][0];
+    // mkfitErrsR[1][1] = mkfitErrs[2][2];
+    // mkfitErrsR[0][1] = mkfitErrs[0][2];
+    // mkfitErrsR[1][0] = mkfitErrs[2][0];
     
     const float x = mkfittrack.x(), y = mkfittrack.y();
     float chi2 = 1e6, chi2_d = 1e6;
     int   tkID_c = -1;
     for (auto&& cmsswtrack : m_event->extRecTracks_)
     {
+      SVector3 cmsswParams = cmsswtrack.parameters().Sub<SVector3>(3);
+      cmsswParams[1] = cmsswtrack.swimPhiToR(x,y);
+
+      const float tmpchi2   = computeHelixChi2(cmsswParams,mkfitParams,mkfitErrs,false);
+      const float tmpchi2_d = computeHelixChi2(cmsswParams,mkfitParams,mkfitErrs,true);
+
       // SVector2 cmsswParams;
-      // cmsswParams[0] = cmsswtrack.parameters()[3];
-      // cmsswParams[1] = cmsswtrack.parameters()[5];
+      // cmsswParams[0] = cmsswParams[0];
+      // cmsswParams[1] = cmsswParams[2];
       
       // const float tmpchi2   = computeHelixChi2(cmsswParams,mkfitParamsR,mkfitErrsR,false);
       // const float tmpchi2_d = computeHelixChi2(cmsswParams,mkfitParamsR,mkfitErrsR,true);
       
-      SVector3 cmsswParams = cmsswtrack.parameters().Sub<SVector3>(3);
-      cmsswParams[1] = cmsswtrack.swimPhiToR(x,y);
-      const float tmpchi2   = computeHelixChi2(cmsswParams,mkfitParams,mkfitErrs,false);
-      const float tmpchi2_d = computeHelixChi2(cmsswParams,mkfitParams,mkfitErrs,true);
-    
       if (tmpchi2 < chi2) {chi2 = tmpchi2; tkID_c = cmsswtrack.label(); chi2_d = tmpchi2_d;}
       //if (tmpchi2_d < chi2_d) {chi2 = tmpchi2; tkID_c = cmsswtrack.label(); chi2_d = tmpchi2_d;}
     }

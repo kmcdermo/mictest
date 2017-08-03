@@ -26,4 +26,4 @@ done
 
 rm ${outdir}/*.txt
 
-make distclean
+#make distclean
