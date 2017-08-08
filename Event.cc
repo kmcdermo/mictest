@@ -760,13 +760,10 @@ int Event::clean_cms_seedtracks()
 
       if (dr2 < maxDR2)
 	writetrack[tss]=false;
-    
     }
-   
 
     if(writetrack[ts])
       cleanSeedTracks.emplace_back(seedTracks_[ts]);
-      
   }
   
 #ifdef DEBUG
@@ -775,6 +772,19 @@ int Event::clean_cms_seedtracks()
 
   seedTracks_.swap(cleanSeedTracks);
 
+  if ((Config::root_val || Config::cmssw_val) && (seedTracks_.size() > 0) && false)
+  {
+
+    std::vector<int> stids;
+    for (auto&& track : seedTracks_) stids.push_back(track.label());
+    std::sort(stids.begin(),stids.end());
+
+    int newlabel = stids.back();
+    for (auto&& seedtrack : seedTracks_)
+    {
+      if (seedtrack.label() < 0) seedtrack.setLabel(++newlabel);
+    }
+  }
 }
 
 
