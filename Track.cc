@@ -491,7 +491,11 @@ void TrackExtra::setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<
       const int mcHitID = layerHits[hitlaypair.first][idx].mcHitID();
       if (mcHitID >= 0)
       {
-	cmsswmcidcounts[globalHitInfo[mcHitID].mcTrackID()]++;
+	const int mcTrackID = globalHitInfo[mcHitID].mcTrackID();
+	if (mcTrackID >= 0)
+	{
+	  cmsswmcidcounts[mcTrackID]++;
+	}
       }
     }
   }
@@ -520,7 +524,11 @@ void TrackExtra::setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<
     const int mcHitID = layerHits[lyr][idx].mcHitID();
     if (mcHitID >= 0)
     {
-      buildmcidcounts[globalHitInfo[mcHitID].mcTrackID()]++;
+      const int mcTrackID = globalHitInfo[mcHitID].mcTrackID();
+      if (mcTrackID >= 0) 
+      {
+	buildmcidcounts[mcTrackID]++;
+      }
     }
     
     if (ihit < Config::nlayers_per_seed) continue;
