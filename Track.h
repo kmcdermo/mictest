@@ -478,11 +478,21 @@ public:
   void setMCTrackIDInfoByLabel(const Track& trk, const std::vector<HitVec>& layerHits, const MCHitInfoVec& globalHitInfo, const TrackVec& simtracks);
   void setMCTrackIDInfo(const Track& trk, const std::vector<HitVec>& layerHits, const MCHitInfoVec& globalHitInfo, const TrackVec& simtracks, const bool isSeed);
   void setCMSSWTrackIDInfo(const Track& trk, const std::vector<HitVec>& layerHits, const TrackVec& cmsswtracks, const RedTrackVec& redcmsswtracks);
-  void setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<HitVec>& layerHits, const TrackVec& cmsswtracks, const ReducedTrack& redcmsswtrack);
+  void setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<HitVec>& layerHits, const TrackVec& cmsswtracks, const ReducedTrack& redcmsswtrack, const MCHitInfoVec& globalHitInfo, const std::map<int,std::map<int,int> >& hitlayseed);
 
   int   mcTrackID() const {return mcTrackID_;}
   int   nHitsMatched() const {return nHitsMatched_;}
   float fracHitsMatched() const {return fracHitsMatched_;}
+  int   nHitsMatchedMC() const {return nHitsMatchedMC_;}
+  float fracHitsMatchedMC() const {return fracHitsMatchedMC_;}
+  int   nHitsMatchedMCTrue() const {return nHitsMatchedMCTrue_;}
+  float fracHitsMatchedMCTrue() const {return fracHitsMatchedMCTrue_;}
+  int   nHitsMatchedSeed() const {return nHitsMatchedSeed_;}
+  float fracHitsMatchedSeed() const {return fracHitsMatchedSeed_;}
+  int   nHitsMatchedMC_CMSSW() const {return nHitsMatchedMC_CMSSW_;}
+  float fracHitsMatchedMC_CMSSW() const {return fracHitsMatchedMC_CMSSW_;}
+  int   nHitsMatchedMCTrue_CMSSW() const {return nHitsMatchedMCTrue_CMSSW_;}
+  float fracHitsMatchedMCTrue_CMSSW() const {return fracHitsMatchedMCTrue_CMSSW_;}
   int   seedID() const {return seedID_;}
   bool  isDuplicate() const {return isDuplicate_;}
   int   duplicateID() const {return duplicateID_;}
@@ -500,6 +510,16 @@ private:
   int   mcTrackID_;
   int   nHitsMatched_;
   float fracHitsMatched_;
+  int   nHitsMatchedMC_;
+  float fracHitsMatchedMC_;
+  int   nHitsMatchedMCTrue_;
+  float fracHitsMatchedMCTrue_;
+  int   nHitsMatchedSeed_;
+  float fracHitsMatchedSeed_;
+  int   nHitsMatchedMC_CMSSW_;
+  float fracHitsMatchedMC_CMSSW_;
+  int   nHitsMatchedMCTrue_CMSSW_;
+  float fracHitsMatchedMCTrue_CMSSW_;
   int   seedID_;
   int   duplicateID_;
   bool  isDuplicate_;

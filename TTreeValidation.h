@@ -225,6 +225,22 @@ public:
   float pt_cmssw_cFR_=0.,phi_cmssw_cFR_=0.,eta_cmssw_cFR_=0.;
   int   nHits_cmssw_cFR_=0,nLayers_cmssw_cFR_=0,lastlyr_cmssw_cFR_=0;
 
+  // other tests
+  int   nHitsMatchedMC_build_cFR_=0,nHitsMatchedMCTrue_build_cFR_=0,nHitsMatchedSeed_build_cFR_=0,nHitsMatchedMC_build_cmssw_cFR_=0,nHitsMatchedMCTrue_build_cmssw_cFR_=0;
+  float fracHitsMatchedMC_build_cFR_=0,fracHitsMatchedMCTrue_build_cFR_=0,fracHitsMatchedSeed_build_cFR_=0,fracHitsMatchedMC_build_cmssw_cFR_=0,fracHitsMatchedMCTrue_build_cmssw_cFR_=0;
+  
+
+  /// truuuuuu
+  float x_cmssw_true_cFR_=0.,y_cmssw_true_cFR_=0.,z_cmssw_true_cFR_=0.;
+  float pt_cmssw_true_cFR_=0.,phi_cmssw_true_cFR_=0.,eta_cmssw_true_cFR_=0.;
+  int   nHits_cmssw_true_cFR_=0,nLayers_cmssw_true_cFR_=0,lastlyr_cmssw_true_cFR_=0;
+
+  float helixchi2_build_true_cFR_=0.;
+  float dphi_build_true_cFR_=0.;
+
+  int   nHitsMatched_build_true_cFR_=0;
+  float fracHitsMatched_build_true_cFR_=0;
+
   // Fit tree (for fine tuning z-phi windows and such --> MPlex Only
   TTree* fittree_;
   int   ntotallayers_fit_=0,tkid_fit_=0,evtid_fit_=0;

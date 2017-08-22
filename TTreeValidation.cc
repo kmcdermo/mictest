@@ -379,6 +379,16 @@ void TTreeValidation::initializeCMSSWFakeRateTree()
   cmsswfrtree_->Branch("nLayers_build",&nLayers_build_cFR_);
   cmsswfrtree_->Branch("nHitsMatched_build",&nHitsMatched_build_cFR_);
   cmsswfrtree_->Branch("fracHitsMatched_build",&fracHitsMatched_build_cFR_);
+  cmsswfrtree_->Branch("nHitsMatchedMC_build",&nHitsMatchedMC_build_cFR_);
+  cmsswfrtree_->Branch("fracHitsMatchedMC_build",&fracHitsMatchedMC_build_cFR_);
+  cmsswfrtree_->Branch("nHitsMatchedMCTrue_build",&nHitsMatchedMCTrue_build_cFR_);
+  cmsswfrtree_->Branch("fracHitsMatchedMCTrue_build",&fracHitsMatchedMCTrue_build_cFR_);
+  cmsswfrtree_->Branch("nHitsMatchedSeed_build",&nHitsMatchedSeed_build_cFR_);
+  cmsswfrtree_->Branch("fracHitsMatchedSeed_build",&fracHitsMatchedSeed_build_cFR_);
+  cmsswfrtree_->Branch("nHitsMatchedMC_build_cmssw",&nHitsMatchedMC_build_cmssw_cFR_);
+  cmsswfrtree_->Branch("fracHitsMatchedMC_build_cmssw",&fracHitsMatchedMC_build_cmssw_cFR_);
+  cmsswfrtree_->Branch("nHitsMatchedMCTrue_build_cmssw",&nHitsMatchedMCTrue_build_cmssw_cFR_);
+  cmsswfrtree_->Branch("fracHitsMatchedMCTrue_build_cmssw",&fracHitsMatchedMCTrue_build_cmssw_cFR_);
   cmsswfrtree_->Branch("lastlyr_build",&lastlyr_build_cFR_);
 
   cmsswfrtree_->Branch("xhit_build",&xhit_build_cFR_);
@@ -403,6 +413,24 @@ void TTreeValidation::initializeCMSSWFakeRateTree()
   cmsswfrtree_->Branch("nHits_cmssw",&nHits_cmssw_cFR_);
   cmsswfrtree_->Branch("nLayers_cmssw",&nLayers_cmssw_cFR_);
   cmsswfrtree_->Branch("lastlyr_cmssw",&lastlyr_cmssw_cFR_);
+
+  ////////
+  cmsswfrtree_->Branch("x_cmssw_true",&x_cmssw_true_cFR_);
+  cmsswfrtree_->Branch("y_cmssw_true",&y_cmssw_true_cFR_);
+  cmsswfrtree_->Branch("z_cmssw_true",&z_cmssw_true_cFR_);
+
+  cmsswfrtree_->Branch("pt_cmssw_true",&pt_cmssw_true_cFR_);
+  cmsswfrtree_->Branch("phi_cmssw_true",&phi_cmssw_true_cFR_);
+  cmsswfrtree_->Branch("eta_cmssw_true",&eta_cmssw_true_cFR_);
+
+  cmsswfrtree_->Branch("nHitsMatched_build_true",&nHitsMatched_build_true_cFR_);
+  cmsswfrtree_->Branch("fracHitsMatched_build_true",&fracHitsMatched_build_true_cFR_);
+  cmsswfrtree_->Branch("nHits_cmssw_true",&nHits_cmssw_true_cFR_);
+  cmsswfrtree_->Branch("nLayers_cmssw_true",&nLayers_cmssw_true_cFR_);
+  cmsswfrtree_->Branch("lastlyr_cmssw_true",&lastlyr_cmssw_true_cFR_);
+
+  cmsswfrtree_->Branch("helixchi2_build_true",&helixchi2_build_true_cFR_);
+  cmsswfrtree_->Branch("dphi_build_true",&dphi_build_true_cFR_);
 }
 
 void TTreeValidation::initializeFitTree()
@@ -554,11 +582,14 @@ void TTreeValidation::setTrackExtras(Event& ev)
     const auto& buildtracks = ev.candidateTracks_;
           auto& buildextras = ev.candidateTracksExtra_;
 
+    std::map<int,std::map<int,int> > hitlayseed;
+
     RedTrackVec reducedCMSSW(cmsswtracks.size()); // use 2D chi2 for now, so might as well make use of this object for now
     for (int itrack = 0; itrack < cmsswtracks.size(); itrack++)
     {
       const auto & cmsswtrack = cmsswtracks[itrack];
       const int seedID = cmsswextras[itrack].seedID();
+
       const SVector6 & params = cmsswtrack.parameters();
       SVector2 tmpv(params[3],params[5]);
 
@@ -571,6 +602,7 @@ void TTreeValidation::setTrackExtras(Event& ev)
 	if (idx >= 0) 
 	{
 	  tmpmap[lyr].push_back(idx);
+	  hitlayseed[lyr][idx] = seedID;
 	}
       }
 
@@ -589,7 +621,7 @@ void TTreeValidation::setTrackExtras(Event& ev)
       }
       else 
       {
-	extra.setCMSSWTrackIDInfoByLabel(track, layerhits, cmsswtracks, reducedCMSSW[cmsswtracks[buildToCmsswMap_[track.label()]].label()]);
+	extra.setCMSSWTrackIDInfoByLabel(track, layerhits, cmsswtracks, reducedCMSSW[cmsswtracks[buildToCmsswMap_[track.label()]].label()], ev.simHitsInfo_, hitlayseed);
       }
     }
   }
@@ -1752,6 +1784,16 @@ void TTreeValidation::fillCMSSWFakeRateTree(const Event& ev)
     nLayers_build_cFR_         = buildtrack.nUniqueLayers();
     nHitsMatched_build_cFR_    = buildextra.nHitsMatched();
     fracHitsMatched_build_cFR_ = buildextra.fracHitsMatched();
+    nHitsMatchedMC_build_cFR_    = buildextra.nHitsMatchedMC();
+    fracHitsMatchedMC_build_cFR_ = buildextra.fracHitsMatchedMC();
+    nHitsMatchedMCTrue_build_cFR_    = buildextra.nHitsMatchedMCTrue();
+    fracHitsMatchedMCTrue_build_cFR_ = buildextra.fracHitsMatchedMCTrue();
+    nHitsMatchedSeed_build_cFR_    = buildextra.nHitsMatchedSeed();
+    fracHitsMatchedSeed_build_cFR_ = buildextra.fracHitsMatchedSeed();
+    nHitsMatchedMC_build_cmssw_cFR_    = buildextra.nHitsMatchedMC_CMSSW();
+    fracHitsMatchedMC_build_cmssw_cFR_ = buildextra.fracHitsMatchedMC_CMSSW();
+    nHitsMatchedMCTrue_build_cmssw_cFR_    = buildextra.nHitsMatchedMCTrue_CMSSW();
+    fracHitsMatchedMCTrue_build_cmssw_cFR_ = buildextra.fracHitsMatchedMCTrue_CMSSW();
     lastlyr_build_cFR_         = buildtrack.getLastFoundHitLyr();
     
     // hit info
@@ -1766,6 +1808,77 @@ void TTreeValidation::fillCMSSWFakeRateTree(const Event& ev)
 
     // stored dphi
     dphi_build_cFR_ = buildextra.dPhi();
+
+    // TRUE TRACK 
+    const auto& cmsswtracktrue = evt_cmssw_tracks[buildToCmsswMap_[buildtrack.label()]];
+    const auto& cmsswextratrue = evt_cmssw_extras[cmsswtracktrue.label()];
+      
+    const SVector6 & trkParams = buildtrack.parameters();
+    const SMatrixSym66 & trkErrs = buildtrack.errors();
+    const SVector6 & ctrkParams = cmsswtracktrue.parameters();
+
+    // temps needed for chi2
+    SVector2 trkParamsR;
+    trkParamsR[0] = trkParams[3];
+    trkParamsR[1] = trkParams[5];
+    
+    SMatrixSym22 trkErrsR;
+    trkErrsR[0][0] = trkErrs[3][3];
+    trkErrsR[1][1] = trkErrs[5][5];
+    trkErrsR[0][1] = trkErrs[3][5];
+    trkErrsR[1][0] = trkErrs[5][3];
+    
+    SVector2 ctrkParamsR;
+    ctrkParamsR[0] = ctrkParams[3];
+    ctrkParamsR[1] = ctrkParams[5];
+    
+    helixchi2_build_true_cFR_ = std::abs(computeHelixChi2(ctrkParamsR,trkParamsR,trkErrsR,false));
+    dphi_build_true_cFR_ = std::abs(squashPhiGeneral(cmsswtracktrue.swimPhiToR(buildtrack.x(),buildtrack.y())-buildtrack.momPhi()));
+    
+    std::map<int,std::vector<int> > hitlaymap;
+    for (int ihit = 0; ihit < cmsswtracktrue.nTotalHits(); ihit++)
+    {
+      const int lyr = cmsswtracktrue.getHitLyr(ihit);
+      const int idx = cmsswtracktrue.getHitIdx(ihit);
+      
+      if (lyr >= 0 && idx >= 0) hitlaymap[lyr].push_back(idx);
+    }
+    
+    nHitsMatched_build_true_cFR_ = 0;
+    for (int ihit = Config::nlayers_per_seed; ihit < buildtrack.nTotalHits(); ihit++)
+    {
+      const int lyr = buildtrack.getHitLyr(ihit);
+      const int idx = buildtrack.getHitIdx(ihit);
+      
+      if (lyr >= 0 && idx >= 0)
+      {
+	if (hitlaymap.count(lyr))
+	{
+	  for (auto cidx : hitlaymap[lyr])
+	  {
+	    if (cidx == idx)
+	    {
+	      nHitsMatched_build_true_cFR_++; break;
+	    }
+	  }
+	}
+      }
+    }      
+    const int nCandHits = buildtrack.nFoundHits() - Config::nlayers_per_seed;
+    if (nCandHits>0) fracHitsMatched_build_true_cFR_ = float(nHitsMatched_build_true_cFR_) / float(nCandHits);
+    else fracHitsMatched_build_true_cFR_ = float(nHitsMatched_build_true_cFR_) / float(nCandHits);
+
+    x_cmssw_true_cFR_ = cmsswtracktrue.x();
+    y_cmssw_true_cFR_ = cmsswtracktrue.y();
+    z_cmssw_true_cFR_ = cmsswtracktrue.z();
+    
+    pt_cmssw_true_cFR_  = cmsswtracktrue.pT(); 
+    phi_cmssw_true_cFR_ = cmsswtracktrue.momPhi();
+    eta_cmssw_true_cFR_ = cmsswtracktrue.momEta();
+    
+    nHits_cmssw_true_cFR_   = cmsswtracktrue.nFoundHits(); 
+    nLayers_cmssw_true_cFR_ = cmsswtracktrue.nUniqueLayers();
+    lastlyr_cmssw_true_cFR_ = cmsswtracktrue.getLastFoundHitLyr();
     
     // cmssw match?
     cmsswID_build_cFR_ = buildextra.cmsswTrackID();

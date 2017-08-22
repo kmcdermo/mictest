@@ -456,12 +456,13 @@ void TrackExtra::setCMSSWTrackIDInfo(const Track& trk, const std::vector<HitVec>
   fracHitsMatched_ = float(nHitsMatched_) / float(trk.nFoundHits()); // seed hits may already be included!
 }
 
-void TrackExtra::setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<HitVec>& layerHits, const TrackVec& cmsswtracks, const ReducedTrack& redcmsswtrack)
+void TrackExtra::setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<HitVec>& layerHits, const TrackVec& cmsswtracks, const ReducedTrack& redcmsswtrack, const MCHitInfoVec& globalHitInfo, const std::map<int,std::map<int,int> > & hitlayseed)
 {
   const SVector6 & trkParams = trk.parameters();
   const SMatrixSym66 & trkErrs = trk.errors();
   const int cmsswlabel = redcmsswtrack.label();
-
+  const Track& cmsswtrack = cmsswtracks[cmsswlabel];
+  
   // temps needed for chi2
   SVector2 trkParamsR;
   trkParamsR[0] = trkParams[3];
@@ -476,14 +477,61 @@ void TrackExtra::setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<
   helixChi2_ = std::abs(computeHelixChi2(redcmsswtrack.parameters(),trkParamsR,trkErrsR,false));
   dPhi_ = std::abs(squashPhiGeneral(cmsswtracks[cmsswlabel].swimPhiToR(trk.x(),trk.y())-trk.momPhi()));
 
-  nHitsMatched_ = 0;
   const HitLayerMap & hitLayerMap = redcmsswtrack.hitLayerMap();
-  for (int ihit = Config::nlayers_per_seed; ihit < trk.nTotalHits(); ihit++) // loop over mkfit track hits
+
+  nHitsMatchedMC_CMSSW_ = 0;
+  nHitsMatchedMCTrue_CMSSW_ = 0;
+  std::map<int,int> cmsswmcidcounts;
+  for (auto&& hitlaypair : hitLayerMap)
+  {
+    if (hitlaypair.first < 0) continue;
+    for (auto idx : hitlaypair.second)
+    { 
+      if (idx < 0) continue;
+      const int mcHitID = layerHits[hitlaypair.first][idx].mcHitID();
+      if (mcHitID >= 0)
+      {
+	cmsswmcidcounts[globalHitInfo[mcHitID].mcTrackID()]++;
+      }
+    }
+  }
+  for (auto&& cmsswmcidpair : cmsswmcidcounts)
+  {
+    if (cmsswmcidpair.second > nHitsMatchedMC_CMSSW_) nHitsMatchedMC_CMSSW_ = cmsswmcidpair.second;
+    if (cmsswmcidpair.first == mcTrackID_) nHitsMatchedMCTrue_CMSSW_ = cmsswmcidpair.second;
+  }
+  fracHitsMatchedMC_CMSSW_ = float(nHitsMatchedMC_CMSSW_) / float(cmsswtrack.nFoundHits());
+  fracHitsMatchedMCTrue_CMSSW_ = float(nHitsMatchedMCTrue_CMSSW_) / float(cmsswtrack.nFoundHits());
+
+  nHitsMatched_ = 0;
+  nHitsMatchedMC_ = 0;
+  nHitsMatchedMCTrue_ = 0;
+  nHitsMatchedSeed_ = 0;
+  std::map<int,int> buildmcidcounts;
+  std::map<int,int> buildseedidcounts;
+  for (int ihit = 0; ihit < trk.nTotalHits(); ihit++) // loop over mkfit track hits
   {
     const int lyr = trk.getHitLyr(ihit);
     const int idx = trk.getHitIdx(ihit);
     
     if (idx < 0) continue;
+
+    // DO MC STUFF HERE
+    const int mcHitID = layerHits[lyr][idx].mcHitID();
+    if (mcHitID >= 0)
+    {
+      buildmcidcounts[globalHitInfo[mcHitID].mcTrackID()]++;
+    }
+    
+    if (ihit < Config::nlayers_per_seed) continue;
+
+    if (hitlayseed.count(lyr))
+    {
+      if (hitlayseed.at(lyr).count(idx))
+      {
+	buildseedidcounts[hitlayseed.at(lyr).at(idx)]++;
+      }
+    }
 
     if (hitLayerMap.count(lyr))
     {
@@ -493,6 +541,19 @@ void TrackExtra::setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<
       }
     }
   }
+
+  for (auto&& buildmcidpair : buildmcidcounts)
+  {
+    if (buildmcidpair.second > nHitsMatchedMC_) nHitsMatchedMC_ = buildmcidpair.second;
+    if (buildmcidpair.first == mcTrackID_) nHitsMatchedMCTrue_ = buildmcidpair.second;
+  }
+  fracHitsMatchedMC_ = float(nHitsMatchedMC_) / float(trk.nFoundHits());
+  fracHitsMatchedMCTrue_ = float(nHitsMatchedMCTrue_) / float(trk.nFoundHits());
+
+  for (auto&& buildseedidpair : buildseedidcounts)
+  {
+    if (buildseedidpair.second > nHitsMatchedSeed_) nHitsMatchedSeed_ = buildseedidpair.second;
+  }  
 
   // get eligible hits
   const int nCandHits = trk.nFoundHits()-Config::nlayers_per_seed; 
@@ -505,11 +566,13 @@ void TrackExtra::setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<
     else cmsswTrackID_ = -1; 
   
     fracHitsMatched_ = float(nHitsMatched_) / float(nCandHits);
+    fracHitsMatchedSeed_ = float(nHitsMatchedSeed_) / float(nCandHits);
   }
   else
   { 
     cmsswTrackID_ = -10;
     fracHitsMatched_ = 0.f;
+    fracHitsMatchedSeed_ = 0.f;
   }
   
   // Modify cmsswTrackID based on nMinHits
