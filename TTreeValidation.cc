@@ -582,7 +582,7 @@ void TTreeValidation::setTrackExtras(Event& ev)
     const auto& buildtracks = ev.candidateTracks_;
           auto& buildextras = ev.candidateTracksExtra_;
 
-    std::map<int,std::map<int,int> > hitlayseed;
+    std::map<int,std::map<int,std::vector<int> > > hitlayseed;
 
     RedTrackVec reducedCMSSW(cmsswtracks.size()); // use 2D chi2 for now, so might as well make use of this object for now
     for (int itrack = 0; itrack < cmsswtracks.size(); itrack++)
@@ -602,7 +602,7 @@ void TTreeValidation::setTrackExtras(Event& ev)
 	if (idx >= 0) 
 	{
 	  tmpmap[lyr].push_back(idx);
-	  hitlayseed[lyr][idx] = seedID;
+	  hitlayseed[lyr][idx].push_back(seedID);
 	}
       }
 

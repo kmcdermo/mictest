@@ -456,7 +456,7 @@ void TrackExtra::setCMSSWTrackIDInfo(const Track& trk, const std::vector<HitVec>
   fracHitsMatched_ = float(nHitsMatched_) / float(trk.nFoundHits()); // seed hits may already be included!
 }
 
-void TrackExtra::setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<HitVec>& layerHits, const TrackVec& cmsswtracks, const ReducedTrack& redcmsswtrack, const MCHitInfoVec& globalHitInfo, const std::map<int,std::map<int,int> > & hitlayseed)
+void TrackExtra::setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<HitVec>& layerHits, const TrackVec& cmsswtracks, const ReducedTrack& redcmsswtrack, const MCHitInfoVec& globalHitInfo, const std::map<int,std::map<int,std::vector<int> > > & hitlayseed)
 {
   const SVector6 & trkParams = trk.parameters();
   const SMatrixSym66 & trkErrs = trk.errors();
@@ -529,7 +529,10 @@ void TrackExtra::setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<
     {
       if (hitlayseed.at(lyr).count(idx))
       {
-	buildseedidcounts[hitlayseed.at(lyr).at(idx)]++;
+	for (auto seedid : hitlayseed.at(lyr).at(idx))
+	{
+	  buildseedidcounts[seedid]++;
+	}
       }
     }
 

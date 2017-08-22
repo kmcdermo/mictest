@@ -478,7 +478,7 @@ public:
   void setMCTrackIDInfoByLabel(const Track& trk, const std::vector<HitVec>& layerHits, const MCHitInfoVec& globalHitInfo, const TrackVec& simtracks);
   void setMCTrackIDInfo(const Track& trk, const std::vector<HitVec>& layerHits, const MCHitInfoVec& globalHitInfo, const TrackVec& simtracks, const bool isSeed);
   void setCMSSWTrackIDInfo(const Track& trk, const std::vector<HitVec>& layerHits, const TrackVec& cmsswtracks, const RedTrackVec& redcmsswtracks);
-  void setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<HitVec>& layerHits, const TrackVec& cmsswtracks, const ReducedTrack& redcmsswtrack, const MCHitInfoVec& globalHitInfo, const std::map<int,std::map<int,int> >& hitlayseed);
+  void setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<HitVec>& layerHits, const TrackVec& cmsswtracks, const ReducedTrack& redcmsswtrack, const MCHitInfoVec& globalHitInfo, const std::map<int,std::map<int,std::vector<int> > >& hitlayseed);
 
   int   mcTrackID() const {return mcTrackID_;}
   int   nHitsMatched() const {return nHitsMatched_;}
