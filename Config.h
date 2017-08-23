@@ -7,6 +7,7 @@ class TrackerInfo;
 #include <algorithm>
 #include <cmath>
 #include <string> // won't compile on clang gcc for mac OS w/o this!
+#include <fstream>
 
 //#define PRINTOUTS_FOR_PLOTS
 #define CCSCOORD
@@ -14,6 +15,11 @@ class TrackerInfo;
 namespace Config
 {
   extern TrackerInfo TrkInfo;
+
+  // simple dumper
+  constexpr int nBadLimit = 10;
+  extern int nBadTracks;
+  extern std::ofstream dumper;
 
   // default file version
   constexpr int FileVersion = 1;

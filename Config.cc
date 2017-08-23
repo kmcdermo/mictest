@@ -6,6 +6,9 @@ namespace Config
 {
   TrackerInfo TrkInfo;
 
+  int nBadTracks = 0;
+  std::ofstream dumper("cmssw2mkfitdump.txt",std::ios_base::trunc);
+  
   int nTracks = 10000;
   int nEvents = 20;
 

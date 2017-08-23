@@ -422,6 +422,9 @@ void test_standard()
     data_file.Close();
   }
 
+  Config::dumper.close();
+
+
   for (auto& val : vals) {
     val->fillConfigTree();
     val->saveTTrees();

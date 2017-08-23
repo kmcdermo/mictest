@@ -291,7 +291,6 @@ void TrackExtra::setMCTrackIDInfoByLabel(const Track& trk, const std::vector<Hit
   }
 
   mcTrackID_ = modifyRefTrackID(nCandHits,Config::nMinFoundHits-Config::nlayers_per_seed,simtracks,seedID_,mcTrackID_);
-  
   dprint("Track " << trk.label() << " parent mc track " << seedID_ << " matched id "  << mcTrackID_ << " count " << nHitsMatched_ << "/" << nCandHits);
 }
 
