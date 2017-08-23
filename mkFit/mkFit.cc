@@ -247,6 +247,10 @@ void test_standard()
   double t_skip[NT] = {0};
   double time = dtime();
 
+  Config::dumper << "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" << std::endl;
+  Config::dumper << "Selection: buildextra.fracHitsMatched() < 0.2 && buildtrack.nFoundHits() >= 8 && buildextra.mcTrackID() >= 0 && cmsswmask_build == 0)" << std::endl;
+  Config::dumper << "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" << std::endl << std::endl;
+
 #if USE_CUDA
   tbb::task_scheduler_init tbb_init(Config::numThreadsFinder);
   //tbb::task_scheduler_init tbb_init(tbb::task_scheduler_init::automatic);
