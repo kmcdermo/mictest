@@ -28,9 +28,9 @@ void dumpMatrix(Matrix m)
 {
   for (int r=0;r<m.kRows;++r) {
     for (int c=0;c<m.kCols;++c) {
-      std::cout << std::setw(12) << m.At(r,c) << " ";
+      Config::dumper << std::setw(12) << m.At(r,c) << " ";
     }
-    std::cout << std::endl;
+    Config::dumper << std::endl;
   }
 }
 

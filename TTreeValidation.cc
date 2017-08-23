@@ -1822,7 +1822,8 @@ void TTreeValidation::fillCMSSWFakeRateTree(const Event& ev)
       if (evt_seed_tracks[iseed].label() == buildextra.mcTrackID()) {seedi = iseed; break;}
     }    
     const auto& seedtrack = evt_seed_tracks[seedi];
-    const auto& simtrack = evt_sim_tracks[buildextra.mcTrackID()];
+    Track simtrack;
+    if (buildextra.mcTrackID() >= 0) simtrack = evt_sim_tracks[buildextra.mcTrackID()];
   
     const SVector6 & trkParams = buildtrack.parameters();
     const SMatrixSym66 & trkErrs = buildtrack.errors();
@@ -1974,15 +1975,15 @@ void TTreeValidation::fillCMSSWFakeRateTree(const Event& ev)
 
     if (cmsswmask_build_cFR_ == 0)
     {
-      if (buildextra.fracHitsMatched() < 0.2 && buildtrack.nFoundHits() >= 8)
+      if (buildextra.fracHitsMatched() < 0.2 && buildtrack.nFoundHits() >= 8 && buildextra.mcTrackID() >= 0)
       {
 	Config::nBadTracks++;
         if (Config::nBadTracks < Config::nBadLimit)
         {
 	  Config::dumper << "BAD TRACK # " << Config::nBadTracks << " EVT # " << ev.evtID() << std::endl;
-	  Config::dumper << "mkFit Track realigned label: " << buildtrack.label() << " seedID: " << buildextra.seedID() << " mcTrackID: " << buildextra.mcTrackID() << std::endl;
-	  Config::dumper << "CMSSW Track realigned label: " << cmsswtracktrue.label() << " seedID: " << cmsswextratrue.seedID() << std::endl;
-	  Config::dumper << "Seed  Track label: " << seedtrack.label() << " position in vector post-sort: " << seedi << std::endl;
+	  Config::dumper << "mkFit Track - realigned label: " << buildtrack.label() << " - seedID: " << buildextra.seedID() << " - mcTrackID: " << buildextra.mcTrackID() << std::endl;
+	  Config::dumper << "CMSSW Track - realigned label: " << cmsswtracktrue.label() << " - seedID: " << cmsswextratrue.seedID() << std::endl;
+	  Config::dumper << "Seed  Track - label: " << seedtrack.label() << " - position in vector post-sort: " << seedi << std::endl;
 	  Config::dumper << "mkFit Track - nHitsTotal: " << buildtrack.nTotalHits() << " nFoundHits: " << buildtrack.nFoundHits() << std::endl;
 	  Config::dumper << "Seed  Track - nHitsTotal: " << seedtrack.nTotalHits() << " nFoundHits: " << seedtrack.nFoundHits() << std::endl;
 	  Config::dumper << "CMSSW Track - nHitsTotal: " << cmsswtracktrue.nTotalHits() << " nFoundHits: " << cmsswtracktrue.nFoundHits() << std::endl;
@@ -1993,6 +1994,26 @@ void TTreeValidation::fillCMSSWFakeRateTree(const Event& ev)
 			 << " nHitsMatchedMC_CMSSW: " << buildextra.nHitsMatchedMC_CMSSW() << " nHitsMatchedMCTrue_CMSSW: " << buildextra.nHitsMatchedMCTrue_CMSSW() 
 			 << std::endl << std::endl;
 
+	  Config::dumper << "-----------------------------------------------------------" << std::endl;
+	  Config::dumper << "                     Track State Dumps                     " << std::endl;
+	  Config::dumper << "mkFit Track (Final)" << std::endl;
+	  print(buildtrack.state());
+	  Config::dumper << "Seed Track (Initial)" << std::endl;
+	  print(buildtrack.state());
+	  Config::dumper << "CMSSW Track (Initial)" << std::endl;
+	  print(buildtrack.state());
+	  Config::dumper << "Sim Track (Initial)" << std::endl;
+	  print(buildtrack.state());
+	  Config::dumper << "-----------------------------------------------------------" << std::endl << std::endl;
+
+	  Config::dumper << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+	  Config::dumper << "                      Other Track Info                     " << std::endl;
+	  Config::dumper << "CMSSW Phi Swam to mkFit track: " << cmsswtracktrue.swimPhiToR(buildtrack.x(),buildtrack.y()) << std::endl;
+	  Config::dumper << "|dPhi(mkFit,swam CMSSW)|: " << buildextra.dPhi() << std::endl;
+	  Config::dumper << "Helix Chi2 (CMSSW,mkFit) using eta, 1./pt: " << buildextra.helixChi2() << std::endl;
+	  Config::dumper << "mkFit Hit Chi2: " << buildtrack.chi2() << std::endl;
+	  Config::dumper << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl << std::endl;
+	  Config::dumper << "                    Track Hit ID Dumps                     " << std::endl;
 	  Config::dumper << "mkFit Track Hit Dump: | ihit | Layer | Hit Index | mcHitID | mcTrackID of Hit | x pos | y pos | z pos |" << std::endl;
 	  for (int ihit = 0; ihit < buildtrack.nTotalHits(); ihit++)
 	  {
@@ -2085,6 +2106,7 @@ void TTreeValidation::fillCMSSWFakeRateTree(const Event& ev)
 	    }
 	  }
 	  Config::dumper << "===========================================================" << std::endl;
+	  Config::dumper << std::endl << std::endl;
 	}
       }
     }

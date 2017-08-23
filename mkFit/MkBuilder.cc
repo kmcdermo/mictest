@@ -1025,6 +1025,7 @@ void MkBuilder::root_val()
 void MkBuilder::cmssw_val()
 {
   // get the tracks ready for validation
+  remap_seed_hits();
   remap_cand_hits();
   prep_recotracks();
   prep_cmsswtracks();
