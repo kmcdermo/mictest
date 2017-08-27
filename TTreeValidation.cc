@@ -1973,9 +1973,9 @@ void TTreeValidation::fillCMSSWFakeRateTree(const Event& ev)
       iTkMatches_build_cFR_ = -99;
     }
 
-    if (cmsswmask_build_cFR_ == 0)
+    if (cmsswmask_build_cFR_ < 0)
     {
-      if (buildextra.fracHitsMatched() < 0.2 && buildtrack.nFoundHits() >= 8 && buildextra.mcTrackID() >= 0)
+      if (buildextra.fracHitsMatched() < 0.1 && buildtrack.nFoundHits() > 20 && buildextra.mcTrackID() >= 0)
       {
 	Config::nBadTracks++;
         if (Config::nBadTracks <= Config::nBadLimit)

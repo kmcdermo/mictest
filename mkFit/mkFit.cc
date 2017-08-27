@@ -248,7 +248,7 @@ void test_standard()
   double time = dtime();
 
   Config::dumper << "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" << std::endl;
-  Config::dumper << "Selection: buildextra.fracHitsMatched() < 0.2 && buildtrack.nFoundHits() >= 8 && buildextra.mcTrackID() >= 0 && cmsswmask_build == 0)" << std::endl;
+  Config::dumper << "Selection: buildextra.fracHitsMatched() < 0.1 && buildtrack.nFoundHits() > 20 && buildextra.mcTrackID() >= 0 && cmsswmask_build < 0)" << std::endl;
   Config::dumper << "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" << std::endl << std::endl;
 
 #if USE_CUDA
