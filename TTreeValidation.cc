@@ -1982,13 +1982,13 @@ void TTreeValidation::fillCMSSWFakeRateTree(const Event& ev)
         {
 	  Config::dumper << "***********************************************************" << std::endl;
 	  Config::dumper << "BAD TRACK # " << Config::nBadTracks << " EVT # " << ev.evtID() << std::endl;
-	  Config::dumper << "mkFit Track - realigned label: " << buildtrack.label() << " - seedID: " << buildextra.seedID() << " - mcTrackID: " << buildextra.mcTrackID() << " - cmsswTrackID: " << buildextra.cmsswTrackID() << std::endl;
-	  Config::dumper << "CMSSW Track - realigned label: " << cmsswtracktrue.label() << " - seedID: " << cmsswextratrue.seedID() << std::endl;
-	  Config::dumper << "Seed  Track - label: " << seedtrack.label() << " - position in vector post-sort: " << seedi << std::endl;
-	  Config::dumper << "mkFit Track - nHitsTotal: " << buildtrack.nTotalHits() << " nFoundHits: " << buildtrack.nFoundHits() << std::endl;
-	  Config::dumper << "Seed  Track - nHitsTotal: " << seedtrack.nTotalHits() << " nFoundHits: " << seedtrack.nFoundHits() << std::endl;
-	  Config::dumper << "CMSSW Track - nHitsTotal: " << cmsswtracktrue.nTotalHits() << " nFoundHits: " << cmsswtracktrue.nFoundHits() << std::endl;
-	  Config::dumper << "Sim   Track - nHitsTotal: " << simtrack.nTotalHits() << " nFoundHits: " << simtrack.nFoundHits() << std::endl;
+	  Config::dumper << "mkFit Track | realigned label: " << buildtrack.label() << " | seedID: " << buildextra.seedID() << " | mcTrackID: " << buildextra.mcTrackID() << " | cmsswTrackID: " << buildextra.cmsswTrackID() << std::endl;
+	  Config::dumper << "CMSSW Track | realigned label: " << cmsswtracktrue.label() << " | seedID: " << cmsswextratrue.seedID() << std::endl;
+	  Config::dumper << "Seed  Track | label: " << seedtrack.label() << " | position in vector post-sort: " << seedi << std::endl;
+	  Config::dumper << "mkFit Track | nHitsTotal: " << buildtrack.nTotalHits() << " nFoundHits: " << buildtrack.nFoundHits() << std::endl;
+	  Config::dumper << "Seed  Track | nHitsTotal: " << seedtrack.nTotalHits() << " nFoundHits: " << seedtrack.nFoundHits() << std::endl;
+	  Config::dumper << "CMSSW Track | nHitsTotal: " << cmsswtracktrue.nTotalHits() << " nFoundHits: " << cmsswtracktrue.nFoundHits() << std::endl;
+	  Config::dumper << "Sim   Track | nHitsTotal: " << simtrack.nTotalHits() << " nFoundHits: " << simtrack.nFoundHits() << std::endl;
 	  Config::dumper << "nHitsMatched: " << buildextra.nHitsMatched()
 			 << " nHitsMatchedSeed: " << buildextra.nHitsMatchedSeed()
 			 << " nHitsMatchedMC: " << buildextra.nHitsMatchedMC() << " nHitsMatchedMCTrue: " << buildextra.nHitsMatchedMCTrue()
@@ -2001,14 +2001,14 @@ void TTreeValidation::fillCMSSWFakeRateTree(const Event& ev)
 	  Config::dumper << "mkFit Track (Final)" << std::endl;
 	  print(buildtrack.state());
 	  Config::dumper << "-----------------------------------------------------------" << std::endl;
-	  Config::dumper << "Seed Track (Initial)" << std::endl;
-	  print(buildtrack.state());
+	  Config::dumper << "Seed Track (Final)" << std::endl;
+	  print(seedtrack.state());
 	  Config::dumper << "-----------------------------------------------------------" << std::endl;
 	  Config::dumper << "CMSSW Track (Initial)" << std::endl;
-	  print(buildtrack.state());
+	  print(cmsswtracktrue.state());
 	  Config::dumper << "-----------------------------------------------------------" << std::endl;
 	  Config::dumper << "Sim Track (Initial)" << std::endl;
-	  print(buildtrack.state());
+	  print(simtrack.state());
 	  Config::dumper << "-----------------------------------------------------------" << std::endl << std::endl;
 
 	  Config::dumper << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
