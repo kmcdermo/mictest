@@ -226,8 +226,8 @@ public:
   int   nHits_cmssw_cFR_=0,nLayers_cmssw_cFR_=0,lastlyr_cmssw_cFR_=0;
 
   // other tests
-  int   nHitsMatchedMC_build_cFR_=0,nHitsMatchedMCTrue_build_cFR_=0,nHitsMatchedSeed_build_cFR_=0,nHitsMatchedMC_build_cmssw_cFR_=0,nHitsMatchedMCTrue_build_cmssw_cFR_=0;
-  float fracHitsMatchedMC_build_cFR_=0,fracHitsMatchedMCTrue_build_cFR_=0,fracHitsMatchedSeed_build_cFR_=0,fracHitsMatchedMC_build_cmssw_cFR_=0,fracHitsMatchedMCTrue_build_cmssw_cFR_=0;
+  int   nHitsMatchedMC1_build_cFR_=0,nHitsMatchedMC2_build_cFR_=0,nHitsMatchedMCTrue_build_cFR_=0,nHitsMatchedSeed_build_cFR_=0,nHitsMatchedMC_build_cmssw_cFR_=0,nHitsMatchedMCTrue_build_cmssw_cFR_=0;
+  float fracHitsMatchedMC1_build_cFR_=0,fracHitsMatchedMC2_build_cFR_=0,fracHitsMatchedMCTrue_build_cFR_=0,fracHitsMatchedSeed_build_cFR_=0,fracHitsMatchedMC_build_cmssw_cFR_=0,fracHitsMatchedMCTrue_build_cmssw_cFR_=0;
   
 
   /// truuuuuu

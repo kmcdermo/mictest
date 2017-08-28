@@ -481,10 +481,14 @@ public:
   void setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<HitVec>& layerHits, const TrackVec& cmsswtracks, const ReducedTrack& redcmsswtrack, const MCHitInfoVec& globalHitInfo, const std::map<int,std::map<int,std::vector<int> > >& hitlayseed);
 
   int   mcTrackID() const {return mcTrackID_;}
+  int   mcTrackID1() const {return mcTrackID1_;}
+  int   mcTrackID2() const {return mcTrackID2_;}
   int   nHitsMatched() const {return nHitsMatched_;}
   float fracHitsMatched() const {return fracHitsMatched_;}
-  int   nHitsMatchedMC() const {return nHitsMatchedMC_;}
-  float fracHitsMatchedMC() const {return fracHitsMatchedMC_;}
+  int   nHitsMatchedMC1() const {return nHitsMatchedMC1_;}
+  float fracHitsMatchedMC1() const {return fracHitsMatchedMC1_;}
+  int   nHitsMatchedMC2() const {return nHitsMatchedMC2_;}
+  float fracHitsMatchedMC2() const {return fracHitsMatchedMC2_;}
   int   nHitsMatchedMCTrue() const {return nHitsMatchedMCTrue_;}
   float fracHitsMatchedMCTrue() const {return fracHitsMatchedMCTrue_;}
   int   nHitsMatchedSeed() const {return nHitsMatchedSeed_;}
@@ -508,10 +512,14 @@ private:
   friend class Track;
 
   int   mcTrackID_;
+  int   mcTrackID1_;
+  int   mcTrackID2_;
   int   nHitsMatched_;
   float fracHitsMatched_;
-  int   nHitsMatchedMC_;
-  float fracHitsMatchedMC_;
+  int   nHitsMatchedMC1_;
+  float fracHitsMatchedMC1_;
+  int   nHitsMatchedMC2_;
+  float fracHitsMatchedMC2_;
   int   nHitsMatchedMCTrue_;
   float fracHitsMatchedMCTrue_;
   int   nHitsMatchedSeed_;
@@ -544,5 +552,6 @@ typedef std::unordered_map<int,TSLayerPairVec>    TkIDToTSLayerPairVecMap;
 void print(const TrackState& s);
 void print(std::string label, int itrack, const Track& trk);
 void print(std::string label, const TrackState& s);
+void dumpHits(const Track& trk, const std::vector<HitVec>& layerHits, const MCHitInfoVec& globalHitInfo);
 
 #endif

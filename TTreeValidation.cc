@@ -379,8 +379,12 @@ void TTreeValidation::initializeCMSSWFakeRateTree()
   cmsswfrtree_->Branch("nLayers_build",&nLayers_build_cFR_);
   cmsswfrtree_->Branch("nHitsMatched_build",&nHitsMatched_build_cFR_);
   cmsswfrtree_->Branch("fracHitsMatched_build",&fracHitsMatched_build_cFR_);
-  cmsswfrtree_->Branch("nHitsMatchedMC_build",&nHitsMatchedMC_build_cFR_);
-  cmsswfrtree_->Branch("fracHitsMatchedMC_build",&fracHitsMatchedMC_build_cFR_);
+
+  cmsswfrtree_->Branch("nHitsMatchedMC1_build",&nHitsMatchedMC1_build_cFR_);
+  cmsswfrtree_->Branch("fracHitsMatchedMC1_build",&fracHitsMatchedMC1_build_cFR_);
+  cmsswfrtree_->Branch("nHitsMatchedMC2_build",&nHitsMatchedMC2_build_cFR_);
+  cmsswfrtree_->Branch("fracHitsMatchedMC2_build",&fracHitsMatchedMC2_build_cFR_);
+
   cmsswfrtree_->Branch("nHitsMatchedMCTrue_build",&nHitsMatchedMCTrue_build_cFR_);
   cmsswfrtree_->Branch("fracHitsMatchedMCTrue_build",&fracHitsMatchedMCTrue_build_cFR_);
   cmsswfrtree_->Branch("nHitsMatchedSeed_build",&nHitsMatchedSeed_build_cFR_);
@@ -1787,8 +1791,10 @@ void TTreeValidation::fillCMSSWFakeRateTree(const Event& ev)
     nLayers_build_cFR_         = buildtrack.nUniqueLayers();
     nHitsMatched_build_cFR_    = buildextra.nHitsMatched();
     fracHitsMatched_build_cFR_ = buildextra.fracHitsMatched();
-    nHitsMatchedMC_build_cFR_    = buildextra.nHitsMatchedMC();
-    fracHitsMatchedMC_build_cFR_ = buildextra.fracHitsMatchedMC();
+    nHitsMatchedMC1_build_cFR_    = buildextra.nHitsMatchedMC1();
+    fracHitsMatchedMC1_build_cFR_ = buildextra.fracHitsMatchedMC1();
+    nHitsMatchedMC2_build_cFR_    = buildextra.nHitsMatchedMC2();
+    fracHitsMatchedMC2_build_cFR_ = buildextra.fracHitsMatchedMC2();
     nHitsMatchedMCTrue_build_cFR_    = buildextra.nHitsMatchedMCTrue();
     fracHitsMatchedMCTrue_build_cFR_ = buildextra.fracHitsMatchedMCTrue();
     nHitsMatchedSeed_build_cFR_    = buildextra.nHitsMatchedSeed();
@@ -1980,6 +1986,11 @@ void TTreeValidation::fillCMSSWFakeRateTree(const Event& ev)
 	Config::nBadTracks++;
         if (Config::nBadTracks <= Config::nBadLimit)
         {
+	  Track simtrack1;
+	  if (buildextra.mcTrackID1() >= 0) simtrack1 = evt_sim_tracks[buildextra.mcTrackID1()];
+	  Track simtrack2;
+	  if (buildextra.mcTrackID2() >= 0) simtrack2 = evt_sim_tracks[buildextra.mcTrackID2()];
+
 	  Config::dumper << "***********************************************************" << std::endl;
 	  Config::dumper << "BAD TRACK # " << Config::nBadTracks << " EVT # " << ev.evtID() << std::endl;
 	  Config::dumper << "mkFit Track | realigned label: " << buildtrack.label() << " | seedID: " << buildextra.seedID() << " | mcTrackID: " << buildextra.mcTrackID() << " | cmsswTrackID: " << buildextra.cmsswTrackID() << std::endl;
@@ -1989,11 +2000,11 @@ void TTreeValidation::fillCMSSWFakeRateTree(const Event& ev)
 	  Config::dumper << "Seed  Track | nHitsTotal: " << seedtrack.nTotalHits() << " nFoundHits: " << seedtrack.nFoundHits() << std::endl;
 	  Config::dumper << "CMSSW Track | nHitsTotal: " << cmsswtracktrue.nTotalHits() << " nFoundHits: " << cmsswtracktrue.nFoundHits() << std::endl;
 	  Config::dumper << "Sim   Track | nHitsTotal: " << simtrack.nTotalHits() << " nFoundHits: " << simtrack.nFoundHits() << std::endl;
-	  Config::dumper << "nHitsMatched: " << buildextra.nHitsMatched()
-			 << " nHitsMatchedSeed: " << buildextra.nHitsMatchedSeed()
-			 << " nHitsMatchedMC: " << buildextra.nHitsMatchedMC() << " nHitsMatchedMCTrue: " << buildextra.nHitsMatchedMCTrue()
-			 << " nHitsMatchedMC_CMSSW: " << buildextra.nHitsMatchedMC_CMSSW() << " nHitsMatchedMCTrue_CMSSW: " << buildextra.nHitsMatchedMCTrue_CMSSW() 
-			 << std::endl;
+	  Config::dumper << "nHitsMatched: " << buildextra.nHitsMatched() << " nHitsMatchedSeed: " << buildextra.nHitsMatchedSeed()
+			 << " nHitsMatchedMC_CMSSW: " << buildextra.nHitsMatchedMC_CMSSW() << " nHitsMatchedMCTrue_CMSSW: " << buildextra.nHitsMatchedMCTrue_CMSSW() << std::endl;
+	  Config::dumper << "mcTrackID True: " << buildextra.mcTrackID() << " nHitsMatchedMCTrue: " << buildextra.nHitsMatchedMCTrue() << std::endl;
+	  Config::dumper << "mcTrackID 1st Most Matches: " << buildextra.mcTrackID1() << " nHitsMatchedMC1: " << buildextra.nHitsMatchedMC1() << std::endl;
+	  Config::dumper << "mcTrackID 2nd Most Matches: " << buildextra.mcTrackID2() << " nHitsMatchedMC2: " << buildextra.nHitsMatchedMC2() << std::endl;
 	  Config::dumper << "***********************************************************" << std::endl << std::endl;
 
 	  Config::dumper << "-----------------------------------------------------------" << std::endl;
@@ -2007,8 +2018,14 @@ void TTreeValidation::fillCMSSWFakeRateTree(const Event& ev)
 	  Config::dumper << "CMSSW Track (Initial)" << std::endl;
 	  print(cmsswtracktrue.state());
 	  Config::dumper << "-----------------------------------------------------------" << std::endl;
-	  Config::dumper << "Sim Track (Initial)" << std::endl;
+	  Config::dumper << "Sim Track True (Initial)" << std::endl;
 	  print(simtrack.state());
+	  Config::dumper << "-----------------------------------------------------------" << std::endl;
+	  Config::dumper << "Sim Track With 1st Most Matches (Initial)" << std::endl;
+	  if (buildextra.mcTrackID1() >= 0 && buildextra.mcTrackID() != buildextra.mcTrackID1()) print(simtrack1.state());
+	  Config::dumper << "-----------------------------------------------------------" << std::endl;
+	  Config::dumper << "Sim Track With 2nd Most Matches (Initial)" << std::endl;	
+	  if (buildextra.mcTrackID2() >= 0 && buildextra.mcTrackID() != buildextra.mcTrackID2()) print(simtrack2.state());
 	  Config::dumper << "-----------------------------------------------------------" << std::endl << std::endl;
 
 	  Config::dumper << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
@@ -2022,96 +2039,22 @@ void TTreeValidation::fillCMSSWFakeRateTree(const Event& ev)
 	  Config::dumper << "===========================================================" << std::endl;
 	  Config::dumper << "                    Track Hit ID Dumps                     " << std::endl;
 	  Config::dumper << "mkFit Track Hit Dump: | ihit | Layer | Hit Index | mcHitID | mcTrackID of Hit | x pos | y pos | z pos |" << std::endl;
-	  for (int ihit = 0; ihit < buildtrack.nTotalHits(); ihit++)
-	  {
-	    const int lyr = buildtrack.getHitLyr(ihit);
-	    const int idx = buildtrack.getHitIdx(ihit);
-
-	    int mcHitID = -1;
-	    if (idx >= 0) mcHitID = evt_layer_hits[lyr][idx].mcHitID();
-	    int mcTrackID = -1;
-	    if (mcHitID >= 0) mcTrackID = evt_sim_hits[mcHitID].mcTrackID();
-
-	    Config::dumper << ihit << " | " << lyr << " | " << idx << " | " << mcHitID << " | " << mcTrackID << " | ";
-	    if (idx >= 0)
-	    {
-	      const auto& hit = evt_layer_hits[lyr][idx];
-	      Config::dumper << hit.x() << " | " << hit.y() << " | " << hit.z() << " | " << std::endl;
-	    }
-	    else
-	    {
-	      Config::dumper << std::endl;
-	    }
-	  }
+	  dumpHits(buildtrack,evt_layer_hits,evt_sim_hits);
 	  Config::dumper << "===========================================================" << std::endl;
 	  Config::dumper << "Seed Track Hit Dump: | ihit | Layer | Hit Index | mcHitID | mcTrackID of Hit | x pos | y pos | z pos |" << std::endl;
-	  for (int ihit = 0; ihit < seedtrack.nTotalHits(); ihit++)
-	  {
-	    const int lyr = seedtrack.getHitLyr(ihit);
-	    const int idx = seedtrack.getHitIdx(ihit);
-
-	    int mcHitID = -1;
-	    if (idx >= 0) mcHitID = evt_layer_hits[lyr][idx].mcHitID();
-	    int mcTrackID = -1;
-	    if (mcHitID >= 0) mcTrackID = evt_sim_hits[mcHitID].mcTrackID();
-
-	    Config::dumper << ihit << " | " << lyr << " | " << idx << " | " << mcHitID << " | " << mcTrackID << " | ";
-	    if (idx >= 0)
-	    {
-	      const auto& hit = evt_layer_hits[lyr][idx];
-	      Config::dumper << hit.x() << " | " << hit.y() << " | " << hit.z() << " | " << std::endl;
-	    }
-	    else
-	    {
-	      Config::dumper << std::endl;
-	    }
-	  }
+	  dumpHits(seedtrack,evt_layer_hits,evt_sim_hits);
 	  Config::dumper << "===========================================================" << std::endl;
 	  Config::dumper << "CMSSW Track Hit Dump: | ihit | Layer | Hit Index | mcHitID | mcTrackID of Hit | x pos | y pos | z pos |" << std::endl;
-	  for (int ihit = 0; ihit < cmsswtracktrue.nTotalHits(); ihit++)
-	  {
-	    const int lyr = cmsswtracktrue.getHitLyr(ihit);
-	    const int idx = cmsswtracktrue.getHitIdx(ihit);
-
-	    int mcHitID = -1;
-	    if (idx >= 0) mcHitID = evt_layer_hits[lyr][idx].mcHitID();
-	    int mcTrackID = -1;
-	    if (mcHitID >= 0) mcTrackID = evt_sim_hits[mcHitID].mcTrackID();
-
-	    Config::dumper << ihit << " | " << lyr << " | " << idx << " | " << mcHitID << " | " << mcTrackID << " | ";
-	    if (idx >= 0)
-	    {
-	      const auto& hit = evt_layer_hits[lyr][idx];
-	      Config::dumper << hit.x() << " | " << hit.y() << " | " << hit.z() << " | " << std::endl;
-	    }
-	    else
-	    {
-	      Config::dumper << std::endl;
-	    }
-	  }
+	  dumpHits(cmsswtracktrue,evt_layer_hits,evt_sim_hits);
 	  Config::dumper << "===========================================================" << std::endl;
 	  Config::dumper << "Sim Track Hit Dump: | ihit | Layer | Hit Index | mcHitID | mcTrackID of Hit | x pos | y pos | z pos |" << std::endl;
-	  for (int ihit = 0; ihit < simtrack.nTotalHits(); ihit++)
-	  {
-	    const int lyr = simtrack.getHitLyr(ihit);
-	    const int idx = simtrack.getHitIdx(ihit);
-
-	    int mcHitID = -1;
-	    if (idx >= 0) mcHitID = evt_layer_hits[lyr][idx].mcHitID();
-	    int mcTrackID = -1;
-	    if (mcHitID >= 0) mcTrackID = evt_sim_hits[mcHitID].mcTrackID();
-
-	    Config::dumper << ihit << " | " << lyr << " | " << idx << " | " << mcHitID << " | " << mcTrackID << " | ";
-	    if (idx >= 0)
-	    {
-	      const auto& hit = evt_layer_hits[lyr][idx];
-	      Config::dumper << hit.x() << " | " << hit.y() << " | " << hit.z() << " | " << std::endl;
-	    }
-	    else
-	    {
-	      Config::dumper << std::endl;
-	    }
-	  }
+	  dumpHits(simtrack,evt_layer_hits,evt_sim_hits);
+	  Config::dumper << "===========================================================" << std::endl;
+	  Config::dumper << "Sim Track With 1st Most Matches Hit Dump: | ihit | Layer | Hit Index | mcHitID | mcTrackID of Hit | x pos | y pos | z pos |" << std::endl;
+	  if (buildextra.mcTrackID1() >= 0 && buildextra.mcTrackID() != buildextra.mcTrackID1()) dumpHits(simtrack1,evt_layer_hits,evt_sim_hits);
+	  Config::dumper << "===========================================================" << std::endl;
+	  Config::dumper << "Sim Track With 2nd Most Matches Hit Dump: | ihit | Layer | Hit Index | mcHitID | mcTrackID of Hit | x pos | y pos | z pos |" << std::endl;
+	  if (buildextra.mcTrackID2() >= 0 && buildextra.mcTrackID() != buildextra.mcTrackID2()) dumpHits(simtrack2,evt_layer_hits,evt_sim_hits);
 	  Config::dumper << "===========================================================" << std::endl;
 	  Config::dumper << std::endl << std::endl;
 	}

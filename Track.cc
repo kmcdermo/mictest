@@ -455,6 +455,31 @@ void TrackExtra::setCMSSWTrackIDInfo(const Track& trk, const std::vector<HitVec>
   fracHitsMatched_ = float(nHitsMatched_) / float(trk.nFoundHits()); // seed hits may already be included!
 }
 
+void dumpHits(const Track& trk, const std::vector<HitVec>& layerHits, const MCHitInfoVec& globalHitInfo)
+{
+  for (int ihit = 0; ihit < trk.nTotalHits(); ihit++)
+  {
+    const int lyr = trk.getHitLyr(ihit);
+    const int idx = trk.getHitIdx(ihit);
+    
+    int mcHitID = -1;
+    if (idx >= 0) mcHitID = layerHits[lyr][idx].mcHitID();
+    int mcTrackID = -1;
+    if (mcHitID >= 0) mcTrackID = globalHitInfo[mcHitID].mcTrackID();
+    
+    Config::dumper << ihit << " | " << lyr << " | " << idx << " | " << mcHitID << " | " << mcTrackID << " | ";
+    if (idx >= 0)
+    {
+      const auto& hit = layerHits[lyr][idx];
+      Config::dumper << hit.x() << " | " << hit.y() << " | " << hit.z() << " | " << std::endl;
+    }
+    else
+    {
+      Config::dumper << std::endl;
+    }
+  }
+}
+
 void TrackExtra::setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<HitVec>& layerHits, const TrackVec& cmsswtracks, const ReducedTrack& redcmsswtrack, const MCHitInfoVec& globalHitInfo, const std::map<int,std::map<int,std::vector<int> > > & hitlayseed)
 {
   const SVector6 & trkParams = trk.parameters();
@@ -506,8 +531,12 @@ void TrackExtra::setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<
   fracHitsMatchedMC_CMSSW_ = float(nHitsMatchedMC_CMSSW_) / float(cmsswtrack.nFoundHits());
   fracHitsMatchedMCTrue_CMSSW_ = float(nHitsMatchedMCTrue_CMSSW_) / float(cmsswtrack.nFoundHits());
 
+  mcTrackID1_ = -1;
+  mcTrackID2_ = -1;
+
   nHitsMatched_ = 0;
-  nHitsMatchedMC_ = 0;
+  nHitsMatchedMC1_ = 0;
+  nHitsMatchedMC2_ = 0;
   nHitsMatchedMCTrue_ = 0;
   nHitsMatchedSeed_ = 0;
   std::map<int,int> buildmcidcounts;
@@ -554,10 +583,29 @@ void TrackExtra::setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<
 
   for (auto&& buildmcidpair : buildmcidcounts)
   {
-    if (buildmcidpair.second > nHitsMatchedMC_) nHitsMatchedMC_ = buildmcidpair.second;
+    if (buildmcidpair.second > nHitsMatchedMC1_) 
+    {
+      nHitsMatchedMC1_ = buildmcidpair.second; 
+      mcTrackID1_ = buildmcidpair.first;
+    }
+
     if (buildmcidpair.first == mcTrackID_) nHitsMatchedMCTrue_ = buildmcidpair.second;
   }
-  fracHitsMatchedMC_ = float(nHitsMatchedMC_) / float(trk.nFoundHits());
+
+
+  for (auto&& buildmcidpair : buildmcidcounts)
+  {
+    if (buildmcidpair.first != mcTrackID1_) 
+    {
+      if (buildmcidpair.second > nHitsMatchedMC2_)
+      {
+	nHitsMatchedMC2_ = buildmcidpair.second; 
+	mcTrackID2_ = buildmcidpair.first;
+      }
+    }
+  }
+  fracHitsMatchedMC1_ = float(nHitsMatchedMC1_) / float(trk.nFoundHits());
+  fracHitsMatchedMC2_ = float(nHitsMatchedMC2_) / float(trk.nFoundHits());
   fracHitsMatchedMCTrue_ = float(nHitsMatchedMCTrue_) / float(trk.nFoundHits());
 
   for (auto&& buildseedidpair : buildseedidcounts)
@@ -598,9 +646,10 @@ void print(const TrackState& s)
 		 << " y:  " << s.parameters[1]
 		 << " z:  " << s.parameters[2] << std::endl
 		 << " 1/pT: " << s.parameters[3]
-		 << " phi : " << s.parameters[4]
-		 << " eta : " << s.parameters[5] << std::endl
-		 << "valid: " << s.valid << " charge: " << s.charge << " errors: " << std::endl;
+		 << " phi: " << s.parameters[4]
+		 << " eta: " << getEta(s.parameters[5]) << std::endl
+		 << "valid: " << s.valid << " charge: " << s.charge << std::endl;
+  Config::dumper << "errors (x,y,z,1/pt,phi,theta): " << std::endl;
   dumpMatrix(s.errors);
   Config::dumper << std::endl;
 }
