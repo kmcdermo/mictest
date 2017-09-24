@@ -1752,6 +1752,7 @@ void TTreeValidation::fillCMSSWEfficiencyTree(const Event& ev)
       duplmask_build_ceff_   = -1; // mask means unmatched cmssw track
       nTkMatches_build_ceff_ = -99; // unmatched
     }
+ 
     cmsswefftree_->Fill();
   } 
 }
@@ -1981,7 +1982,7 @@ void TTreeValidation::fillCMSSWFakeRateTree(const Event& ev)
 
     if (cmsswmask_build_cFR_ < 0)
     {
-      if (buildextra.fracHitsMatched() < 0.1 && buildtrack.nFoundHits() > 20 && buildextra.mcTrackID() >= 0)
+      if ((cmsswtracktrue.momEta() > 1.8 && cmsswtracktrue.momEta() < 2.0) && buildextra.mcTrackID() >= 0)
       {
 	Config::nBadTracks++;
         if (Config::nBadTracks <= Config::nBadLimit)
