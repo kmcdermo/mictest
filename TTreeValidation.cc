@@ -1980,7 +1980,7 @@ void TTreeValidation::fillCMSSWFakeRateTree(const Event& ev)
       iTkMatches_build_cFR_ = -99;
     }
 
-    if (cmsswmask_build_cFR_ < 0)
+    if (cmsswmask_build_cFR_ < 0 && cmsswtracktrue.isFindable())
     {
       if ((cmsswtracktrue.momEta() > 1.8 && cmsswtracktrue.momEta() < 2.0) && buildextra.mcTrackID() >= 0)
       {

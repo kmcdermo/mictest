@@ -248,7 +248,7 @@ void test_standard()
   double time = dtime();
 
   Config::dumper << "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" << std::endl;
-  Config::dumper << "Selection: (cmsswtrack.momEta() > 1.8 && cmsswtrack.momEta() < 2.0) && (buildextra.mcTrackID() >= 0 && cmsswmask_build < 0)" << std::endl;
+  Config::dumper << "Selection: (cmsswtrack.momEta() > 1.8 && cmsswtrack.momEta() < 2.0) && (buildextra.mcTrackID() >= 0 && cmsswmask_build < 0 && cmsswtrack.isFindable())" << std::endl;
   Config::dumper << "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" << std::endl << std::endl;
 
 #if USE_CUDA
