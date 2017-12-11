@@ -86,6 +86,9 @@ float Track::swimPhiToR(const float x0, const float y0) const
 {
   const float dR = getHypot(x()-x0,y()-y0); 
   const float dPhi = 2.f*std::asin(dR/176.f/pT()*charge());
+
+  //  std::cout << "(dR: " << dR << " pT: " << pT() << " charge: " << charge() << " dPhi: " << dPhi << " momPhi: " << momPhi() << " ";
+
   return squashPhiGeneral(momPhi()-dPhi);
 }
 
@@ -456,6 +459,18 @@ void TrackExtra::setCMSSWTrackIDInfoByTrkParams(const Track& trk, const std::vec
   fracHitsMatched_ = float(nHitsMatched_) / float(trk.nFoundHits()); // seed hits may already be included!
 }
 
+void TrackExtra::copyInExtra(const TrackExtra& extra)
+{
+  cmsswTrackID_ = extra.cmsswTrackID();
+  mcTrackID_ = extra.mcTrackID();
+  seedID_ = extra.seedID();
+
+  nHitsMatched_ = extra.nHitsMatched();
+  fracHitsMatched_ = extra.fracHitsMatched();
+  helixChi2_ = extra.helixChi2();
+  dPhi_ = extra.dPhi();
+}
+
 void TrackExtra::setCMSSWTrackIDInfoByHits(const Track& trk, const LayIdxIDVecMapMap& cmsswHitIDMap, const TrackVec& cmsswtracks, const RedTrackVec& redcmsswtracks)
 {
   std::unordered_map<int,int> labelMatchMap;
@@ -481,8 +496,9 @@ void TrackExtra::setCMSSWTrackIDInfoByHits(const Track& trk, const LayIdxIDVecMa
   std::vector<int> labelMatchVec;
   for (const auto labelMatchPair : labelMatchMap)
   {
-    // 75% matching criterion 
-    if (4*labelMatchPair.second >= 3*trk.nFoundHits()) labelMatchVec.push_back(labelMatchPair.first);
+    const int nCMSSWHits = cmsswtracks[labelMatchPair.first].nUniqueLayers();
+    //    if (2*labelMatchPair.second >= trk.nFoundHits()) labelMatchVec.push_back(labelMatchPair.first);
+    if (10*labelMatchPair.second >= 5*nCMSSWHits) labelMatchVec.push_back(labelMatchPair.first);
   }
 
   // protect against no matches!
@@ -537,7 +553,10 @@ void TrackExtra::setCMSSWTrackIDInfoByHits(const Track& trk, const LayIdxIDVecMa
   cmsswTrackID_ = modifyRefTrackID(trk.nFoundHits(),Config::nMinFoundHits,cmsswtracks,-1,cmsswTrackID_);
 
   // other important info
-  fracHitsMatched_ = float(nHitsMatched_) / float(trk.nFoundHits()); // seed hits may already be included!
+  //  fracHitsMatched_ = float(nHitsMatched_) / float(trk.nFoundHits()); // seed hits may already be included!
+
+  const int nHitsCMSSW = cmsswtracks[cmsswTrackID_].nUniqueLayers();
+  fracHitsMatched_ = float(nHitsMatched_) / float(nHitsCMSSW); // seed hits may already be included!
 }
 
 void TrackExtra::setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<HitVec>& layerHits, const TrackVec& cmsswtracks, const ReducedTrack& redcmsswtrack)
@@ -558,7 +577,13 @@ void TrackExtra::setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<
   trkErrsR[1][0] = trkErrs[5][3];
 
   helixChi2_ = std::abs(computeHelixChi2(redcmsswtrack.parameters(),trkParamsR,trkErrsR,false));
-  dPhi_ = std::abs(squashPhiGeneral(cmsswtracks[cmsswlabel].swimPhiToR(trk.x(),trk.y())-trk.momPhi()));
+
+  //  std::cout << cmsswlabel << ": ";
+  const float swamphi = cmsswtracks[cmsswlabel].swimPhiToR(trk.x(),trk.y());
+
+  dPhi_ = std::abs(squashPhiGeneral(swamphi-trk.momPhi()));
+
+  //  std::cout << " squashed: " << swamphi << ")" << " - " << trk.momPhi() << " = " << dPhi_ << std::endl;
 
   nHitsMatched_ = 0;
   const HitLayerMap & hitLayerMap = redcmsswtrack.hitLayerMap();
@@ -585,9 +610,10 @@ void TrackExtra::setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<
   if (nCandHits != 0)
   {
     // Require majority of hits to match
-    if (2*nHitsMatched_ >= nCandHits) cmsswTrackID_ = cmsswlabel;
-    else cmsswTrackID_ = -1; 
+    //    if (2*nHitsMatched_ >= nCandHits) cmsswTrackID_ = cmsswlabel;
+    //    else cmsswTrackID_ = -1; 
   
+    cmsswTrackID_ = cmsswlabel;
     fracHitsMatched_ = float(nHitsMatched_) / float(nCandHits);
   }
   else
@@ -597,7 +623,7 @@ void TrackExtra::setCMSSWTrackIDInfoByLabel(const Track& trk, const std::vector<
   }
   
   // Modify cmsswTrackID based on nMinHits
-  cmsswTrackID_ = modifyRefTrackID(nCandHits,Config::nMinFoundHits-Config::nlayers_per_seed,cmsswtracks,cmsswlabel,cmsswTrackID_);
+  //  cmsswTrackID_ = modifyRefTrackID(nCandHits,Config::nMinFoundHits-Config::nlayers_per_seed,cmsswtracks,cmsswlabel,cmsswTrackID_);
 }
  
 

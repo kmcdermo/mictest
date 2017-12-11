@@ -572,6 +572,13 @@ void TTreeValidation::setTrackExtras(Event& ev)
       else if (Config::cmsswMatching == hitBased)
       {
 	extra.setCMSSWTrackIDInfoByHits(track, cmsswHitIDMap, cmsswtracks, reducedCMSSW);
+	TrackExtra hitextra;
+	hitextra.setCMSSWTrackIDInfoByTrkParams(track, layerhits, cmsswtracks, reducedCMSSW);
+	
+	if (extra.cmsswTrackID() < 0 && hitextra.cmsswTrackID() > 0)
+	{
+	  extra.copyInExtra(hitextra);
+	}
       }
       else if (Config::cmsswMatching == labelBased) // can only be used if using pure seeds!
       {

@@ -476,6 +476,7 @@ public:
   int   cmsswTrackID() const {return cmsswTrackID_;}
   float helixChi2() const {return helixChi2_;}
   float dPhi() const {return dPhi_;}
+  void  copyInExtra(const TrackExtra& extra);
 
   void  setmcTrackID(int mcTrackID) {mcTrackID_ = mcTrackID;}
   void  setseedID(int seedID) {seedID_ = seedID;}

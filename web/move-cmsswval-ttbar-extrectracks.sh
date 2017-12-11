@@ -1,7 +1,7 @@
 #!/bin/bash
 
 dir=${1:-plots}
-outdir=${dir}/cmsswval-ttbar-extrectracks
+outdir=${dir}/cmssw-val-hit-cmsdenom-0.8-OR-trkparam
 base=SNB_CMSSW_TTbar
 
 echo "Moving plots and text files locally to ${outdir}"
@@ -9,8 +9,24 @@ for ttbar in NoPU PU35 PU70
 do
     fulldir=${outdir}/${ttbar}
     mkdir -p ${fulldir}
+    mkdir -p ${fulldir}/diffs
 
-    mv ${base}_${ttbar}_*.png ${fulldir}
+    for rate in eff ineff_barrel ineff_endcap fr dr
+    do
+	for var in pt eta phi
+	do
+	    mv ${base}_${ttbar}_${rate}_${var}_*.png ${fulldir}
+	done
+    done
+
+    for coll in bestmatch allmatch
+    do 
+	for var in nHits invpt phi eta
+	do
+	    mv ${base}_${ttbar}_${coll}_d${var}_*.png ${fulldir}/diffs
+	done
+    done
+
     for build in BH STD CE
     do
 	vbase=validation_${base}_${ttbar}_${build}

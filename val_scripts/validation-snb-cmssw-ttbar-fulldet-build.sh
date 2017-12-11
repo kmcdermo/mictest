@@ -13,7 +13,7 @@ base=SNB_CMSSW_TTbar
 
 for ttbar in NoPU PU35 PU70 
 do
-    for sV in "SimSeed --cmssw-simseeds" "CMSSeed --cmssw-n2seeds"
+    for sV in "CMSSeed --cmssw-n2seeds"
     do echo $sV | while read -r sN sO
 	do
 	    for bV in "BH bh" "STD std" "CE ce"

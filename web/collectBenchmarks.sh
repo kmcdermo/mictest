@@ -61,7 +61,7 @@ mkdir -p ${dir}/${rootdir}
 for build in BH STD CE
 do
     vBase=SNB_${sample}_${build}
-    mv validation_${vBase}_"ROOTVAL"/totals_validation_${vBase}_"ROOTVAL".txt ${dir}/${rootdir}
+    mv totals_validation_${vBase}_"ROOTVAL".txt ${dir}/${rootdir}
 done
 
 for rate in eff ineff_barrel ineff_endcap dr fr 
@@ -80,7 +80,7 @@ mkdir -p ${dir}/${cmsswdir}/diffs
 for build in BH STD CE
 do
     vBase=SNB_${sample}_${build}
-    mv validation_${vBase}_"CMSSWVAL"/totals_validation_${vBase}_"CMSSWVAL"_cmssw.txt ${dir}/${cmsswdir}
+    mv totals_validation_${vBase}_"CMSSWVAL"_cmssw.txt ${dir}/${cmsswdir}
 done
 
 for rate in eff ineff_barrel ineff_endcap dr fr 
