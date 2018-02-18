@@ -971,9 +971,14 @@ void MkFinder::BkFitInputTracks(TrackVec& cands, int beg, int end)
   {
     const Track &trk = cands[i];
 
+    std::cout << "Fit Input -" << " i: " << i << " label: " << trk.label() << " trk.x(): " << trk.x() << " trk.momPhi(): " << trk.momPhi() << std::endl;  
+    for (int ihit = 0; ihit < trk.nTotalHits(); ihit++)
+      std::cout << "    " << trk.getHitLyr(ihit) << " " << trk.getHitIdx(ihit) << std::endl;
+
     Chg(itrack, 0, 0) = trk.charge();
     CurHit[itrack]    = trk.nTotalHits() - 1;
     HoTArr[itrack]    = trk.getHitsOnTrackArray();
+    Label(itrack, 0, 0) = trk.label();
 
     idx[itrack] = (char*) &trk - varr;
   }
@@ -1013,9 +1018,14 @@ void MkFinder::BkFitInputTracks(EventOfCombCandidates& eocss, int beg, int end)
   {
     const Track &trk = eocss[i][0];
 
+    std::cout << "Fit Input -" << " i: " << i << " label: " << trk.label() << " trk.x(): " << trk.x() << " trk.momPhi(): " << trk.momPhi() << std::endl;  
+    for (int ihit = 0; ihit < trk.nTotalHits(); ihit++)
+      std::cout << "    " << trk.getHitLyr(ihit) << " " << trk.getHitIdx(ihit) << std::endl;
+
     Chg(itrack, 0, 0) = trk.charge();
     CurHit[itrack]    = trk.nTotalHits() - 1;
     HoTArr[itrack]    = trk.getHitsOnTrackArray();
+    Label(itrack, 0, 0) = trk.label();
 
     idx[itrack] = (char*) &trk - varr;
   }
@@ -1048,6 +1058,11 @@ void MkFinder::BkFitOutputTracks(TrackVec& cands, int beg, int end)
       Par[iP].CopyOut(itrack, trk.parameters_nc().Array());
 
       trk.setChi2(Chi2(itrack, 0, 0));
+
+      std::cout << "Output -" << " i: " << i << " label: " << trk.label() << " trk.x(): " << trk.x() << " trk.momPhi(): " << trk.momPhi() << std::endl;  
+      for (int ihit = 0; ihit < trk.nTotalHits(); ihit++)
+	std::cout << "    " << trk.getHitLyr(ihit) << " " << trk.getHitIdx(ihit) << std::endl;
+
     }
 }
 
@@ -1064,6 +1079,11 @@ void MkFinder::BkFitOutputTracks(EventOfCombCandidates& eocss, int beg, int end)
     Par[iP].CopyOut(itrack, trk.parameters_nc().Array());
 
     trk.setChi2(Chi2(itrack, 0, 0));
+
+    std::cout << "Output -" << " i: " << i << " label: " << trk.label() << " trk.x(): " << trk.x() << " trk.momPhi(): " << trk.momPhi() << std::endl;  
+
+    for (int ihit = 0; ihit < trk.nTotalHits(); ihit++)
+      std::cout << "    " << trk.getHitLyr(ihit) << " " << trk.getHitIdx(ihit) << std::endl;
   }
 }
 
@@ -1172,5 +1192,10 @@ void MkFinder::BkFitFitTracks(const EventOfHits   & eventofhits,
 
 void MkFinder::BkFitPropTracksToPCA(const int N_proc)
 {
+  for (int i = 0; i < N_proc; i++)
+  {
+    std::cout << "PCA Input -" << " i: " << i << " label: " << Label(i,0,0) << " x(): " << Par[iC](i,0,0) << " momPhi(): "  << Par[iC](i,4,0) << std::endl;
+  }
+
   PropagateTracksToPCAZ(N_proc, Config::pca_prop_pflags);
 }
