@@ -157,7 +157,7 @@ void LayerOfHits::SuckInHits(const HitVec &hitv)
       curr_phi_bin = 0;
     }
 
-    int phi_bin = GetPhiBin(ha[j].phi);
+    int phi_bin = std::min(std::max(GetPhiBin(ha[j].phi), 0), Config::m_nphi - 1);
 
     if (phi_bin > curr_phi_bin)
     {

@@ -1118,7 +1118,10 @@ int TTreeValidation::getLastFoundHit(const int trackMCHitID, const int mcTrackID
   }
   else
   {
-    mcHitID = ev.simTracks_[mcTrackID].getMCHitIDFromLayer(ev.layerHits_,ev.simHitsInfo_[trackMCHitID].layer());
+    if (mcTrackID >= 0)
+    {
+      mcHitID = ev.simTracks_[mcTrackID].getMCHitIDFromLayer(ev.layerHits_,ev.simHitsInfo_[trackMCHitID].layer());
+    }
   }
   return mcHitID;
 }
