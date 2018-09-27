@@ -5,6 +5,13 @@
 
 #include "PropagationMPlex.h"
 
+#include <mutex>
+#include <iostream>
+
+static std::mutex mtx_;
+
+//run --cmssw-n2seeds --sim-val --input-file /data2/slava77/samples/2017/pass-c93773a/initialStep/PU70HS/10224.0_TTbar_13+TTbar_13TeV_TuneCUETP8M1_2017PU_GenSimFullINPUT+DigiFullPU_2017PU+RecoFullPU_2017PU+HARVESTFullPU_2017PU/memoryFile.fv3.clean.writeAll.recT.082418-25daeda.bin --build-std --backward-fit-pca --num-thr 64 --num-thr-ev 32
+
 namespace mkfit {
 
 //==============================================================================

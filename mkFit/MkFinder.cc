@@ -1079,7 +1079,12 @@ void MkFinder::BkFitInputTracks(EventOfCombCandidates& eocss, int beg, int end)
   const int   off_error  = (char*) trk0.errors().Array() - varr;
   const int   off_param  = (char*) trk0.parameters().Array() - varr;
 
+  std::lock_guard<std::mutex> locker(mtx_);
+  std::cout << "    during - beg: " << beg << " end: " << end << " N_proc: " << N_proc << std::endl;
+
   int idx[NN]      __attribute__((aligned(64)));
+
+  std::cout << "       a" << std::endl;
 
   int itrack = 0;
 
@@ -1091,21 +1096,39 @@ void MkFinder::BkFitInputTracks(EventOfCombCandidates& eocss, int beg, int end)
     CurHit[itrack]    = trk.nTotalHits() - 1;
     HoTArr[itrack]    = trk.getHitsOnTrackArray();
 
+    // std::cout << "           i: " << i << " itrack: " << itrack << " -";
+    // for (int ihit = 0; ihit < trk.nTotalHits(); ihit++) std::cout << " ihit: " << ihit << " [" << trk.getHitLyr(ihit) << " , " << trk.getHitIdx(ihit) << "] ";
+    // std::cout << std::endl;
+
+    const auto ihit = trk.nTotalHits()-1;
+    std::cout << "         i: " << i << " itrack: " << itrack << " ihit: " << ihit << " lyr: " << trk.getHitLyr(ihit) << " idx: " << trk.getHitIdx(ihit) << std::endl;
+    
     idx[itrack] = (char*) &trk - varr;
   }
 
+  std::cout << "       b" << std::endl;
+
   Chi2.SetVal(0);
+
+  std::cout << "       c" << std::endl;
 
 #ifdef MIC_INTRINSICS
   __m512i vi      = _mm512_load_epi32(idx);
+  std::cout << "       d1 - idx: " << idx << " varr: " << &varr << " off_error: " << off_error << std::endl;
   Err[iC].SlurpIn(varr + off_error, vi, N_proc);
+  std::cout << "       d2" << std::endl;
   Par[iC].SlurpIn(varr + off_param, vi, N_proc);
+  std::cout << "       d3" << std::endl;
 #else
   Err[iC].SlurpIn(varr + off_error, idx, N_proc);
+  std::cout << "       d2" << std::endl;
   Par[iC].SlurpIn(varr + off_param, idx, N_proc);
+  std::cout << "       d3" << std::endl;
 #endif
 
   Err[iC].Scale(100.0f);
+
+  std::cout << "       e" << std::endl;
 }
 
 

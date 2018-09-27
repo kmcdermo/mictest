@@ -1105,6 +1105,27 @@ void MkBuilder::root_val()
   prep_recotracks();
   if (Config::cmssw_val) prep_cmsswtracks();
 
+  std::lock_guard<std::mutex> printlock(Event::printmutex);
+
+  for (auto itrack = 0; itrack < m_event->simTracks_.size(); itrack++)
+  {
+    const auto & simtrack = m_event->simTracks_[itrack];
+
+    for (auto ihit = 0; ihit < simtrack.nTotalHits(); ihit++)
+    {
+      const auto lyr = simtrack.getHitLyr(ihit);
+      const auto idx = simtrack.getHitIdx(ihit);
+      const auto mch = m_event->layerHits_[lyr][idx].mcHitID();
+      const auto mct = m_event->simHitsInfo_[mch].mcTrackID();
+      
+      if (mct < 0)
+      {
+	std::cout << "evt: " << m_event->evtID() << " itrack: " << itrack << " label: " << simtrack.label() 
+		  << " lyr: " << lyr << " idx: " << idx << " mcHitID: " << mch << " mcTrackID: " << mct << std::endl;
+      }
+    }
+  }
+
   // validate
   m_event->Validate();
 }
@@ -2252,7 +2273,12 @@ void MkBuilder::BackwardFit()
     {
       FINDER( mkfndr );
 
+      std::lock_guard<std::mutex> printlock(Event::printmutex);
+      std::cout << "---------------------------------" << std::endl;
+      std::cout << "HERE : " << m_event->evtID() << " beg: " << cands.begin() << " end: " << cands.end() << " region: " << region << std::endl;
       fit_cands(mkfndr.get(), cands.begin(), cands.end(), region);
+      std::cout << "THERE: " << m_event->evtID() << " beg: " << cands.begin() << " end: " << cands.end() << " region: " << region << std::endl;
+      std::cout << "---------------------------------" << std::endl;
     });
   });
 }
@@ -2272,12 +2298,37 @@ void MkBuilder::fit_cands(MkFinder *mkfndr, int start_cand, int end_cand, int re
     //          i, t.charge(), t.chi2(), t.pT(), t.momEta(), t.x(), t.y(), t.z(), t.nFoundHits(), t.label(), t.isFindable());
     // }
 
+    //    std::lock_guard<std::mutex> printlock(Event::printmutex);
+    std::cout << "  before - evtID: " << m_event->evtID() << " region: " << region << " start_cand: " << start_cand
+     	      << " end_cand: " << end_cand << " icand: " << icand << " end: " << end << std::endl;
+
+    // std::lock_guard<std::mutex> printlock(Event::printmutex);
+    // for (auto itrack = 0; itrack < eoccs.m_candidates.size(); itrack++)
+    // {
+    //   const auto & track = eoccs.m_candidates[itrack][0];
+
+    //   for (auto ihit = 0; ihit < track.nTotalHits(); ihit++)
+    //   {
+    // 	const auto lyr = track.getHitLyr(ihit);
+    // 	const auto idx = track.getHitIdx(ihit);
+      
+    // 	if (idx == -9)
+    // 	{
+    // 	  std::cout << "evt: " << m_event->evtID() << " itrack: " << itrack << " label: " << track.label() 
+    // 		    << " lyr: " << lyr << " idx: " << idx << std::endl;
+    // 	}
+    //   }
+    // }
+
     bool chi_debug = false;
 #ifdef DEBUG_BACKWARD_FIT
   redo_fit:
 #endif
     // input tracks
     mkfndr->BkFitInputTracks(eoccs, icand, end);
+
+    std::cout << "  after  - evtID: " << m_event->evtID() << " region: " << region << " start_cand: " << start_cand
+     	      << " end_cand: " << end_cand << " icand: " << icand << " end: " << end << std::endl;
 
     // fit tracks back to first layer
     mkfndr->BkFitFitTracks(m_event_of_hits, st_par, end - icand, chi_debug);
