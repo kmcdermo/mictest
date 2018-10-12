@@ -27,7 +27,7 @@ then
     declare -a nevs=("1" "2" "4" "8" "12")
 elif [[ "${ben_arch}" == "KNL" ]]
 then
-    mOpt="-j 64 AVX_512:=1"
+    mOpt="-j 64 KNL_AVX512:=1"
     dir=/data1/work/slava77/samples
     maxth=256
     maxvu=16
@@ -36,7 +36,7 @@ then
     declare -a nevs=("1" "2" "4" "8" "16" "32" "64" "128")
 elif [[ "${ben_arch}" == "SKL-SP" ]]
 then
-    mOpt="-j 32 AVX_512:=1"
+    mOpt="-j 32 SKL_AVX512:=1"
     dir=/data2/slava77/samples
     maxth=64
     maxvu=16

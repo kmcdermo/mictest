@@ -91,7 +91,7 @@ function plotVal()
 
 ## Compile once
 make clean
-mVal="-j 32 WITH_ROOT:=1 AVX_512:=1"
+mVal="-j 32 WITH_ROOT:=1 SKL_AVX512:=1"
 make ${mVal}
 mkdir -p ${tmpdir}
 
