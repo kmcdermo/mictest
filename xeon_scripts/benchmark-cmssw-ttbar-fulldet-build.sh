@@ -31,7 +31,7 @@ then
     dir=/data1/work/slava77/samples
     maxth=256
     maxvu=16
-    declare -a nths=("1" "2" "4" "8" "16" "32" "64" "96" "128" "160" "192" "224" "256")
+    declare -a nths=("1")
     declare -a nvus=("1" "2" "4" "8" "16")
     declare -a nevs=("1" "2" "4" "8" "16" "32" "64" "128")
 elif [[ "${ben_arch}" == "SKL-SP" ]]
@@ -40,7 +40,7 @@ then
     dir=/data2/slava77/samples
     maxth=64
     maxvu=16
-    declare -a nths=("1" "2" "4" "8" "16" "32" "48" "64")
+    declare -a nths=("1")
     declare -a nvus=("1" "2" "4" "8" "16")
     declare -a nevs=("1" "2" "4" "8" "16" "32" "64")
 else 
@@ -84,29 +84,6 @@ do
 	    ## Building-only benchmark
 	    echo "${oBase}: Benchmark [nTH:${nth}, nVU:${maxvu}int]"
 	    ${bExe} --num-events ${nevents} >& log_${oBase}_NVU${maxvu}int_NTH${nth}.txt
-
-	    ## Multiple Events in Flight benchmark
-	    check_meif=$( CheckIfMEIF ${build} )
-	    if [[ "${check_meif}" == "true" ]]
-	    then
-		for nev in "${nevs[@]}"
-		do
-		    if (( ${nev} <= ${nth} ))
-		    then
-			nproc=$(( ${nevents} * ${nev} ))
-			echo "${oBase}: Benchmark [nTH:${nth}, nVU:${maxvu}int, nEV:${nev}]"
-			${bExe} --silent --num-thr-ev ${nev} --num-events ${nproc} >& log_${oBase}_NVU${maxvu}int_NTH${nth}_NEV${nev}.txt
-		    fi
-		done
-	    fi
-
-	    ## nHits validation
-	    check_text=$( CheckIfText ${build} )
-	    if (( ${nth} == ${maxth} )) && [[ "${check_text}" == "true" ]]
-	    then
-		echo "${oBase}: Text dump for plots [nTH:${nth}, nVU:${maxvu}int]"
-		${bExe} --dump-for-plots --quality-val --read-cmssw-tracks --num-events ${nevents} >& log_${oBase}_NVU${maxvu}int_NTH${nth}_${dump}.txt
-	    fi
 	done
     done
 done
@@ -127,14 +104,6 @@ do
 	    ## Building-only benchmark
 	    echo "${oBase}: Benchmark [nTH:${minth}, nVU:${nvu}]"
 	    ${bExe} >& log_${oBase}_NVU${nvu}_NTH${minth}.txt
-
-	    ## nHits validation
-	    check_text=$( CheckIfText ${build} )
-	    if (( ${nvu} == ${minvu} )) && [[ "${check_text}" == "true" ]]
-	    then
-		echo "${oBase}: Text dump for plots [nTH:${minth}, nVU:${nvu}]"
-		${bExe} --dump-for-plots --quality-val --read-cmssw-tracks >& log_${oBase}_NVU${nvu}_NTH${minth}_${dump}.txt
-	    fi
 	done
     done
 done

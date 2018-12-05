@@ -33,24 +33,6 @@ def run():
     if isVU == 'true' :
         makeplots(arch,sample,build,vuvals,nth,'VU')
 
-    # Parallelization datapoints
-    if arch == 'KNL' :
-        nvu = '16int'
-        thvals = ['1','2','4','8','16','32','64','96','128','160','192','224','256']
-    elif arch == 'SNB' :
-        nvu = '8int'
-        thvals = ['1','2','4','6','8','12','16','20','24']
-    elif arch == 'SKL-SP' :
-        nvu = '16int'
-        thvals = ['1','2','4','8','16','32','48','64']
-    else :
-        print arch,'is not a valid architecture! Exiting...'
-        sys.exit(0)
-    
-    # call the make plots function
-    if isTH == 'true' :
-        makeplots(arch,sample,build,thvals,nvu,'TH')
-
     g.Write()
     g.Close()
 
