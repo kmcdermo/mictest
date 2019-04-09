@@ -44,14 +44,14 @@ void PlotBenchmarks::RunBenchmarkPlots()
   const TString ytitlespeedup = "Average Build Speedup per Event";
 
   // Do the overlaying!
-  PlotBenchmarks::MakeOverlay("VU_time",sample+" Vectorization Benchmark on "+arch+" [nTH="+nth+"]",xtitlevu,ytitletime,
-			      arch_opt.vumin,arch_opt.vumax,arch_opt.vutimemin,arch_opt.vutimemax);
+  // PlotBenchmarks::MakeOverlay("VU_time",sample+" Vectorization Benchmark on "+arch+" [nTH="+nth+"]",xtitlevu,ytitletime,
+  // 			      arch_opt.vumin,arch_opt.vumax,arch_opt.vutimemin,arch_opt.vutimemax);
 
   PlotBenchmarks::MakeOverlay("TH_time",sample+" Parallelization Benchmark on "+arch+" [nVU="+nvu+"]",xtitleth,ytitletime,
 			      arch_opt.thmin,arch_opt.thmax,arch_opt.thtimemin,arch_opt.thtimemax);
 
-  PlotBenchmarks::MakeOverlay("VU_speedup",sample+" Vectorization Speedup on "+arch+" [nTH="+nth+"]",xtitlevu,ytitlespeedup,
-			      arch_opt.vumin,arch_opt.vumax,arch_opt.vuspeedupmin,arch_opt.vuspeedupmax);
+  // PlotBenchmarks::MakeOverlay("VU_speedup",sample+" Vectorization Speedup on "+arch+" [nTH="+nth+"]",xtitlevu,ytitlespeedup,
+  // 			      arch_opt.vumin,arch_opt.vumax,arch_opt.vuspeedupmin,arch_opt.vuspeedupmax);
 
   PlotBenchmarks::MakeOverlay("TH_speedup",sample+" Parallelization Speedup on "+arch+" [nVU="+nvu+"]",xtitleth,ytitlespeedup,
 			      arch_opt.thmin,arch_opt.thmax,arch_opt.thspeedupmin,arch_opt.thspeedupmax);

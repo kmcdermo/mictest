@@ -420,7 +420,7 @@ namespace Config
 
   #ifndef MPT_SIZE
     #if defined(__MIC__) || defined(__AVX512F__)
-      #define MPT_SIZE 16
+      #define MPT_SIZE 512
     #elif defined USE_CUDA
       #define MPT_SIZE 8
     #elif defined(__AVX__) || defined(__AVX2__)

@@ -65,12 +65,6 @@ do
     # set th builds : all benchmarks!
     th_builds+=("${ben_build}")
     
-    # set vu builds : exclude FV since it does not have a meaningful implementation outside of max VU
-    if [[ "${ben_build}" != "FV" ]]
-    then
-	vu_builds+=("${ben_build}")
-    fi
-    
     # set meif builds : only do CE and FV
     if [[ "${ben_build}" == "CE" ]] || [[ "${ben_build}" == "FV" ]]
     then

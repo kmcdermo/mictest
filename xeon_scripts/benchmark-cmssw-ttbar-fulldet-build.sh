@@ -111,34 +111,6 @@ do
     done
 done
 
-## Vectorization Benchmarks
-for nvu in "${nvus[@]}"
-do
-    make clean ${mOpt}
-    make ${mOpt} USE_INTRINSICS:=-DMPT_SIZE=${nvu}
-
-    for build in "${vu_builds[@]}"
-    do echo ${!build} | while read -r bN bO
-	do
-	    ## Common base executable
-	    oBase=${base}_${bN}
-	    bExe="${exe} --build-${bO} --num-thr ${minth} --num-events ${nevents}"
-
-	    ## Building-only benchmark
-	    echo "${oBase}: Benchmark [nTH:${minth}, nVU:${nvu}]"
-	    ${bExe} >& log_${oBase}_NVU${nvu}_NTH${minth}.txt
-
-	    ## nHits validation
-	    check_text=$( CheckIfText ${build} )
-	    if (( ${nvu} == ${minvu} )) && [[ "${check_text}" == "true" ]]
-	    then
-		echo "${oBase}: Text dump for plots [nTH:${minth}, nVU:${nvu}]"
-		${bExe} --dump-for-plots --quality-val --read-cmssw-tracks >& log_${oBase}_NVU${nvu}_NTH${minth}_${dump}.txt
-	    fi
-	done
-    done
-done
-
 ## Final cleanup
 make distclean ${mOpt}
 
