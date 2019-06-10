@@ -17,11 +17,11 @@ def run():
     g = ROOT.TFile('benchmark_'+arch+'_'+sample+'.root','update')
 
     # Vectorization data points
-    vuvals = ['1','2','4','8']
+    vuvals = ['1','2','4','8','16','32','64','128']
     nth = '1'
     
     if  arch == 'KNL' or arch == 'SKL-SP' or arch == 'LNX-G' or arch == 'LNX-S':
-        vuvals.append('16')
+        vuvals.append('256')
         vuvals.append('16int')
     elif arch == 'SNB' :
         vuvals.append('8int')
@@ -40,13 +40,7 @@ def run():
     elif arch == 'SNB' :
         nvu = '8int'
         thvals = ['1','2','4','6','8','12','16','20','24']
-    elif arch == 'SKL-SP' :
-        nvu = '16int'
-        thvals = ['1','2','4','8','16','32','48','64']
-    elif arch == 'LNX-G' :
-        nvu = '16int'
-        thvals = ['1','2','4','8','16','32','48','64']
-    elif arch == 'LNX-S' :
+    elif arch == 'SKL-SP' or arch == 'LNX-G' or arch == 'LNX-S' :
         nvu = '16int'
         thvals = ['1','2','4','8','16','32','48','64']
     else :

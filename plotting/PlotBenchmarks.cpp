@@ -33,7 +33,7 @@ void PlotBenchmarks::RunBenchmarkPlots()
 {
   // title options
   const TString nth = "1"; 
-  const TString nvu = Form("%iint",arch_opt.vumax);
+  const TString nvu = Form("%iint",arch_opt.nvu);
 
   // x-axis titles
   const TString xtitlevu = "Matriplex Vector Width [floats]";

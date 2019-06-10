@@ -49,6 +49,8 @@ namespace
 
 struct ArchOpts
 {
+  Int_t nvu;
+
   Int_t vumin;
   Int_t vumax;
 
@@ -81,8 +83,10 @@ namespace
   {
     if      (ARCH == SNB)
     {
+      arch_opt.nvu = 8;
+
       arch_opt.vumin = 1;
-      arch_opt.vumax = 8;
+      arch_opt.vumax = 128;
 
       arch_opt.thmin = 1;
       arch_opt.thmax = 24;
@@ -94,7 +98,7 @@ namespace
       arch_opt.thtimemax = 1.;
 
       arch_opt.vuspeedupmin = 0.;
-      arch_opt.vuspeedupmax = arch_opt.vumax;
+      arch_opt.vuspeedupmax = arch_opt.nvu;
 
       arch_opt.thspeedupmin = 0.;
       arch_opt.thspeedupmax = arch_opt.thmax;
@@ -107,8 +111,10 @@ namespace
     }
     else if (ARCH == KNL)
     {
+      arch_opt.nvu = 16;
+
       arch_opt.vumin = 1;
-      arch_opt.vumax = 16;
+      arch_opt.vumax = 256;
       
       arch_opt.thmin = 1;
       arch_opt.thmax = 256;
@@ -120,7 +126,7 @@ namespace
       arch_opt.thtimemax = 1.;
 
       arch_opt.vuspeedupmin = 0.;
-      arch_opt.vuspeedupmax = arch_opt.vumax;
+      arch_opt.vuspeedupmax = arch_opt.nvu;
 
       arch_opt.thspeedupmin = 0.;
       arch_opt.thspeedupmax = 80.;
@@ -133,8 +139,10 @@ namespace
     }
     else if (ARCH == SKL)
     {
+      arch_opt.nvu = 16;
+
       arch_opt.vumin = 1;
-      arch_opt.vumax = 16;
+      arch_opt.vumax = 256;
       
       arch_opt.thmin = 1;
       arch_opt.thmax = 64;
@@ -146,7 +154,7 @@ namespace
       arch_opt.thtimemax = 1.;
 
       arch_opt.vuspeedupmin = 0.;
-      arch_opt.vuspeedupmax = arch_opt.vumax;
+      arch_opt.vuspeedupmax = arch_opt.nvu;
 
       arch_opt.thspeedupmin = 0.;
       arch_opt.thspeedupmax = arch_opt.thmax / 2;
@@ -159,8 +167,10 @@ namespace
     }
     else if (ARCH == LNXG)
     {
+      arch_opt.nvu = 16;
+
       arch_opt.vumin = 1;
-      arch_opt.vumax = 16;
+      arch_opt.vumax = 256;
       
       arch_opt.thmin = 1;
       arch_opt.thmax = 64;
@@ -172,7 +182,7 @@ namespace
       arch_opt.thtimemax = 1.;
 
       arch_opt.vuspeedupmin = 0.;
-      arch_opt.vuspeedupmax = arch_opt.vumax;
+      arch_opt.vuspeedupmax = arch_opt.nvu;
 
       arch_opt.thspeedupmin = 0.;
       arch_opt.thspeedupmax = arch_opt.thmax / 2;
@@ -185,8 +195,10 @@ namespace
     }
     else if (ARCH == LNXS)
     {
+      arch_opt.nvu = 16;
+
       arch_opt.vumin = 1;
-      arch_opt.vumax = 16;
+      arch_opt.vumax = 256;
       
       arch_opt.thmin = 1;
       arch_opt.thmax = 64;
@@ -198,7 +210,7 @@ namespace
       arch_opt.thtimemax = 1.;
 
       arch_opt.vuspeedupmin = 0.;
-      arch_opt.vuspeedupmax = arch_opt.vumax;
+      arch_opt.vuspeedupmax = arch_opt.nvu;
 
       arch_opt.thspeedupmin = 0.;
       arch_opt.thspeedupmax = arch_opt.thmax / 2;

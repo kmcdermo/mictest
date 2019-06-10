@@ -23,7 +23,7 @@ then
     maxth=24
     maxvu=8
     declare -a nths=("1" "2" "4" "6" "8" "12" "16" "20" "24")
-    declare -a nvus=("1" "2" "4" "8")
+    declare -a nvus=("1" "2" "4" "8" "16" "32" "64" "128")
     declare -a nevs=("1" "2" "4" "8" "12")
 elif [[ "${ben_arch}" == "KNL" ]]
 then
@@ -32,7 +32,7 @@ then
     maxth=256
     maxvu=16
     declare -a nths=("1" "2" "4" "8" "16" "32" "64" "96" "128" "160" "192" "224" "256")
-    declare -a nvus=("1" "2" "4" "8" "16")
+    declare -a nvus=("1" "2" "4" "8" "16" "32" "64" "128" "256")
     declare -a nevs=("1" "2" "4" "8" "16" "32" "64" "128")
 elif [[ "${ben_arch}" == "SKL-SP" ]]
 then
@@ -41,7 +41,7 @@ then
     maxth=64
     maxvu=16
     declare -a nths=("1" "2" "4" "8" "16" "32" "48" "64")
-    declare -a nvus=("1" "2" "4" "8" "16")
+    declare -a nvus=("1" "2" "4" "8" "16" "32" "64" "128" "256")
     declare -a nevs=("1" "2" "4" "8" "16" "32" "64")
 elif [[ "${ben_arch}" == "LNX-G" ]]
 then 
@@ -50,7 +50,7 @@ then
     maxth=64
     maxvu=16
     declare -a nths=("1" "2" "4" "8" "16" "32" "48" "64")
-    declare -a nvus=("1" "2" "4" "8" "16")
+    declare -a nvus=("1" "2" "4" "8" "16" "32" "64" "128" "256")
     declare -a nevs=("1" "2" "4" "8" "16" "32" "64")
 elif [[ "${ben_arch}" == "LNX-S" ]]
 then 
@@ -59,7 +59,7 @@ then
     maxth=64
     maxvu=16
     declare -a nths=("1" "2" "4" "8" "16" "32" "48" "64")
-    declare -a nvus=("1" "2" "4" "8" "16")
+    declare -a nvus=("1" "2" "4" "8" "16" "32" "64" "128" "256")
     declare -a nevs=("1" "2" "4" "8" "16" "32" "64")
 else 
     echo ${ben_arch} "is not a valid architecture! Exiting..."
